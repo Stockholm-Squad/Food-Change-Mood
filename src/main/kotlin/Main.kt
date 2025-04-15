@@ -1,21 +1,18 @@
 package org.example
 
+import org.example.data.CsvData
+import org.example.logic.MealRepository
 import java.io.File
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-fun main() {
-    val file = File("food.csv")
-    val fileRead:List<List<String>> = File("food.csv").readLines().map { it.split(",") }
-//    val foods = file.readLines().toString().split(",")
-//    println(foods[10000])
-//    val x = foods[ColumnIndex.DESCRIPTION][9]
-//    val b  = foods[x]
-   for (i in 10 until 17)
-       println(fileRead[i])
-//    println(b)
-//    13588149
-//    294520189
 
+fun main() {
+
+    val fileName = "food.csv"
+    val csvFile = File(fileName)
+    val mealRepository : MealRepository  = CsvData(csvFile)
+    mealRepository.getAllMeals().also {
+        println(it)
+        println()
+    }
 
 }

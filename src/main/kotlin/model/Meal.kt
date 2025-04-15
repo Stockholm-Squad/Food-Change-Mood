@@ -3,15 +3,16 @@ package model
 import java.util.*
 
 data class Meal(
-    val id: Int,
     val name: String?,
-    val description: String?,
-    val tags: List<String>?,
-    val numberOfIngredients:Int?,
-    val ingredients: List<String>?,
-    val numberOfSteps:Int?,
-    val steps: List<String>?,
+    val id: Int,
     val preparationTime: Int?,
+    val contributorId: Int?,
+    val addedDate: String,
+    val tags: List<String>?,
     val nutrition: Nutrition,
-    val addedDate: Date
+    val numberOfSteps: Int?,
+    val steps: List<String>?,
+    val description: String?,
+    val ingredients: List<String>?,
+    val numberOfIngredients: Int?,
 )
