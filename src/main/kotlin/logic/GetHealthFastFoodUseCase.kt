@@ -1,6 +1,6 @@
 package logic
 
-import data.MealRepository
+import org.example.logic.MealRepository
 import model.Meal
 import java.util.Collections.emptyList
 
