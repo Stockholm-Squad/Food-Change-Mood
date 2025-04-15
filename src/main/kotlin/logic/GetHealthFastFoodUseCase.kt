@@ -1,11 +1,11 @@
 package logic
 
-import data.MealRepository
+import org.example.logic.IMealsRepository
 import model.Meal
 import java.util.Collections.emptyList
 
 class GetHealthFastFoodUseCase(
-    private val mealRepository: MealRepository
+    private val mealRepository: IMealsRepository
 ) {
     fun getHealthyFastFood():List<Meal>{
         return emptyList()
