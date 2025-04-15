@@ -10,12 +10,9 @@ class CsvMealsRepository(
     private val csvFoodReader: CsvFoodReader
 ) : IMealsRepository {
     override fun getAllMeals(): List<Meal> {
-        val allMeals: MutableList<Meal> = mutableListOf()
-        csvFoodReader.readLinesFromFile().forEach { lieOfcsv ->
-            val newMeal = csvFileFoodParser.parseOnLine(lieOfcsv)
-            allMeals.add(newMeal)
+        return csvFoodReader.readLinesFromFile().map {
+            csvFileFoodParser.parseOnLine(it)
         }
-        return allMeals
     }
 
 }
