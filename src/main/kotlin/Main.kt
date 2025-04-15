@@ -4,6 +4,7 @@ import data.CsvFoodReader
 import logic.GetHealthFastFoodUseCase
 import org.example.data.CsvMealsRepository
 import org.example.logic.IMealsRepository
+import presentation.FoodConsoleUi
 import java.io.File
 
 
@@ -15,8 +16,8 @@ fun main() {
     val csvFileFoodParser = CsvFileFoodParser()
     val mealRepository: IMealsRepository = CsvMealsRepository(csvFileFoodParser, csvFoodReader)
     val getHealthFastFoodUseCase = GetHealthFastFoodUseCase(mealRepository)
-    val result = getHealthFastFoodUseCase.getHealthyFastFood()
-    println(result)
+    val ui=FoodConsoleUi(getHealthFastFoodUseCase)
+    ui.start()
 //     mealRepository.getAllMeals().also {
 //        println(it)
 //        println()
