@@ -13,6 +13,8 @@ repositories {
 dependencies {
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
     implementation("io.insert-koin:koin-core:4.0.2")
+    implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.9.1")
+
 
 }
 
