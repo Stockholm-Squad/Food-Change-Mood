@@ -1,4 +1,4 @@
-package data
+package org.example.logic
 
 import model.Meal
 
