@@ -8,3 +8,6 @@
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+food.csv
+build/
+.gradle/
