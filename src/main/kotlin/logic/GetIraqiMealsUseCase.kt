@@ -7,19 +7,13 @@ class GetIraqiMealsUseCase(
 ) {
     fun getIraqiMales(): List<Triple<String, Int, String?>> {
         return mealRepository.getAllMeals()
-            .filter(::onlyNotNullData)
+            .filter(::onlyNotEmptyData)
             .filter {meal->
                 meal.description!!.contains("iraq",ignoreCase = true) || meal.tags!!.contains("iraqi") }
-            .take(MAX_NUMBER_OF_MEALS_TO_TAKE)
             .map { iraqiMeal ->
-                Triple(iraqiMeal.name,iraqiMeal.preparationTime,iraqiMeal.description)}
-
+                Triple(iraqiMeal.name,iraqiMeal.minutes,iraqiMeal.description)}
     }
-    private fun onlyNotNullData(input:Meal):Boolean{
-        return input.description != null || input.tags != null
-    }
-
-    companion object{
-        private const val MAX_NUMBER_OF_MEALS_TO_TAKE = 50
+    private fun onlyNotEmptyData(input:Meal):Boolean{
+        return input.description.toString().isNotBlank() || input.tags?.size  != 0
     }
 }
