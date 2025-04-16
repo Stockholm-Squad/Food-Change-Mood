@@ -17,5 +17,5 @@ enum class MenuOption(val option: Int) {
     HIGH_CALORIE_MEAL(12),
     SEAFOOD_RANKING(13),
     ITALIAN_GROUP_MEALS(14),
-    EXIT(15);
+    EXIT(0);
 }
