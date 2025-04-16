@@ -1,19 +1,24 @@
 package org.example
-import org.example.di.appModule
-import org.example.di.useCaseModule
-import org.koin.core.context.startKoin
-import org.koin.java.KoinJavaComponent.getKoin
+
+import org.example.data.CsvMealsRepositoryImpl
+import org.example.data.MealFileParser
+import org.example.data.MealFileReader
+import org.example.data.source.CsvMealDataSource
+import org.example.logic.usecase.GetHealthyFastFoodUseCase
 import presentation.FoodConsoleUi
 
 
 fun main() {
 
 
-    startKoin {
-        modules(appModule, useCaseModule)
-    }
-    val ui: FoodConsoleUi= getKoin().get()
+    val mealFileReader=MealFileReader()
+    val mealFileParser=MealFileParser()
+    val csvMealDataSource=CsvMealDataSource(mealFileParser,mealFileReader)
+    val mealsRepositoryImpl=CsvMealsRepositoryImpl(csvMealDataSource)
+    val getHealthyFastFoodUseCase=GetHealthyFastFoodUseCase(mealsRepositoryImpl)
+    val ui=FoodConsoleUi(getHealthyFastFoodUseCase)
     ui.start()
+
 
 
 }
