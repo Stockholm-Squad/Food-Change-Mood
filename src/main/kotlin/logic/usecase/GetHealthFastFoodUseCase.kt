@@ -1,19 +1,23 @@
-package logic
+package org.example.logic.usecase
 
 import model.Meal
-import org.example.logic.IMealsRepository
-import java.util.Collections.emptyList
+import org.example.logic.repo.IMealsRepository
 
 class GetHealthFastFoodUseCase(
-    private val mealRepository: IMealsRepository
+  private val mealRepository: IMealsRepository
 ) {
     fun getHealthyFastFood(): List<Meal> {
-        val allMeals = mealRepository.getAllMeals()
+        val allMeals =mealRepository.getAllMeals()
       return  allMeals.filter { it.preparationTime!! <= 15 }
             .sortedWith(
                 compareBy<Meal> { it.nutrition.totalFat }
                     .thenBy { it.nutrition.saturatedFat }
                     .thenBy { it.nutrition.carbohydrates }
             )
+
+
+
+
+
     }
 }

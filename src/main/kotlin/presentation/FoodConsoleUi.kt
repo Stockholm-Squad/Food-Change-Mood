@@ -1,6 +1,6 @@
 package presentation;
 
-import logic.GetHealthFastFoodUseCase
+import org.example.logic.usecase.GetHealthFastFoodUseCase
 
 class FoodConsoleUi(
     private val getHealthFastFoodUseCase: GetHealthFastFoodUseCase
@@ -23,7 +23,7 @@ class FoodConsoleUi(
         showOption()
         val input=getUserInput()
         when(input){
-            1-> launchHealthFastFood()
+            1-> printFirst3Meals()
             else -> { println("Invalid Input") }
         }
         presentFeature()
@@ -56,6 +56,24 @@ class FoodConsoleUi(
     private fun showWelcome() {
       println("Welcome to food change mood app")
     }
-
+    fun printFirst3Meals() {
+        getHealthFastFoodUseCase.getHealthyFastFood().forEachIndexed { index, meal ->
+            println(
+                "Meal ${index + 1}: " +
+                        "Name='${meal.name}'\n " +
+                        "ID=${meal.id}\n " +
+                        "Minutes=${meal.preparationTime}\n " +
+                        "ContributorID=${meal.contributorId}\n " +
+                        "Submitted='${meal.addedDate}\n, " +
+                        "Tags=${meal.tags}\n " +
+                        "Nutrition=${meal.nutrition}\n " +
+                        "StepsCount=${meal.numberOfSteps}\n " +
+                        "Steps=${meal.steps}\n " +
+                        "Description='${meal.description.take(30)}...'\n " + // to avoid long prints
+                        "Ingredients=${meal.ingredients}\n " +
+                        "IngredientsCount=${meal.numberOfIngredients}\n\n"
+            )
+        }
+    }
 
 }
