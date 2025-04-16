@@ -1,4 +1,4 @@
-package data
+package org.example.data.utils
 
 object ColumnIndex {
     const val NAME = 0
