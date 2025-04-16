@@ -13,7 +13,7 @@ class FoodCsvParser {
             contributorId = mealInfo.getOrNull(ColumnIndex.CONTRIBUTOR_ID)?.toIntOrNull() ?: 0,
             submitted = mealInfo.getOrNull(ColumnIndex.SUBMITTED),
             tags = parseList(mealInfo.getOrNull(ColumnIndex.TAGS) ?: ""),
-            nutrition = parseNutrition(mealInfo),
+            nutrition = parseNutrition(mealInfo.getOrNull(ColumnIndex.NUTRITION)),
             numberOfSteps = mealInfo.getOrNull(ColumnIndex.N_STEPS)?.toIntOrNull(),
             steps = parseList(mealInfo.getOrNull(ColumnIndex.STEPS) ?: ""),
             description = cleanString(mealInfo.getOrNull(ColumnIndex.DESCRIPTION)),
@@ -22,28 +22,27 @@ class FoodCsvParser {
         )
     }
 
-    private fun parseNutrition(mealInfo: List<String>): Nutrition {
-        val rawNutrition = mealInfo.getOrNull(ColumnIndex.NUTRITION)
-            ?.trim('[', ']')
+    private fun parseNutrition(rawNutrition: String?): Nutrition {
+        val defaultNutrition = Nutrition()
+        val nutritionValues = rawNutrition
+            ?.removeSurrounding("[", "]") // Safely remove brackets
             ?.split(",")
-            ?: return Nutrition()
+            ?.map { it.trim().trim('"', '\'') } // Remove leftover quotes
+            ?: return defaultNutrition
 
-        if (rawNutrition.size < 7) {
-            return Nutrition() // Invalid format
-        }
-        return try {
+        return if (nutritionValues.size == 7) {
             Nutrition(
-                calories = rawNutrition[0].toFloatOrNull() ?: 0f,
-                totalFat = rawNutrition[1].toFloatOrNull() ?: 0f,
-                sugar = rawNutrition[2].toFloatOrNull() ?: 0f,
-                sodium = rawNutrition[3].toFloatOrNull() ?: 0f,
-                protein = rawNutrition[4].toFloatOrNull() ?: 0f,
-                saturatedFat = rawNutrition[5].toFloatOrNull() ?: 0f,
-                carbohydrates = rawNutrition[6].toFloatOrNull() ?: 0f
+                calories = nutritionValues[0].toFloatOrNull() ?: 0f,
+                totalFat = nutritionValues[1].toFloatOrNull() ?: 0f,
+                sugar = nutritionValues[2].toFloatOrNull() ?: 0f,
+                sodium = nutritionValues[3].toFloatOrNull() ?: 0f,
+                protein = nutritionValues[4].toFloatOrNull() ?: 0f,
+                saturatedFat = nutritionValues[5].toFloatOrNull() ?: 0f,
+                carbohydrates = nutritionValues[6].toFloatOrNull() ?: 0f
             )
-        } catch (e: Exception) {
-            println("Parse nutrition: ${e.message}")
-            Nutrition() // Return default on parsing error
+        } else {
+            println("Malformed nutrition data: $rawNutrition")
+            defaultNutrition
         }
     }
 
@@ -62,4 +61,6 @@ class FoodCsvParser {
         return input?.trim()
             ?.takeIf { it.isNotBlank() } ?: ""
     }
+
+
 }
