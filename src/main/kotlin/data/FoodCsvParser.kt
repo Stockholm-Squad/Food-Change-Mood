@@ -66,13 +66,13 @@ class FoodCsvParser {
     private fun constructNutritionFromToken(raw: String): Nutrition {
         val nutrition = parseListOfData(raw).map { it.trim().toFloatOrNull() }
         return Nutrition(
-            calories = nutrition[NutritionIndex.CALORIES_INDEX] ?: 0.0F,
-            totalFat = nutrition[NutritionIndex.TOTAL_FAT_INDEX] ?: 0.0F,
-            sugar = nutrition[NutritionIndex.SUGAR_INDEX] ?: 0.0F,
-            sodium = nutrition[NutritionIndex.SODIUM] ?: 0.0F,
-            protein = nutrition[NutritionIndex.PROTEIN_INDEX] ?: 0.0F,
-            saturatedFat = nutrition[NutritionIndex.SATURATED_FAT_INDEX] ?: 0.0F,
-            carbohydrates = nutrition[NutritionIndex.CARBOHYDRATES] ?: 0.0F,
+            calories = nutrition[NutritionIndex.CALORIES.index] ?: 0.0F,
+            totalFat = nutrition[NutritionIndex.TOTAL_FAT.index] ?: 0.0F,
+            sugar = nutrition[NutritionIndex.SUGAR.index] ?: 0.0F,
+            sodium = nutrition[NutritionIndex.SODIUM.index] ?: 0.0F,
+            protein = nutrition[NutritionIndex.PROTEIN.index] ?: 0.0F,
+            saturatedFat = nutrition[NutritionIndex.SATURATED_FAT.index] ?: 0.0F,
+            carbohydrates = nutrition[NutritionIndex.CARBOHYDRATES.index] ?: 0.0F,
         )
     }
 
