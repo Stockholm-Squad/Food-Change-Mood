@@ -1,15 +1,16 @@
 package org.example.presentation
 
+import org.example.logic.MealsRepository
 import org.example.model.MenuOption
 import presentation.*
 
-class FoodConsoleUI {
+class FoodConsoleUI(private val mealsRepository: MealsRepository) {
     private val healthyFastFood = GetHealthyFastFoodMealsUI()
     private val searchByName = SearchMealByNameUI()
     private val iraqiMeals = GetIraqiMealsUI()
     private val easyMeals = SuggestEasyMealsUI()
     private val guessGame = GuessGameUI()
-    private val sweetNoEggs = SuggestSweetNoEggsUI()
+    private val sweetNoEggs = SuggestSweetNoEggsUI(mealsRepository)
     private val ketoMeals = KetoDietMealUI()
     private val searchByDate = SearchByAddDateUI()
     private val gymHelper = GymHelperUI()
