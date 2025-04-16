@@ -1,11 +1,11 @@
 package org.example
 
-import presentation.FoodConsoleUI
+import org.example.presentation.FoodConsoleUI
 import java.io.File
 
 
 fun main() {
-    val foodConsoleUI: FoodConsoleUI = FoodConsoleUI()
+    val foodConsoleUI = FoodConsoleUI()
     val fileName = "food.csv"
     val csvFile = File(fileName)
 
