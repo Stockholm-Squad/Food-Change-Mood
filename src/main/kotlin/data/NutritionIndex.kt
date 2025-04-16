@@ -1,15 +1,12 @@
 package data
 
-enum class NutritionIndex {
-    ;
 
-    companion object {
-        const val CALORIES_INDEX = 0
-        const val TOTAL_FAT_INDEX = 1
-        const val SUGAR_INDEX = 2
-        const val SODIUM = 3
-        const val PROTEIN_INDEX = 4
-        const val SATURATED_FAT_INDEX = 5
-        const val CARBOHYDRATES = 6
-    }
+enum class NutritionIndex(val index: Int) {
+    CALORIES(0),
+    TOTAL_FAT(1),
+    SUGAR(2),
+    SODIUM(3),
+    PROTEIN(4),
+    SATURATED_FAT(5),
+    CARBOHYDRATES(6)
 }
