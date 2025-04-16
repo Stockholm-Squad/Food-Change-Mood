@@ -16,7 +16,7 @@ class FoodCsvRepository(
             foodCsvReader.readLinesFromFile()
                 .mapNotNull { line ->
                     try {
-                        foodCsvParser.parseOneLine(line)
+                        foodCsvParser.parseLine(line)
                     } catch (e: Exception) {
                         println("Skipping invalid meal: ${line.getOrNull(ColumnIndex.NAME)}")
                         null

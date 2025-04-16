@@ -2,64 +2,78 @@ package data
 
 import model.Meal
 import model.Nutrition
+import org.example.utils.parseDate
 
 class FoodCsvParser {
 
-    fun parseOneLine(mealInfo: List<String>): Meal {
+    fun parseLine(row: String): Meal {
+        val listOfLines: List<String> = formatLineOfData(row)
         return Meal(
-            name = cleanString(mealInfo.getOrNull(ColumnIndex.NAME)),
-            id = mealInfo.getOrNull(ColumnIndex.ID)?.toIntOrNull() ?: 0,
-            minutes = mealInfo.getOrNull(ColumnIndex.MINUTES)?.toIntOrNull(),
-            contributorId = mealInfo.getOrNull(ColumnIndex.CONTRIBUTOR_ID)?.toIntOrNull() ?: 0,
-            submitted = mealInfo.getOrNull(ColumnIndex.SUBMITTED),
-            tags = parseList(mealInfo.getOrNull(ColumnIndex.TAGS) ?: ""),
-            nutrition = parseNutrition(mealInfo.getOrNull(ColumnIndex.NUTRITION)),
-            numberOfSteps = mealInfo.getOrNull(ColumnIndex.N_STEPS)?.toIntOrNull(),
-            steps = parseList(mealInfo.getOrNull(ColumnIndex.STEPS) ?: ""),
-            description = cleanString(mealInfo.getOrNull(ColumnIndex.DESCRIPTION)),
-            ingredients = parseList(mealInfo.getOrNull(ColumnIndex.INGREDIENTS) ?: ""),
-            numberOfIngredients = mealInfo.getOrNull(ColumnIndex.N_INGREDIENTS)?.toIntOrNull()
+            name = listOfLines[ColumnIndex.NAME],
+            id = listOfLines[ColumnIndex.ID].toIntOrNull() ?: throw IllegalArgumentException("Missing id"),
+            minutes = listOfLines[ColumnIndex.MINUTES].toIntOrNull() ?: 0,
+            contributorId = listOfLines[ColumnIndex.CONTRIBUTOR_ID].toIntOrNull()
+                ?: throw IllegalArgumentException("Missing id"),
+            submitted = (listOfLines[ColumnIndex.SUBMITTED]).parseDate(),
+            tags = parseListOfData(listOfLines[ColumnIndex.TAGS]),
+            nutrition = constructNutritionFromToken(listOfLines[ColumnIndex.NUTRITION]),
+            numberOfSteps = listOfLines[ColumnIndex.N_STEPS].toIntOrNull() ?: 0,
+            steps = parseListOfData(listOfLines[ColumnIndex.STEPS]),
+            description = listOfLines[ColumnIndex.DESCRIPTION],
+            ingredients = parseListOfData(listOfLines[ColumnIndex.INGREDIENTS]),
+            numberOfIngredients = listOfLines[ColumnIndex.N_INGREDIENTS].toIntOrNull() ?: 0
         )
     }
 
-    private fun parseNutrition(rawNutrition: String?): Nutrition {
-        val defaultNutrition = Nutrition()
-        val nutritionValues = rawNutrition
-            ?.removeSurrounding("[", "]") // Safely remove brackets
-            ?.split(",")
-            ?.map { it.trim().trim('"', '\'') } // Remove leftover quotes
-            ?: return defaultNutrition
+    private fun formatLineOfData(str: String): List<String> {
+        val result = mutableListOf<String>()
+        val StrBuilder = StringBuilder()
+        var insideQuotes = false
+        for (char in str) {
+            when (char) {
+                '"' -> {
+                    insideQuotes = !insideQuotes
+                    StrBuilder.append(char)
+                }
 
-        return if (nutritionValues.size == 7) {
-            Nutrition(
-                calories = nutritionValues[0].toFloatOrNull() ?: 0f,
-                totalFat = nutritionValues[1].toFloatOrNull() ?: 0f,
-                sugar = nutritionValues[2].toFloatOrNull() ?: 0f,
-                sodium = nutritionValues[3].toFloatOrNull() ?: 0f,
-                protein = nutritionValues[4].toFloatOrNull() ?: 0f,
-                saturatedFat = nutritionValues[5].toFloatOrNull() ?: 0f,
-                carbohydrates = nutritionValues[6].toFloatOrNull() ?: 0f
-            )
-        } else {
-            println("Malformed nutrition data: $rawNutrition")
-            defaultNutrition
+                ',' -> {
+                    if (insideQuotes) StrBuilder.append(char)
+                    else {
+                        result.add(StrBuilder.toString())
+                        StrBuilder.clear()
+                    }
+                }
+
+                else -> StrBuilder.append(char)
+            }
         }
+        if (StrBuilder.isNotEmpty()) result.add(StrBuilder.toString())
+        return result
     }
 
-    private fun parseList(input: String): List<String> {
-        if (input.isBlank()) return emptyList()
-
-        return input.trim()
-            .replace(Regex("[\\[\\]]"), "")  // Remove ALL brackets
-            .trim('\'', '"')  // Remove surrounding quotes
+    private fun parseListOfData(raw: String): List<String> {
+        return raw
             .split(",")
-            .map { it.trim().trim('\'', '"') }
+            .map {
+                it.replace("'", "")
+                    .replace("\"", "")
+                    .replace("[", "")
+                    .replace("]", "").trim()
+            }
             .filter { it.isNotBlank() }
     }
 
-    private fun cleanString(input: String?): String {
-        return input?.trim()
-            ?.takeIf { it.isNotBlank() } ?: ""
+    private fun constructNutritionFromToken(raw: String): Nutrition {
+        val nutrition = parseListOfData(raw).map { it.trim().toFloatOrNull() }
+        return Nutrition(
+            calories = nutrition[NutritionIndex.CALORIES.index] ?: 0.0F,
+            totalFat = nutrition[NutritionIndex.TOTAL_FAT.index] ?: 0.0F,
+            sugar = nutrition[NutritionIndex.SUGAR.index] ?: 0.0F,
+            sodium = nutrition[NutritionIndex.SODIUM.index] ?: 0.0F,
+            protein = nutrition[NutritionIndex.PROTEIN.index] ?: 0.0F,
+            saturatedFat = nutrition[NutritionIndex.SATURATED_FAT.index] ?: 0.0F,
+            carbohydrates = nutrition[NutritionIndex.CARBOHYDRATES.index] ?: 0.0F,
+        )
     }
 
 
