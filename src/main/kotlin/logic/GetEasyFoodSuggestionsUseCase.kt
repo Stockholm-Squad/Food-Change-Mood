@@ -6,18 +6,24 @@ import java.util.Collections.emptyList
 class GetEasyFoodSuggestionsUseCase(
     private val mealRepository: MealRepository
 ) {
-    fun getEasyFood():List<Meal>{
-        val allMealsList = mealRepository.getAllMeals()
-        val easyFoodList = allMealsList.filter { meal ->
-            meal.preparationTime?.let { prepTime ->
-                meal.numberOfIngredients?.let { numberOfIngredients ->
-                    meal.numberOfSteps?.let { numberOfSteps ->
-                        prepTime <= 30 && numberOfIngredients <= 5 && numberOfSteps <=6
-                    } ?: false
-                } ?: false
-            } ?: false
-        }.shuffled()
+    fun getEasyFood(
+        filterEasyMeal: (Meal) -> Boolean = { it.isEasyMeal() }
+    ): List<Meal> {
+        return mealRepository.getAllMeals()
+            .filter(filterEasyMeal)
+            .shuffled()
             .take(10)
- return if (easyFoodList.isNotEmpty()) easyFoodList else emptyList()
-        }
+            .ifEmpty { throw NoSuchElementException("No easy meals found.") }
+    }
+
+    // Extension function for Meal class to test isEasyMeal
+    fun Meal.isEasyMeal(
+        maxPrepTime: Int = 30,
+        maxIngredients: Int = 5,
+        maxSteps: Int = 6
+    ): Boolean {
+        return (preparationTime ?: Int.MAX_VALUE) <= maxPrepTime &&
+                (numberOfIngredients ?: Int.MAX_VALUE) <= maxIngredients &&
+                (numberOfSteps ?: Int.MAX_VALUE) <= maxSteps
+    }
 }
