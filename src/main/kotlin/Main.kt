@@ -8,7 +8,7 @@ import java.io.File
 
 
 fun main() {
-    val fileName = "foood.csv"
+    val fileName = "food.csv"
     val csvFile = File(fileName)
 
     // Check if the file exists before proceeding
