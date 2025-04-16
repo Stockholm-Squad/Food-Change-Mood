@@ -1,5 +1,6 @@
 package org.example.presentation
 
+import org.example.model.MenuOption
 import presentation.*
 
 class FoodConsoleUI {
@@ -24,23 +25,26 @@ class FoodConsoleUI {
 
         while (true) {
             printMenu()
-            when (readln().toIntOrNull()) {
-                1 -> healthyFastFood.showHealthyFastFoodMeals()
-                2 -> searchByName.handleSearchByName()
-                3 -> iraqiMeals.getIraqiMeals()
-                4 -> easyMeals.showEasySuggestions()
-                5 -> guessGame.playGuessGame()
-                6 -> sweetNoEggs.showSweetsNoEggs()
-                7 -> ketoMeals.showKetoMeal()
-                8 -> searchByDate.searchMealsByDate()
-                9 -> gymHelper.useGymHelper()
-                10 -> countryFood.exploreCountryFoodCulture()
-                11 -> ingredientGame.ingredientGameUI()
-                12 -> potatoLovers.potatoLoversUI()
-                13 -> highCalorieMeal.highCalorieMealUI()
-                14 -> seafoodRanking.proteinSeafoodRanking()
-                15 -> italianForGroups.italianLargeGroupMealsUI()
-                0 -> {
+            val option = readln().toInt()
+
+            // Matching the input to the MenuOption enum
+            when (MenuOption.values().find { it.option == option }) {
+                MenuOption.HEALTHY_FAST_FOOD -> healthyFastFood.showHealthyFastFoodMeals()
+                MenuOption.SEARCH_BY_NAME -> searchByName.handleSearchByName()
+                MenuOption.IRAQI_MEALS -> iraqiMeals.getIraqiMeals()
+                MenuOption.EASY_MEALS -> easyMeals.showEasySuggestions()
+                MenuOption.GUESS_GAME -> guessGame.playGuessGame()
+                MenuOption.SWEETS_NO_EGGS -> sweetNoEggs.showSweetsNoEggs()
+                MenuOption.KETO_MEALS -> ketoMeals.showKetoMeal()
+                MenuOption.SEARCH_BY_DATE -> searchByDate.searchMealsByDate()
+                MenuOption.GYM_HELPER -> gymHelper.useGymHelper()
+                MenuOption.COUNTRY_FOOD -> countryFood.exploreCountryFoodCulture()
+                MenuOption.INGREDIENT_GAME -> ingredientGame.ingredientGameUI()
+                MenuOption.POTATO_LOVERS -> potatoLovers.potatoLoversUI()
+                MenuOption.HIGH_CALORIE_MEAL -> highCalorieMeal.highCalorieMealUI()
+                MenuOption.SEAFOOD_RANKING -> seafoodRanking.proteinSeafoodRanking()
+                MenuOption.ITALIAN_GROUP_MEALS -> italianForGroups.italianLargeGroupMealsUI()
+                MenuOption.EXIT -> {
                     println("👋 Goodbye foodie friend! Stay delicious! 🍕💖")
                     break
                 }
