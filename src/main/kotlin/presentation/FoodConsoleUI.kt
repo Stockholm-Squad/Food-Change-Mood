@@ -1,9 +1,23 @@
-package presentation
+package org.example.presentation
 
-import org.example.presentation.*
+import presentation.*
 
-
-class FoodConsoleUI() {
+class FoodConsoleUI {
+    private val healthyFastFood = GetHealthyFastFoodMealsUI()
+    private val searchByName = SearchMealByNameUI()
+    private val iraqiMeals = GetIraqiMealsUI()
+    private val easyMeals = SuggestEasyMealsUI()
+    private val guessGame = GuessGameUI()
+    private val sweetNoEggs = SuggestSweetNoEggsUI()
+    private val ketoMeals = KetoDietMealUI()
+    private val searchByDate = SearchByAddDateUI()
+    private val gymHelper = GymHelperUI()
+    private val countryFood = ExploreCountryFoodUI()
+    private val ingredientGame = IngredientGameUI()
+    private val potatoLovers = PotatoLoversUI()
+    private val highCalorieMeal = HighCalorieMealUI()
+    private val seafoodRanking = ProteinSeafoodRankingUI()
+    private val italianForGroups = ItalianLargeGroupMealsUI()
 
     fun start() {
         welcomeUser()
@@ -11,27 +25,27 @@ class FoodConsoleUI() {
         while (true) {
             printMenu()
             when (readln().toIntOrNull()) {
-                1 -> GetHealthyFastFoodMealsUI()
-                2 -> SearchMealByNameUI()
-                3 -> GetIraqiMealsUI()
-                4 -> SuggestEasyMealsUI()
-                5 -> GuessGameUI()
-                6 -> SuggestSweetNoEggsUI()
-                7 -> KetoDietMealUI()
-                8 -> SearchByAddDateUI()
-                9 -> GymHelperUI()
-                10 -> ExploreCountryFoodUI()
-                11 -> IngredientGameUI()
-                12 -> PotatoLoversUI()
-                13 -> HighCalorieMealUI()
-                14 -> ProteinSeafoodRankingUI()
-                15 -> ItalianLargeGroupMealsUI()
+                1 -> healthyFastFood
+                2 -> searchByName
+                3 -> iraqiMeals
+                4 -> easyMeals
+                5 -> guessGame
+                6 -> sweetNoEggs
+                7 -> ketoMeals
+                8 -> searchByDate
+                9 -> gymHelper
+                10 -> countryFood
+                11 -> ingredientGame
+                12 -> potatoLovers
+                13 -> highCalorieMeal
+                14 -> seafoodRanking
+                15 -> italianForGroups
                 0 -> {
                     println("👋 Goodbye foodie friend! Stay delicious! 🍕💖")
                     break
                 }
 
-                else -> println("😕 Oops! That’s not on the menu. Pick a number between 0 and 10!")
+                else -> println("😕 Oops! That’s not on the menu. Pick a number between 0 and 15!")
             }
         }
     }
@@ -49,7 +63,6 @@ class FoodConsoleUI() {
     private fun printMenu() {
         println(
             """
-            
             ========================= 🍽️ MENU TIME =========================
             1. Healthy Fast Food Meals 🥗
             2. Search Meal by Name 🔍
