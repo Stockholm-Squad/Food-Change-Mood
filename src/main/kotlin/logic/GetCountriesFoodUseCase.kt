@@ -2,22 +2,27 @@ package org.example.logic
 
 import model.Meal
 
-class GetCountriesFoodUseCase(private val mealRepository: MealRepository) {
+
+class GetCountriesFoodUseCase(private val mealRepository: MealsRepository) {
     fun getRandomMeals(countryName: String): List<Meal> {
-        val meals = mealRepository.getAllMeals()
-        val countryMeals = mutableListOf<Meal>()
-        val only20Meals = mutableListOf<Meal>()
+        return try {
+            val meals = mealRepository.getAllMeals()
 
-        meals.forEach {
-            if (it.name!!.contains(countryName) || it.tags!!.contains(countryName))
-                countryMeals.add(it)
+            val countryMeals = meals.filter {
+                it.name!!.contains(countryName, ignoreCase = true)
+                        || it.tags!!.contains(countryName)
+            }
+
+            if (countryMeals.isEmpty()) {
+                throw NoSuchElementException("No meals found for country: $countryName")
+            }
+
+            countryMeals.shuffled().take(20)
+
+        } catch (e: Exception) {
+            emptyList()
         }
-
-        for (i in 0..20) {
-            val randomIndex = (0..countryMeals.size).random()
-            only20Meals.add(countryMeals[randomIndex])
-        }
-        return only20Meals
-
     }
+
 }
+
