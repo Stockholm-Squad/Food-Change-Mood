@@ -25,21 +25,21 @@ class FoodConsoleUI {
         while (true) {
             printMenu()
             when (readln().toIntOrNull()) {
-                1 -> healthyFastFood
-                2 -> searchByName
-                3 -> iraqiMeals
-                4 -> easyMeals
-                5 -> guessGame
-                6 -> sweetNoEggs
-                7 -> ketoMeals
-                8 -> searchByDate
-                9 -> gymHelper
-                10 -> countryFood
-                11 -> ingredientGame
-                12 -> potatoLovers
-                13 -> highCalorieMeal
-                14 -> seafoodRanking
-                15 -> italianForGroups
+                1 -> healthyFastFood.showHealthyFastFoodMeals()
+                2 -> searchByName.handleSearchByName()
+                3 -> iraqiMeals.getIraqiMeals()
+                4 -> easyMeals.showEasySuggestions()
+                5 -> guessGame.playGuessGame()
+                6 -> sweetNoEggs.showSweetsNoEggs()
+                7 -> ketoMeals.showKetoMeal()
+                8 -> searchByDate.searchMealsByDate()
+                9 -> gymHelper.useGymHelper()
+                10 -> countryFood.exploreCountryFoodCulture()
+                11 -> ingredientGame.ingredientGameUI()
+                12 -> potatoLovers.potatoLoversUI()
+                13 -> highCalorieMeal.highCalorieMealUI()
+                14 -> seafoodRanking.proteinSeafoodRanking()
+                15 -> italianForGroups.italianLargeGroupMealsUI()
                 0 -> {
                     println("👋 Goodbye foodie friend! Stay delicious! 🍕💖")
                     break

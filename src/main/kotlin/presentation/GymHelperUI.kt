@@ -2,7 +2,7 @@ package presentation;
 
 class GymHelperUI {
 
-    private fun useGymHelper() {
+     fun useGymHelper() {
         print("🔥 Enter desired calories: ")
     }
 
