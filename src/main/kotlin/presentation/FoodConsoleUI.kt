@@ -28,7 +28,7 @@ class FoodConsoleUI {
             val option = readln().toInt()
 
             // Matching the input to the MenuOption enum
-            when (MenuOption.values().find { it.option == option }) {
+            when (MenuOption.entries.find { it.option == option }) {
                 MenuOption.HEALTHY_FAST_FOOD -> healthyFastFood.showHealthyFastFoodMeals()
                 MenuOption.SEARCH_BY_NAME -> searchByName.handleSearchByName()
                 MenuOption.IRAQI_MEALS -> iraqiMeals.getIraqiMeals()
