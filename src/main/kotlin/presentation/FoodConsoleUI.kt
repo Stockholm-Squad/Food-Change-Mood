@@ -1,5 +1,6 @@
 package org.example.presentation
 
+import org.example.logic.GetSweetWithNoEggsUseCase
 import org.example.logic.MealsRepository
 import org.example.model.MenuOption
 import presentation.*
@@ -10,7 +11,7 @@ class FoodConsoleUI(private val mealsRepository: MealsRepository) {
     private val iraqiMeals = GetIraqiMealsUI()
     private val easyMeals = SuggestEasyMealsUI()
     private val guessGame = GuessGameUI()
-    private val sweetNoEggs = SuggestSweetNoEggsUI(mealsRepository)
+    private val sweetNoEggs = SuggestSweetNoEggsUI(GetSweetWithNoEggsUseCase(mealsRepository))
     private val ketoMeals = KetoDietMealUI()
     private val searchByDate = SearchByAddDateUI()
     private val gymHelper = GymHelperUI()

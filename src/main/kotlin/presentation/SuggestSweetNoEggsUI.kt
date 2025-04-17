@@ -1,13 +1,12 @@
 package presentation;
 
 import org.example.logic.GetSweetWithNoEggsUseCase
-import org.example.logic.MealsRepository
 
-class SuggestSweetNoEggsUI(private val mealsRepository: MealsRepository) {
+class SuggestSweetNoEggsUI(private val getSweetWithNoEggs: GetSweetWithNoEggsUseCase) {
 
     fun showSweetsNoEggs() {
         println("🍬 Craving dessert? Here’s something sweet with zero eggs!")
-        val dessertsList = GetSweetWithNoEggsUseCase(mealsRepository).getDessertWithNoEggs().toMutableList()
+        val dessertsList = getSweetWithNoEggs.getDessertWithNoEggs().toMutableList()
 
         while (dessertsList.isNotEmpty()) {
             val index = (0..dessertsList.size).random()
