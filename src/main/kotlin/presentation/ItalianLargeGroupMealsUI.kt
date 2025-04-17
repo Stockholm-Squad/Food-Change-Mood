@@ -46,10 +46,7 @@ class ItalianLargeGroupMealsUI {
     }
 
     private fun viewMealDetails(mealsList: List<Meal>, mealId: Int) {
-        val meal: Meal? = useCase.getMeal(
-            mealsList = mealsList,
-            mealId = mealId
-        )
+        val meal: Meal? = useCase.getMeal(mealsList, mealId)
 
         if (meal == null) {
             println("The meal with ID $mealId does not exist.")
