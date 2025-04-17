@@ -21,8 +21,8 @@ class SearchByAddDateUseCase(
         }
     }
 
-    fun getMeal(filteredList: List<Meal>, mealId: Int): Meal? {
-        val meal: Meal? = filteredList.find { meal ->
+    fun getMeal(mealsList: List<Meal>, mealId: Int): Meal? {
+        val meal: Meal? = mealsList.find { meal ->
             meal.id == mealId
         }
         return meal

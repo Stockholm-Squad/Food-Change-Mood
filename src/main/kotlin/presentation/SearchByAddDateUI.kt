@@ -36,6 +36,7 @@ class SearchByAddDateUI {
             if (date != null && date == "0") {
                 return
             } else if (date != null && useCase.isValidDate(date)) {
+                println("Loading...")
                 searchFood(date)
             } else {
                 println("Enter a valid Date or zero => 0")
@@ -72,8 +73,8 @@ class SearchByAddDateUI {
         }
     }
 
-    private fun viewMealDetails(filteredList: List<Meal>, mealId: Int) {
-        val meal: Meal? = useCase.getMeal(filteredList, mealId)
+    private fun viewMealDetails(mealsList: List<Meal>, mealId: Int) {
+        val meal: Meal? = useCase.getMeal(mealsList, mealId)
 
         if (meal == null) {
             println("The meal with ID $mealId does not exist.")
