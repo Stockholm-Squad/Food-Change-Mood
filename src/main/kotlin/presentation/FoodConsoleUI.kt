@@ -11,16 +11,18 @@ import org.example.logic.GetEasyFoodSuggestionsUseCase
 import org.example.model.MenuOption
 import presentation.*
 
-class FoodConsoleUI(private val getEasyFoodSuggestionsUseCase: GetEasyFoodSuggestionsUseCase,
+class FoodConsoleUI(
+    private val getEasyFoodSuggestionsUseCase: GetEasyFoodSuggestionsUseCase,
     private val sweetNoEggsUseCase: GetSweetWithNoEggsUseCase,
     private val getCountriesFoodUseCase: GetCountriesFoodUseCase,
     private val getPotatoMealsUseCase: GetPotatoMealsUseCase,
     private val gymHelperUseCase: GymHelperUseCase,
-    private val ingredientGameUseCase : IngredientGameUseCase,
-                    val getHealthFastFoodUseCase: GetHealthFastFoodUseCase,
+    private val ingredientGameUseCase: IngredientGameUseCase,
+    private val getHealthFastFoodUseCase: GetHealthFastFoodUseCase,
     private val getSeaFoodByProteinRankUseCase: GetSeaFoodByProteinRankUseCase,
     private val searchByAddDateUseCase: SearchByAddDateUseCase,
     private val italianMealsForLargeGroupUseCase: ItalianMealsForLargeGroupUseCase,
+    private val soThinProblem: SoThinProblem,
 ) {
     private val healthyFastFood = GetHealthyFastFoodMealsUI(getHealthFastFoodUseCase)
     private val searchByName = SearchMealByNameUI()
@@ -34,7 +36,7 @@ class FoodConsoleUI(private val getEasyFoodSuggestionsUseCase: GetEasyFoodSugges
     private val countryFood = ExploreCountryFoodUI(getCountriesFoodUseCase)
     private val ingredientGame = IngredientGameUI(ingredientGameUseCase)
     private val potatoLovers = PotatoLoversUI(getPotatoMealsUseCase)
-    private val highCalorieMeal = HighCalorieMealUI()
+    private val highCalorieMeal = SuggestMealWithHighCaloriesUI(soThinProblem)
     private val seafoodRanking = ProteinSeafoodRankingUI(getSeaFoodByProteinRankUseCase)
     private val italianForGroups = ItalianLargeGroupMealsUI(italianMealsForLargeGroupUseCase)
 
@@ -59,7 +61,7 @@ class FoodConsoleUI(private val getEasyFoodSuggestionsUseCase: GetEasyFoodSugges
                 MenuOption.COUNTRY_FOOD -> countryFood.exploreCountryFoodCulture()
                 MenuOption.INGREDIENT_GAME -> ingredientGame.start()
                 MenuOption.POTATO_LOVERS -> potatoLovers.showPotatoLoversUI()
-                MenuOption.HIGH_CALORIE_MEAL -> highCalorieMeal.highCalorieMealUI()
+                MenuOption.HIGH_CALORIE_MEAL -> highCalorieMeal.getMaleWithHighCalorie()
                 MenuOption.SEAFOOD_RANKING -> seafoodRanking.proteinSeafoodRanking()
                 MenuOption.ITALIAN_GROUP_MEALS -> italianForGroups.italianLargeGroupMealsUI()
                 MenuOption.EXIT -> {

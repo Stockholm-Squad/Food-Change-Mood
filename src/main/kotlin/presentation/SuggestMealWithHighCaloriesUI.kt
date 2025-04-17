@@ -12,7 +12,7 @@ class SuggestMealWithHighCaloriesUI(
         val suggestMeal = soThinProblem.suggestMealToSoThinProblem()
         println("------------------------------------------------------------------------------------------------")
         println("name: " + suggestMeal.first)
-        println("des: " + suggestMeal.second)
+        println("description: " + suggestMeal.second)
         println("time: " + suggestMeal.third.first + " minute")
         println("calories: " + suggestMeal.third.second)
         println("--------------------------------------------------------------------------------------------------")
