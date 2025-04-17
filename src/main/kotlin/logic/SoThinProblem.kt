@@ -1,20 +1,33 @@
 package org.example.logic
+
 import model.Nutrition
+
 class SoThinProblem(
-    private val mealRepository: MealsRepository
+    private val mealRepository: MealsRepository,
 ) {
     fun suggestMealToSoThinProblem(): Triple<String?, String?, Pair<Int?, Float>> {
         return mealRepository.getAllMeals()
-            .filter{it.nutrition.onlyMoreThan700Calories()}
-            .map {Triple(it.name,it.description,Pair(it.minutes,it.nutrition.calories))}
-            .random()
-
+            .takeIf { meals ->
+                meals.isNotEmpty()
+            }
+            ?.filter { meal ->
+                meal.nutrition.hasMoreThanMinCalories()
+            }
+            ?.map { suggestMeal ->
+                Triple(
+                    suggestMeal.name,
+                    suggestMeal.description,
+                    Pair(suggestMeal.minutes, suggestMeal.nutrition.calories)
+                )
+            }
+            ?.random() ?: throw IllegalStateException("Sorry, No meal found with more than 700 calories")
     }
-    private fun Nutrition.onlyMoreThan700Calories(): Boolean {
-        return this.calories > CALORIES
+
+    private fun Nutrition.hasMoreThanMinCalories(): Boolean {
+        return this.calories > MIN_CALORIES
     }
 
-    companion object{
-        private const val CALORIES = 700
+    companion object {
+        private const val MIN_CALORIES = 700
     }
 }
