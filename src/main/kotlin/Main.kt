@@ -2,27 +2,40 @@ package org.example
 
 import data.FoodCsvParser
 import data.FoodCsvReader
-import logic.GymHelperUseCase
 import org.example.data.FoodCsvRepository
+import org.example.logic.GetCountriesFoodUseCase
+import org.example.logic.GetSweetWithNoEggsUseCase
+import logic.GymHelperUseCase
 import org.example.logic.MealsRepository
 import org.example.presentation.FoodConsoleUI
+import org.example.logic.GetPotatoMealsUseCase
+
 import java.io.File
 
 
 fun main() {
 
     val fileName = "food.csv"
-    val csvFile: File = File(fileName)
+    val csvFile = File(fileName)
+
     if (isFileValid(csvFile, fileName)) return
 
-    val csvReader: FoodCsvReader = FoodCsvReader(csvFile)
-    val csvParser: FoodCsvParser = FoodCsvParser()
 
-    val mealRepository: MealsRepository = FoodCsvRepository(csvReader, csvParser)
-    val gymHelper: GymHelperUseCase = GymHelperUseCase(mealRepository)
+    val mealReader = FoodCsvReader(csvFile)
+    val mealParser = FoodCsvParser()
+    val foodCsvRepository: MealsRepository = FoodCsvRepository(foodCsvParser = mealParser, foodCsvReader = mealReader)
 
-    val foodConsoleUI = FoodConsoleUI(gymHelper)
+    val sweetWithNoEggsUseCase: GetSweetWithNoEggsUseCase = GetSweetWithNoEggsUseCase(foodCsvRepository)
+    val getCountriesFoodUseCase: GetCountriesFoodUseCase = GetCountriesFoodUseCase(foodCsvRepository)
+    val getPotatoMealsUseCase = GetPotatoMealsUseCase(foodCsvRepository)
+    val gymHelperUseCase: GymHelperUseCase = GymHelperUseCase(foodCsvRepository)
 
+    val foodConsoleUI = FoodConsoleUI(
+        sweetNoEggsUseCase = sweetWithNoEggsUseCase,
+        getCountriesFoodUseCase = getCountriesFoodUseCase,
+        getPotatoMealsUseCase = getPotatoMealsUseCase,
+        gymHelperUseCase = gymHelperUseCase
+    )
     foodConsoleUI.start()
 
 }
