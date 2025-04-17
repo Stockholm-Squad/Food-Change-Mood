@@ -3,13 +3,15 @@ package org.example.presentation
 import org.example.logic.GetCountriesFoodUseCase
 import org.example.logic.GetSweetWithNoEggsUseCase
 import org.example.logic.GetPotatoMealsUseCase
+import logic.GymHelperUseCase
 import org.example.model.MenuOption
 import presentation.*
 
 class FoodConsoleUI(
     private val sweetNoEggsUseCase: GetSweetWithNoEggsUseCase,
     private val getCountriesFoodUseCase: GetCountriesFoodUseCase,
-    private val getPotatoMealsUseCase: GetPotatoMealsUseCase
+    private val getPotatoMealsUseCase: GetPotatoMealsUseCase,
+    private val gymHelperUseCase: GymHelperUseCase
 ) {
     private val healthyFastFood = GetHealthyFastFoodMealsUI()
     private val searchByName = SearchMealByNameUI()
@@ -19,7 +21,7 @@ class FoodConsoleUI(
     private val sweetNoEggs = SuggestSweetNoEggsUI(sweetNoEggsUseCase)
     private val ketoMeals = KetoDietMealUI()
     private val searchByDate = SearchByAddDateUI()
-    private val gymHelper = GymHelperUI()
+    private val gymHelper = GymHelperUI(gymHelperUseCase)
     private val countryFood = ExploreCountryFoodUI(getCountriesFoodUseCase)
     private val ingredientGame = IngredientGameUI()
     private val potatoLovers = PotatoLoversUI(getPotatoMealsUseCase)
