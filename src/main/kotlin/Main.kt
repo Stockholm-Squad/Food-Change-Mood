@@ -33,6 +33,7 @@ fun main() {
     val searchByAddDateUseCase = SearchByAddDateUseCase(foodCsvRepository)
     val italianMealsForLargeGroupUseCase = ItalianMealsForLargeGroupUseCase(foodCsvRepository)
     val getEasyFoodSuggestionsUseCase: GetEasyFoodSuggestionsUseCase = GetEasyFoodSuggestionsUseCase(foodCsvRepository)
+    val soThinProblem: SoThinProblem = SoThinProblem(foodCsvRepository)
 
     val foodConsoleUI = FoodConsoleUI(
         sweetNoEggsUseCase = sweetWithNoEggsUseCase,
@@ -43,8 +44,9 @@ fun main() {
         getSeaFoodByProteinRankUseCase = getSeaFoodByProteinRankUseCase,
         searchByAddDateUseCase = searchByAddDateUseCase,
         italianMealsForLargeGroupUseCase = italianMealsForLargeGroupUseCase,
-    getEasyFoodSuggestionsUseCase = getEasyFoodSuggestionsUseCase,
-        getHealthFastFoodUseCase = getHealthFastFoodUseCase
+        getEasyFoodSuggestionsUseCase = getEasyFoodSuggestionsUseCase,
+        getHealthFastFoodUseCase = getHealthFastFoodUseCase,
+        soThinProblem = soThinProblem
     )
     foodConsoleUI.start()
 
