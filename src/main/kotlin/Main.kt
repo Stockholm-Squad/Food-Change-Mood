@@ -3,7 +3,6 @@ import data.FoodCsvReader
 import org.example.data.FoodCsvRepository
 import java.io.File
 import org.example.logic.GetPotatoMealsUseCase
-import org.example.logic.MealsRepository
 import org.example.presentation.FoodConsoleUI
 
 fun main() {
