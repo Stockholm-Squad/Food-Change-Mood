@@ -4,7 +4,7 @@ import model.Meal
 import java.util.Collections.emptyList
 
 class GetEasyFoodSuggestionsUseCase(
-    private val mealRepository: MealRepository
+    private val mealRepository: MealsRepository
 ) {
     fun getEasyFood(
         filterEasyMeal: (Meal) -> Boolean = { it.isEasyMeal() }
@@ -22,8 +22,8 @@ class GetEasyFoodSuggestionsUseCase(
         maxIngredients: Int = 5,
         maxSteps: Int = 6
     ): Boolean {
-        return (preparationTime ?: Int.MAX_VALUE) <= maxPrepTime &&
-                (numberOfIngredients ?: Int.MAX_VALUE) <= maxIngredients &&
-                (numberOfSteps ?: Int.MAX_VALUE) <= maxSteps
+        return (minutes ?: 0) <= maxPrepTime &&
+                (numberOfIngredients ?: 0) <= maxIngredients &&
+                (numberOfSteps ?: 0) <= maxSteps
     }
 }
