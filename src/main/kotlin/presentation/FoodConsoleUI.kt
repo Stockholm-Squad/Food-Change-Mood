@@ -3,18 +3,21 @@ package org.example.presentation
 import data.FoodCsvParser
 import data.FoodCsvReader
 import org.example.data.FoodCsvRepository
+import org.example.logic.GetSweetWithNoEggsUseCase
 import org.example.logic.MealsRepository
 import org.example.model.MenuOption
 import presentation.*
 import java.io.File
 
-class FoodConsoleUI {
+class FoodConsoleUI(
+    private val sweetNoEggsUseCase: GetSweetWithNoEggsUseCase
+) {
     private val healthyFastFood = GetHealthyFastFoodMealsUI()
     private val searchByName = SearchMealByNameUI()
     private val iraqiMeals = GetIraqiMealsUI()
     private val easyMeals = SuggestEasyMealsUI()
     private val guessGame = GuessGameUI()
-    private val sweetNoEggs = SuggestSweetNoEggsUI()
+    private val sweetNoEggs = SuggestSweetNoEggsUI(sweetNoEggsUseCase)
     private val ketoMeals = KetoDietMealUI()
     private val searchByDate = SearchByAddDateUI()
     private val gymHelper = GymHelperUI()
