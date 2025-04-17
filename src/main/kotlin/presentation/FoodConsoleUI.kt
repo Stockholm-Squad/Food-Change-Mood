@@ -9,12 +9,6 @@ import presentation.*
 import java.io.File
 
 class FoodConsoleUI {
-    private val repository:MealsRepository = FoodCsvRepository(
-        foodCsvReader = FoodCsvReader(
-            csvFile = File("food.csv")
-        ),
-        foodCsvParser = FoodCsvParser()
-    )
     private val healthyFastFood = GetHealthyFastFoodMealsUI()
     private val searchByName = SearchMealByNameUI()
     private val iraqiMeals = GetIraqiMealsUI()
@@ -22,7 +16,7 @@ class FoodConsoleUI {
     private val guessGame = GuessGameUI()
     private val sweetNoEggs = SuggestSweetNoEggsUI()
     private val ketoMeals = KetoDietMealUI()
-    private val searchByDate = SearchByAddDateUI(repository)
+    private val searchByDate = SearchByAddDateUI()
     private val gymHelper = GymHelperUI()
     private val countryFood = ExploreCountryFoodUI()
     private val ingredientGame = IngredientGameUI()

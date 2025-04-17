@@ -1,12 +1,12 @@
 package presentation;
 
+import data.FoodCsvParser
+import data.FoodCsvReader
 import model.Meal
+import org.example.data.FoodCsvRepository
 import org.example.logic.MealsRepository
-import java.time.LocalDate
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
-import java.util.Date
+import org.example.logic.SearchByAddDateUseCase
+import java.io.File
 
 /*
 8- Search Foods by Add Date: Use Kotlin’s Date class to represent the date in the meal entity.
@@ -16,19 +16,17 @@ import java.util.Date
         - No meals were found for the given date. Ensure different exceptions are used for both cases.
  */
 
-class SearchByAddDateUI(
-    private val mealsRepository: MealsRepository
-) {
+class SearchByAddDateUI {
+    private val repository: MealsRepository = FoodCsvRepository(
+        foodCsvReader = FoodCsvReader(
+            csvFile = File("food.csv")
+        ),
+        foodCsvParser = FoodCsvParser()
+    )
 
-    private fun isValidDate(date: String): Boolean {
-        val formatter = DateTimeFormatter.ISO_LOCAL_DATE // Default format: yyyy-MM-dd
-        return try {
-            LocalDate.parse(date, formatter) // Try to parse the date
-            true
-        } catch (e: DateTimeParseException) {
-            false
-        }
-    }
+    private val useCase = SearchByAddDateUseCase(
+        mealsRepository = repository
+    )
 
     fun searchMealsByDate() {
         while (true) {
@@ -37,7 +35,7 @@ class SearchByAddDateUI(
 
             if (date != null && date == "0") {
                 return
-            } else if (date != null && isValidDate(date)) {
+            } else if (date != null && useCase.isValidDate(date)) {
                 searchFood(date)
             } else {
                 println("Enter a valid Date or zero => 0")
@@ -46,10 +44,10 @@ class SearchByAddDateUI(
     }
 
     private fun searchFood(date: String) {
-        val filteredList = getMealsByDate(date)
-        filteredList.forEach { meal ->
-            println("${meal.id} -> ${meal.name}")
-        }
+        val filteredList = useCase.getMealsByDate(date)
+
+        printMealsIdName(filteredList)
+
         while (true) {
             println()
             println("-1 -> search again")
@@ -68,10 +66,14 @@ class SearchByAddDateUI(
         }
     }
 
-    private fun viewMealDetails(filteredList: List<Meal>, mealId: Int) {
-        val meal: Meal? = filteredList.find { meal ->
-            meal.id == mealId
+    private fun printMealsIdName(mealsList: List<Meal>) {
+        mealsList.forEach { meal ->
+            println("${meal.id} -> ${meal.name}")
         }
+    }
+
+    private fun viewMealDetails(filteredList: List<Meal>, mealId: Int) {
+        val meal: Meal? = useCase.getMeal(filteredList, mealId)
 
         if (meal == null) {
             println("The meal with ID $mealId does not exist.")
@@ -81,18 +83,4 @@ class SearchByAddDateUI(
         println(meal)
     }
 
-    private fun getMealsByDate(date: String): List<Meal> {
-        return mealsRepository.getAllMeals()
-            .filter { meal ->
-                hasDate(meal = meal, date = date)
-            }.sortedBy { it.id }
-    }
-
-
-    private fun hasDate(meal: Meal, date: String): Boolean {
-        val localDate = LocalDate.parse(date)
-        val instant = localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()
-        val utilDate: Date = Date.from(instant)
-        return meal.submitted == utilDate
-    }
 }
