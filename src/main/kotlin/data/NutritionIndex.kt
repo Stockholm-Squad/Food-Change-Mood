@@ -1,5 +1,4 @@
-package data
-
+package org.example.data
 
 enum class NutritionIndex(val index: Int) {
     CALORIES(0),
