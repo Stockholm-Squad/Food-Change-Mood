@@ -1,8 +1,14 @@
 package presentation;
 
-class SuggestEasyMealsUI {
+import org.example.logic.GetEasyFoodSuggestionsUseCase
+import kotlin.jvm.Throws
 
-     fun showEasySuggestions() {
-        println("⏱️ Quick & tasty meals coming up!")
+class SuggestEasyMealsUI (private val getEasyFoodSuggestionsUseCase: GetEasyFoodSuggestionsUseCase) {
+
+    fun showEasySuggestions() {
+        println("⏱️ Easy meals coming up!")
+        getEasyFoodSuggestionsUseCase.getEasyFood().takeIf { it.isNotEmpty() }?.forEach {
+            println(it)
+        } ?: throw NoSuchElementException("No easy food suggestions available")
     }
 }
