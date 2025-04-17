@@ -5,8 +5,6 @@ import java.util.Scanner
 
 class IngredientGameUI(private val game: IngredientGameUseCase) {
 
-    private val scanner = Scanner(System.`in`)
-
     fun start() {
         println("🧠 Ingredient Game is starting! Let's see how well you know your meals!")
         println("Guess the correct ingredient for each meal.")
@@ -44,7 +42,7 @@ class IngredientGameUI(private val game: IngredientGameUseCase) {
     private fun getUserChoice(optionCount: Int): Int {
         while (true) {
             print("Enter your choice (1-$optionCount): ")
-            val input = scanner.nextLine()
+            val input = readln()
             val choice = input.toIntOrNull()
 
             if (choice != null && choice in 1..optionCount) {
