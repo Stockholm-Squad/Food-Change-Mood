@@ -1,15 +1,9 @@
 package presentation;
 
-import data.FoodCsvParser
-import data.FoodCsvReader
 import model.Meal
-import org.example.data.FoodCsvRepository
-import org.example.logic.MealsRepository
 import org.example.logic.SearchByAddDateUseCase
-import org.example.utils.DateValidator
 import org.example.utils.DateValidator.Companion.isValidDate
 import org.example.utils.viewMealInListDetails
-import java.io.File
 
 /*
 8- Search Foods by Add Date: Use Kotlin’s Date class to represent the date in the meal entity.
@@ -19,17 +13,7 @@ import java.io.File
         - No meals were found for the given date. Ensure different exceptions are used for both cases.
  */
 
-class SearchByAddDateUI {
-    private val repository: MealsRepository = FoodCsvRepository(
-        foodCsvReader = FoodCsvReader(
-            csvFile = File("food.csv")
-        ),
-        foodCsvParser = FoodCsvParser()
-    )
-
-    private val useCase = SearchByAddDateUseCase(
-        mealsRepository = repository
-    )
+class SearchByAddDateUI(private val searchByAddDateUseCase: SearchByAddDateUseCase) {
 
     fun searchMealsByDate() {
         while (true) {
@@ -48,7 +32,7 @@ class SearchByAddDateUI {
     }
 
     private fun searchFood(date: String) {
-        val filteredList = useCase.getMealsByDate(date)
+        val filteredList = searchByAddDateUseCase.getMealsByDate(date)
 
         printMealsIdName(filteredList)
 
