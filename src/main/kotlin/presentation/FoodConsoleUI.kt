@@ -1,13 +1,15 @@
 package org.example.presentation
 
+import org.example.logic.GetEasyFoodSuggestionsUseCase
 import org.example.model.MenuOption
 import presentation.*
 
-class FoodConsoleUI {
+class FoodConsoleUI (private val getEasyFoodSuggestionsUseCase: GetEasyFoodSuggestionsUseCase){
+
     private val healthyFastFood = GetHealthyFastFoodMealsUI()
     private val searchByName = SearchMealByNameUI()
     private val iraqiMeals = GetIraqiMealsUI()
-    private val easyMeals = SuggestEasyMealsUI()
+    private val easyMeals = SuggestEasyMealsUI(getEasyFoodSuggestionsUseCase)
     private val guessGame = GuessGameUI()
     private val sweetNoEggs = SuggestSweetNoEggsUI()
     private val ketoMeals = KetoDietMealUI()
