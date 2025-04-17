@@ -1,27 +1,33 @@
 package org.example.presentation
 
+import org.example.logic.GetCountriesFoodUseCase
+import org.example.logic.GetSweetWithNoEggsUseCase
+import org.example.logic.GetPotatoMealsUseCase
+import logic.GymHelperUseCase
 import IngredientGameUseCase
-import data.FoodCsvParser
-import data.FoodCsvReader
-import org.example.data.FoodCsvRepository
-import org.example.logic.MealsRepository
+
 import org.example.model.MenuOption
 import presentation.*
-import java.io.File
 
-class FoodConsoleUI(private val game : IngredientGameUseCase) {
+class FoodConsoleUI(
+    private val sweetNoEggsUseCase: GetSweetWithNoEggsUseCase,
+    private val getCountriesFoodUseCase: GetCountriesFoodUseCase,
+    private val getPotatoMealsUseCase: GetPotatoMealsUseCase,
+    private val gymHelperUseCase: GymHelperUseCase,
+    private val ingredientGameUseCase : IngredientGameUseCase
+) {
     private val healthyFastFood = GetHealthyFastFoodMealsUI()
     private val searchByName = SearchMealByNameUI()
     private val iraqiMeals = GetIraqiMealsUI()
     private val easyMeals = SuggestEasyMealsUI()
     private val guessGame = GuessGameUI()
-    private val sweetNoEggs = SuggestSweetNoEggsUI()
+    private val sweetNoEggs = SuggestSweetNoEggsUI(sweetNoEggsUseCase)
     private val ketoMeals = KetoDietMealUI()
     private val searchByDate = SearchByAddDateUI()
-    private val gymHelper = GymHelperUI()
-    private val countryFood = ExploreCountryFoodUI()
-    private val ingredientGame = IngredientGameUI(game)
-    private val potatoLovers = PotatoLoversUI()
+    private val gymHelper = GymHelperUI(gymHelperUseCase)
+    private val countryFood = ExploreCountryFoodUI(getCountriesFoodUseCase)
+    private val ingredientGame = IngredientGameUI(ingredientGameUseCase)
+    private val potatoLovers = PotatoLoversUI(getPotatoMealsUseCase)
     private val highCalorieMeal = HighCalorieMealUI()
     private val seafoodRanking = ProteinSeafoodRankingUI()
     private val italianForGroups = ItalianLargeGroupMealsUI()
@@ -46,7 +52,7 @@ class FoodConsoleUI(private val game : IngredientGameUseCase) {
                 MenuOption.GYM_HELPER -> gymHelper.useGymHelper()
                 MenuOption.COUNTRY_FOOD -> countryFood.exploreCountryFoodCulture()
                 MenuOption.INGREDIENT_GAME -> ingredientGame.start()
-                MenuOption.POTATO_LOVERS -> potatoLovers.potatoLoversUI()
+                MenuOption.POTATO_LOVERS -> potatoLovers.showPotatoLoversUI()
                 MenuOption.HIGH_CALORIE_MEAL -> highCalorieMeal.highCalorieMealUI()
                 MenuOption.SEAFOOD_RANKING -> seafoodRanking.proteinSeafoodRanking()
                 MenuOption.ITALIAN_GROUP_MEALS -> italianForGroups.italianLargeGroupMealsUI()

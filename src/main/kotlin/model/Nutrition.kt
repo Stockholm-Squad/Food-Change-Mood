@@ -8,4 +8,17 @@ data class Nutrition(
     val protein: Float = 0f,
     val saturatedFat: Float = 0f,
     val carbohydrates: Float = 0f
-)
+) {
+    override fun toString(): String {
+        return """Nutrition(
+                        calories=$calories,
+                        totalFat=$totalFat,
+                        sugar=$sugar,
+                        sodium=$sodium,
+                        protein=$protein,
+                        saturatedFat=$saturatedFat,
+                        carbohydrates=$carbohydrates
+                          )
+        """.trimIndent()
+    }
+}
