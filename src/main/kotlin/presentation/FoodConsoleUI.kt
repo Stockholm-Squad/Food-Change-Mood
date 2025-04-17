@@ -5,6 +5,8 @@ import org.example.logic.GetSweetWithNoEggsUseCase
 import org.example.logic.GetPotatoMealsUseCase
 import logic.GymHelperUseCase
 import IngredientGameUseCase
+import org.example.logic.GetSeaFoodByProteinRankUseCase
+
 
 import org.example.model.MenuOption
 import presentation.*
@@ -14,7 +16,8 @@ class FoodConsoleUI(
     private val getCountriesFoodUseCase: GetCountriesFoodUseCase,
     private val getPotatoMealsUseCase: GetPotatoMealsUseCase,
     private val gymHelperUseCase: GymHelperUseCase,
-    private val ingredientGameUseCase : IngredientGameUseCase
+    private val ingredientGameUseCase : IngredientGameUseCase,
+    private val getSeaFoodByProteinRankUseCase: GetSeaFoodByProteinRankUseCase
 ) {
     private val healthyFastFood = GetHealthyFastFoodMealsUI()
     private val searchByName = SearchMealByNameUI()
@@ -29,7 +32,7 @@ class FoodConsoleUI(
     private val ingredientGame = IngredientGameUI(ingredientGameUseCase)
     private val potatoLovers = PotatoLoversUI(getPotatoMealsUseCase)
     private val highCalorieMeal = HighCalorieMealUI()
-    private val seafoodRanking = ProteinSeafoodRankingUI()
+    private val seafoodRanking = ProteinSeafoodRankingUI(getSeaFoodByProteinRankUseCase)
     private val italianForGroups = ItalianLargeGroupMealsUI()
 
     fun start() {

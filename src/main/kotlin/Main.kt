@@ -5,10 +5,7 @@ import data.FoodCsvParser
 import data.FoodCsvReader
 import logic.GymHelperUseCase
 import org.example.data.FoodCsvRepository
-import org.example.logic.GetCountriesFoodUseCase
-import org.example.logic.GetPotatoMealsUseCase
-import org.example.logic.GetSweetWithNoEggsUseCase
-import org.example.logic.MealsRepository
+import org.example.logic.*
 import org.example.presentation.FoodConsoleUI
 import java.io.File
 
@@ -30,6 +27,7 @@ fun main() {
     val getPotatoMealsUseCase = GetPotatoMealsUseCase(foodCsvRepository)
     val gymHelperUseCase: GymHelperUseCase = GymHelperUseCase(foodCsvRepository)
     val ingredientGameUseCase = IngredientGameUseCase(foodCsvRepository)
+    val getSeaFoodByProteinRankUseCase = GetSeaFoodByProteinRankUseCase(foodCsvRepository)
 
     val foodConsoleUI = FoodConsoleUI(
         sweetNoEggsUseCase = sweetWithNoEggsUseCase,
@@ -37,6 +35,7 @@ fun main() {
         getPotatoMealsUseCase = getPotatoMealsUseCase,
         gymHelperUseCase = gymHelperUseCase,
         ingredientGameUseCase = ingredientGameUseCase,
+        getSeaFoodByProteinRankUseCase = getSeaFoodByProteinRankUseCase
     )
     foodConsoleUI.start()
 
