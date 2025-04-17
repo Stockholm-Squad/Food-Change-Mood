@@ -2,6 +2,7 @@ package org.example
 
 import data.FoodCsvParser
 import data.FoodCsvReader
+import logic.GetHealthFastFoodUseCase
 import org.example.data.FoodCsvRepository
 import org.example.logic.GetCountriesFoodUseCase
 import org.example.logic.GetSweetWithNoEggsUseCase
@@ -29,11 +30,11 @@ fun main() {
     val sweetWithNoEggsUseCase: GetSweetWithNoEggsUseCase = GetSweetWithNoEggsUseCase(foodCsvRepository)
     val getCountriesFoodUseCase: GetCountriesFoodUseCase = GetCountriesFoodUseCase(foodCsvRepository)
     val getPotatoMealsUseCase = GetPotatoMealsUseCase(foodCsvRepository)
-
+    val getHealthFastFoodUseCase=GetHealthFastFoodUseCase(foodCsvRepository)
     val foodConsoleUI = FoodConsoleUI(
         sweetWithNoEggsUseCase,
         getCountriesFoodUseCase,
-        getPotatoMealsUseCase
+        getPotatoMealsUseCase,getHealthFastFoodUseCase
     )
     foodConsoleUI.start()
 

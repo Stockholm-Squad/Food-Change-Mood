@@ -1,5 +1,6 @@
 package org.example.presentation
 
+import logic.GetHealthFastFoodUseCase
 import org.example.logic.GetCountriesFoodUseCase
 import org.example.logic.GetSweetWithNoEggsUseCase
 import org.example.logic.GetPotatoMealsUseCase
@@ -9,9 +10,10 @@ import presentation.*
 class FoodConsoleUI(
     private val sweetNoEggsUseCase: GetSweetWithNoEggsUseCase,
     private val getCountriesFoodUseCase: GetCountriesFoodUseCase,
-    private val getPotatoMealsUseCase: GetPotatoMealsUseCase
+    private val getPotatoMealsUseCase: GetPotatoMealsUseCase,
+    private val getHealthFastFoodUseCase: GetHealthFastFoodUseCase
 ) {
-    private val healthyFastFood = GetHealthyFastFoodMealsUI()
+    private val healthyFastFood = GetHealthyFastFoodMealsUI(getHealthFastFoodUseCase)
     private val searchByName = SearchMealByNameUI()
     private val iraqiMeals = GetIraqiMealsUI()
     private val easyMeals = SuggestEasyMealsUI()
