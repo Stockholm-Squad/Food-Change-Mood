@@ -1,8 +1,11 @@
 package org.example.presentation
 
-class ProteinSeafoodRankingUI {
+import org.example.logic.GetSeaFoodByProteinRankUseCase
 
-     fun proteinSeafoodRanking() {
-        println("🐟 Seafood Protein Rankings:")
+class ProteinSeafoodRankingUI(private val getSeaFoodByProteinRankUseCase: GetSeaFoodByProteinRankUseCase) {
+
+    fun proteinSeafoodRanking() {
+        getSeaFoodByProteinRankUseCase.getSeaFoodByProteinRank()
+            .mapIndexed { index, meal -> println("Rank: ${index + 1} Meal name: ${meal.name} Protein amount : ${meal.nutrition.protein}") }
     }
 }

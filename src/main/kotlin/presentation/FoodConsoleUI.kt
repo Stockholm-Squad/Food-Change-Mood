@@ -1,9 +1,11 @@
 package org.example.presentation
 
+import org.example.logic.GetSeaFoodByProteinRankUseCase
 import org.example.model.MenuOption
 import presentation.*
 
-class FoodConsoleUI {
+class FoodConsoleUI(private val getSeaFoodByProteinRankUseCase: GetSeaFoodByProteinRankUseCase) {
+
     private val healthyFastFood = GetHealthyFastFoodMealsUI()
     private val searchByName = SearchMealByNameUI()
     private val iraqiMeals = GetIraqiMealsUI()
@@ -17,7 +19,7 @@ class FoodConsoleUI {
     private val ingredientGame = IngredientGameUI()
     private val potatoLovers = PotatoLoversUI()
     private val highCalorieMeal = HighCalorieMealUI()
-    private val seafoodRanking = ProteinSeafoodRankingUI()
+    private val seafoodRanking = ProteinSeafoodRankingUI(getSeaFoodByProteinRankUseCase)
     private val italianForGroups = ItalianLargeGroupMealsUI()
 
     fun start() {
