@@ -21,13 +21,6 @@ class SearchByAddDateUseCase(
         }
     }
 
-    fun getMeal(mealsList: List<Meal>, mealId: Int): Meal? {
-        val meal: Meal? = mealsList.find { meal ->
-            meal.id == mealId
-        }
-        return meal
-    }
-
     fun getMealsByDate(date: String): List<Meal> {
         return mealsRepository.getAllMeals()
             .filter { meal ->

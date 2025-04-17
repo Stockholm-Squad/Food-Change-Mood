@@ -6,6 +6,7 @@ import model.Meal
 import org.example.data.FoodCsvRepository
 import org.example.logic.MealsRepository
 import org.example.logic.SearchByAddDateUseCase
+import org.example.utils.viewMealInListDetails
 import java.io.File
 
 /*
@@ -62,7 +63,7 @@ class SearchByAddDateUI {
             } else if (mealId == -1) {
                 break
             } else {
-                viewMealDetails(filteredList, mealId)
+                viewMealInListDetails(filteredList, mealId)
             }
         }
     }
@@ -73,15 +74,5 @@ class SearchByAddDateUI {
         }
     }
 
-    private fun viewMealDetails(mealsList: List<Meal>, mealId: Int) {
-        val meal: Meal? = useCase.getMeal(mealsList, mealId)
-
-        if (meal == null) {
-            println("The meal with ID $mealId does not exist.")
-            return
-        }
-
-        println(meal)
-    }
 
 }
