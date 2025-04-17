@@ -1,7 +1,12 @@
 package org.example.presentation
 
+import data.FoodCsvParser
+import data.FoodCsvReader
+import org.example.data.FoodCsvRepository
+import org.example.logic.MealsRepository
 import org.example.model.MenuOption
 import presentation.*
+import java.io.File
 
 class FoodConsoleUI {
     private val healthyFastFood = GetHealthyFastFoodMealsUI()
