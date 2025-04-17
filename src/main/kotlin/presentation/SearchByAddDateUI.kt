@@ -6,6 +6,8 @@ import model.Meal
 import org.example.data.FoodCsvRepository
 import org.example.logic.MealsRepository
 import org.example.logic.SearchByAddDateUseCase
+import org.example.utils.DateValidator
+import org.example.utils.DateValidator.Companion.isValidDate
 import org.example.utils.viewMealInListDetails
 import java.io.File
 
@@ -36,7 +38,7 @@ class SearchByAddDateUI {
 
             if (date != null && date == "0") {
                 return
-            } else if (date != null && useCase.isValidDate(date)) {
+            } else if (date != null && isValidDate(date)) {
                 println("Loading...")
                 searchFood(date)
             } else {
