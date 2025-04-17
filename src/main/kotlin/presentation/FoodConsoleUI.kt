@@ -1,9 +1,20 @@
 package org.example.presentation
 
+import data.FoodCsvParser
+import data.FoodCsvReader
+import org.example.data.FoodCsvRepository
+import org.example.logic.MealsRepository
 import org.example.model.MenuOption
 import presentation.*
+import java.io.File
 
 class FoodConsoleUI {
+    private val repository:MealsRepository = FoodCsvRepository(
+        foodCsvReader = FoodCsvReader(
+            csvFile = File("food.csv")
+        ),
+        foodCsvParser = FoodCsvParser()
+    )
     private val healthyFastFood = GetHealthyFastFoodMealsUI()
     private val searchByName = SearchMealByNameUI()
     private val iraqiMeals = GetIraqiMealsUI()
@@ -11,7 +22,7 @@ class FoodConsoleUI {
     private val guessGame = GuessGameUI()
     private val sweetNoEggs = SuggestSweetNoEggsUI()
     private val ketoMeals = KetoDietMealUI()
-    private val searchByDate = SearchByAddDateUI()
+    private val searchByDate = SearchByAddDateUI(repository)
     private val gymHelper = GymHelperUI()
     private val countryFood = ExploreCountryFoodUI()
     private val ingredientGame = IngredientGameUI()
