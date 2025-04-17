@@ -4,6 +4,8 @@ import org.example.logic.GetCountriesFoodUseCase
 import org.example.logic.GetSweetWithNoEggsUseCase
 import org.example.logic.GetPotatoMealsUseCase
 import logic.GymHelperUseCase
+import IngredientGameUseCase
+
 import org.example.model.MenuOption
 import presentation.*
 
@@ -11,7 +13,8 @@ class FoodConsoleUI(
     private val sweetNoEggsUseCase: GetSweetWithNoEggsUseCase,
     private val getCountriesFoodUseCase: GetCountriesFoodUseCase,
     private val getPotatoMealsUseCase: GetPotatoMealsUseCase,
-    private val gymHelperUseCase: GymHelperUseCase
+    private val gymHelperUseCase: GymHelperUseCase,
+    private val ingredientGameUseCase : IngredientGameUseCase
 ) {
     private val healthyFastFood = GetHealthyFastFoodMealsUI()
     private val searchByName = SearchMealByNameUI()
@@ -23,7 +26,7 @@ class FoodConsoleUI(
     private val searchByDate = SearchByAddDateUI()
     private val gymHelper = GymHelperUI(gymHelperUseCase)
     private val countryFood = ExploreCountryFoodUI(getCountriesFoodUseCase)
-    private val ingredientGame = IngredientGameUI()
+    private val ingredientGame = IngredientGameUI(ingredientGameUseCase)
     private val potatoLovers = PotatoLoversUI(getPotatoMealsUseCase)
     private val highCalorieMeal = HighCalorieMealUI()
     private val seafoodRanking = ProteinSeafoodRankingUI()
@@ -48,7 +51,7 @@ class FoodConsoleUI(
                 MenuOption.SEARCH_BY_DATE -> searchByDate.searchMealsByDate()
                 MenuOption.GYM_HELPER -> gymHelper.useGymHelper()
                 MenuOption.COUNTRY_FOOD -> countryFood.exploreCountryFoodCulture()
-                MenuOption.INGREDIENT_GAME -> ingredientGame.ingredientGameUI()
+                MenuOption.INGREDIENT_GAME -> ingredientGame.start()
                 MenuOption.POTATO_LOVERS -> potatoLovers.showPotatoLoversUI()
                 MenuOption.HIGH_CALORIE_MEAL -> highCalorieMeal.highCalorieMealUI()
                 MenuOption.SEAFOOD_RANKING -> seafoodRanking.proteinSeafoodRanking()

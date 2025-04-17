@@ -1,15 +1,15 @@
 package org.example
 
+import IngredientGameUseCase
 import data.FoodCsvParser
 import data.FoodCsvReader
+import logic.GymHelperUseCase
 import org.example.data.FoodCsvRepository
 import org.example.logic.GetCountriesFoodUseCase
+import org.example.logic.GetPotatoMealsUseCase
 import org.example.logic.GetSweetWithNoEggsUseCase
-import logic.GymHelperUseCase
 import org.example.logic.MealsRepository
 import org.example.presentation.FoodConsoleUI
-import org.example.logic.GetPotatoMealsUseCase
-
 import java.io.File
 
 
@@ -29,12 +29,14 @@ fun main() {
     val getCountriesFoodUseCase: GetCountriesFoodUseCase = GetCountriesFoodUseCase(foodCsvRepository)
     val getPotatoMealsUseCase = GetPotatoMealsUseCase(foodCsvRepository)
     val gymHelperUseCase: GymHelperUseCase = GymHelperUseCase(foodCsvRepository)
+    val ingredientGameUseCase = IngredientGameUseCase(foodCsvRepository)
 
     val foodConsoleUI = FoodConsoleUI(
         sweetNoEggsUseCase = sweetWithNoEggsUseCase,
         getCountriesFoodUseCase = getCountriesFoodUseCase,
         getPotatoMealsUseCase = getPotatoMealsUseCase,
-        gymHelperUseCase = gymHelperUseCase
+        gymHelperUseCase = gymHelperUseCase,
+        ingredientGameUseCase = ingredientGameUseCase,
     )
     foodConsoleUI.start()
 
