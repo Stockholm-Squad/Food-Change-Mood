@@ -20,7 +20,7 @@ class FoodCsvRepository(
                         try {
                             foodCsvParser.parseLine(line)
                         } catch (e: Exception) {
-                            println("Skipping invalid meal: ${line.getOrNull(ColumnIndex.NAME)}")
+                            println("Skipping invalid meal: ${line.getOrNull(ColumnIndex.NAME.index)}")
                             null
                         }
                     }
