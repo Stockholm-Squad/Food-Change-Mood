@@ -1,39 +1,29 @@
 package org.example.presentation
 
-
-import logic.GetHealthFastFoodUseCase
-import org.example.logic.GetCountriesFoodUseCase
-import org.example.logic.GetSweetWithNoEggsUseCase
-import org.example.logic.GetPotatoMealsUseCase
-
 import logic.GymHelperUseCase
 import IngredientGameUseCase
 import org.example.logic.GetSeaFoodByProteinRankUseCase
 
 
 import org.example.logic.*
-
+import org.example.logic.GetEasyFoodSuggestionsUseCase
 import org.example.model.MenuOption
 import presentation.*
 
-class FoodConsoleUI(
+class FoodConsoleUI(private val getEasyFoodSuggestionsUseCase: GetEasyFoodSuggestionsUseCase,
     private val sweetNoEggsUseCase: GetSweetWithNoEggsUseCase,
     private val getCountriesFoodUseCase: GetCountriesFoodUseCase,
     private val getPotatoMealsUseCase: GetPotatoMealsUseCase,
-
-    private val getHealthFastFoodUseCase: GetHealthFastFoodUseCase
-
     private val gymHelperUseCase: GymHelperUseCase,
     private val ingredientGameUseCase : IngredientGameUseCase,
     private val getSeaFoodByProteinRankUseCase: GetSeaFoodByProteinRankUseCase,
     private val searchByAddDateUseCase: SearchByAddDateUseCase,
     private val italianMealsForLargeGroupUseCase: ItalianMealsForLargeGroupUseCase,
-
 ) {
-    private val healthyFastFood = GetHealthyFastFoodMealsUI(getHealthFastFoodUseCase)
+    private val healthyFastFood = GetHealthyFastFoodMealsUI()
     private val searchByName = SearchMealByNameUI()
     private val iraqiMeals = GetIraqiMealsUI()
-    private val easyMeals = SuggestEasyMealsUI()
+    private val easyMeals = SuggestEasyMealsUI(getEasyFoodSuggestionsUseCase)
     private val guessGame = GuessGameUI()
     private val sweetNoEggs = SuggestSweetNoEggsUI(sweetNoEggsUseCase)
     private val ketoMeals = KetoDietMealUI()
