@@ -1,6 +1,6 @@
 package org.example.presentation
 
- feature/add-healthy-fast-food
+
 import logic.GetHealthFastFoodUseCase
 import org.example.logic.GetCountriesFoodUseCase
 import org.example.logic.GetSweetWithNoEggsUseCase
@@ -12,7 +12,7 @@ import org.example.logic.GetSeaFoodByProteinRankUseCase
 
 
 import org.example.logic.*
- develop
+
 import org.example.model.MenuOption
 import presentation.*
 
@@ -20,7 +20,7 @@ class FoodConsoleUI(
     private val sweetNoEggsUseCase: GetSweetWithNoEggsUseCase,
     private val getCountriesFoodUseCase: GetCountriesFoodUseCase,
     private val getPotatoMealsUseCase: GetPotatoMealsUseCase,
- feature/add-healthy-fast-food
+
     private val getHealthFastFoodUseCase: GetHealthFastFoodUseCase
 
     private val gymHelperUseCase: GymHelperUseCase,
@@ -28,7 +28,7 @@ class FoodConsoleUI(
     private val getSeaFoodByProteinRankUseCase: GetSeaFoodByProteinRankUseCase,
     private val searchByAddDateUseCase: SearchByAddDateUseCase,
     private val italianMealsForLargeGroupUseCase: ItalianMealsForLargeGroupUseCase,
- develop
+
 ) {
     private val healthyFastFood = GetHealthyFastFoodMealsUI(getHealthFastFoodUseCase)
     private val searchByName = SearchMealByNameUI()
