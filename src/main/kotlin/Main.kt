@@ -1,27 +1,24 @@
 package org.example
 
+import IngredientGameUseCase
 import data.FoodCsvParser
 import data.FoodCsvReader
 import logic.GetHealthFastFoodUseCase
 import org.example.data.FoodCsvRepository
-import org.example.logic.GetCountriesFoodUseCase
-import org.example.logic.GetSweetWithNoEggsUseCase
-import org.example.logic.MealsRepository
+import logic.GymHelperUseCase
+import org.example.logic.*
 import org.example.presentation.FoodConsoleUI
-import org.example.logic.GetPotatoMealsUseCase
 
 import java.io.File
+
 
 fun main() {
 
     val fileName = "food.csv"
     val csvFile = File(fileName)
 
-    // Check if the file exists before proceeding
-    if (!csvFile.exists()) {
-        println("File $fileName not found!")
-        return
-    }
+    if (isFileValid(csvFile, fileName)) return
+
 
     val mealReader = FoodCsvReader(csvFile)
     val mealParser = FoodCsvParser()
@@ -30,12 +27,39 @@ fun main() {
     val sweetWithNoEggsUseCase: GetSweetWithNoEggsUseCase = GetSweetWithNoEggsUseCase(foodCsvRepository)
     val getCountriesFoodUseCase: GetCountriesFoodUseCase = GetCountriesFoodUseCase(foodCsvRepository)
     val getPotatoMealsUseCase = GetPotatoMealsUseCase(foodCsvRepository)
+ feature/add-healthy-fast-food
     val getHealthFastFoodUseCase=GetHealthFastFoodUseCase(foodCsvRepository)
     val foodConsoleUI = FoodConsoleUI(
         sweetWithNoEggsUseCase,
         getCountriesFoodUseCase,
         getPotatoMealsUseCase,getHealthFastFoodUseCase
+
+    val gymHelperUseCase: GymHelperUseCase = GymHelperUseCase(foodCsvRepository)
+
+    val ingredientGameUseCase = IngredientGameUseCase(foodCsvRepository)
+    val getSeaFoodByProteinRankUseCase = GetSeaFoodByProteinRankUseCase(foodCsvRepository)
+    val searchByAddDateUseCase = SearchByAddDateUseCase(foodCsvRepository)
+    val italianMealsForLargeGroupUseCase = ItalianMealsForLargeGroupUseCase(foodCsvRepository)
+
+    val foodConsoleUI = FoodConsoleUI(
+        sweetNoEggsUseCase = sweetWithNoEggsUseCase,
+        getCountriesFoodUseCase = getCountriesFoodUseCase,
+        getPotatoMealsUseCase = getPotatoMealsUseCase,
+        gymHelperUseCase = gymHelperUseCase,
+        ingredientGameUseCase = ingredientGameUseCase,
+        getSeaFoodByProteinRankUseCase = getSeaFoodByProteinRankUseCase,
+        searchByAddDateUseCase = searchByAddDateUseCase,
+        italianMealsForLargeGroupUseCase = italianMealsForLargeGroupUseCase,
+ develop
     )
     foodConsoleUI.start()
 
+}
+
+private fun isFileValid(csvFile: File, fileName: String): Boolean {
+    if (!csvFile.exists()) {
+        println("File $fileName not found!")
+        return true
+    }
+    return false
 }

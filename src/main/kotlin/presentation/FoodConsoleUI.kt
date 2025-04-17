@@ -1,9 +1,18 @@
 package org.example.presentation
 
+ feature/add-healthy-fast-food
 import logic.GetHealthFastFoodUseCase
 import org.example.logic.GetCountriesFoodUseCase
 import org.example.logic.GetSweetWithNoEggsUseCase
 import org.example.logic.GetPotatoMealsUseCase
+
+import logic.GymHelperUseCase
+import IngredientGameUseCase
+import org.example.logic.GetSeaFoodByProteinRankUseCase
+
+
+import org.example.logic.*
+ develop
 import org.example.model.MenuOption
 import presentation.*
 
@@ -11,7 +20,15 @@ class FoodConsoleUI(
     private val sweetNoEggsUseCase: GetSweetWithNoEggsUseCase,
     private val getCountriesFoodUseCase: GetCountriesFoodUseCase,
     private val getPotatoMealsUseCase: GetPotatoMealsUseCase,
+ feature/add-healthy-fast-food
     private val getHealthFastFoodUseCase: GetHealthFastFoodUseCase
+
+    private val gymHelperUseCase: GymHelperUseCase,
+    private val ingredientGameUseCase : IngredientGameUseCase,
+    private val getSeaFoodByProteinRankUseCase: GetSeaFoodByProteinRankUseCase,
+    private val searchByAddDateUseCase: SearchByAddDateUseCase,
+    private val italianMealsForLargeGroupUseCase: ItalianMealsForLargeGroupUseCase,
+ develop
 ) {
     private val healthyFastFood = GetHealthyFastFoodMealsUI(getHealthFastFoodUseCase)
     private val searchByName = SearchMealByNameUI()
@@ -20,14 +37,14 @@ class FoodConsoleUI(
     private val guessGame = GuessGameUI()
     private val sweetNoEggs = SuggestSweetNoEggsUI(sweetNoEggsUseCase)
     private val ketoMeals = KetoDietMealUI()
-    private val searchByDate = SearchByAddDateUI()
-    private val gymHelper = GymHelperUI()
+    private val searchByDate = SearchByAddDateUI(searchByAddDateUseCase)
+    private val gymHelper = GymHelperUI(gymHelperUseCase)
     private val countryFood = ExploreCountryFoodUI(getCountriesFoodUseCase)
-    private val ingredientGame = IngredientGameUI()
+    private val ingredientGame = IngredientGameUI(ingredientGameUseCase)
     private val potatoLovers = PotatoLoversUI(getPotatoMealsUseCase)
     private val highCalorieMeal = HighCalorieMealUI()
-    private val seafoodRanking = ProteinSeafoodRankingUI()
-    private val italianForGroups = ItalianLargeGroupMealsUI()
+    private val seafoodRanking = ProteinSeafoodRankingUI(getSeaFoodByProteinRankUseCase)
+    private val italianForGroups = ItalianLargeGroupMealsUI(italianMealsForLargeGroupUseCase)
 
     fun start() {
         welcomeUser()
@@ -48,7 +65,7 @@ class FoodConsoleUI(
                 MenuOption.SEARCH_BY_DATE -> searchByDate.searchMealsByDate()
                 MenuOption.GYM_HELPER -> gymHelper.useGymHelper()
                 MenuOption.COUNTRY_FOOD -> countryFood.exploreCountryFoodCulture()
-                MenuOption.INGREDIENT_GAME -> ingredientGame.ingredientGameUI()
+                MenuOption.INGREDIENT_GAME -> ingredientGame.start()
                 MenuOption.POTATO_LOVERS -> potatoLovers.showPotatoLoversUI()
                 MenuOption.HIGH_CALORIE_MEAL -> highCalorieMeal.highCalorieMealUI()
                 MenuOption.SEAFOOD_RANKING -> seafoodRanking.proteinSeafoodRanking()
