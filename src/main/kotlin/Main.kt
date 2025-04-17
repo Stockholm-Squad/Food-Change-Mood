@@ -7,8 +7,9 @@ import org.example.logic.GetCountriesFoodUseCase
 import org.example.logic.GetSweetWithNoEggsUseCase
 import org.example.logic.MealsRepository
 import org.example.presentation.FoodConsoleUI
-import java.io.File
+import org.example.logic.GetPotatoMealsUseCase
 
+import java.io.File
 
 fun main() {
 
@@ -27,10 +28,12 @@ fun main() {
 
     val sweetWithNoEggsUseCase: GetSweetWithNoEggsUseCase = GetSweetWithNoEggsUseCase(foodCsvRepository)
     val getCountriesFoodUseCase: GetCountriesFoodUseCase = GetCountriesFoodUseCase(foodCsvRepository)
+    val getPotatoMealsUseCase = GetPotatoMealsUseCase(foodCsvRepository)
 
     val foodConsoleUI = FoodConsoleUI(
         sweetWithNoEggsUseCase,
-        getCountriesFoodUseCase
+        getCountriesFoodUseCase,
+        getPotatoMealsUseCase
     )
     foodConsoleUI.start()
 
