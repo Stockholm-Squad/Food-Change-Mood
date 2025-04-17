@@ -1,21 +1,24 @@
 package org.example.presentation
 
 import org.example.logic.GetCountriesFoodUseCase
-import org.example.logic.MealsRepository
+import org.example.logic.GetSweetWithNoEggsUseCase
 import org.example.model.MenuOption
 import presentation.*
 
-class FoodConsoleUI(private val mealsRepository: MealsRepository) {
+class FoodConsoleUI(
+    private val sweetNoEggsUseCase: GetSweetWithNoEggsUseCase,
+    private val getCountriesFoodUseCase: GetCountriesFoodUseCase
+) {
     private val healthyFastFood = GetHealthyFastFoodMealsUI()
     private val searchByName = SearchMealByNameUI()
     private val iraqiMeals = GetIraqiMealsUI()
     private val easyMeals = SuggestEasyMealsUI()
     private val guessGame = GuessGameUI()
-    private val sweetNoEggs = SuggestSweetNoEggsUI()
+    private val sweetNoEggs = SuggestSweetNoEggsUI(sweetNoEggsUseCase)
     private val ketoMeals = KetoDietMealUI()
     private val searchByDate = SearchByAddDateUI()
     private val gymHelper = GymHelperUI()
-    private val countryFood = ExploreCountryFoodUI(GetCountriesFoodUseCase(mealsRepository))
+    private val countryFood = ExploreCountryFoodUI(getCountriesFoodUseCase)
     private val ingredientGame = IngredientGameUI()
     private val potatoLovers = PotatoLoversUI()
     private val highCalorieMeal = HighCalorieMealUI()
