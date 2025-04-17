@@ -2,6 +2,7 @@ package data
 
 import model.Meal
 import model.Nutrition
+import org.example.data.NutritionIndex
 import org.example.utils.parseDate
 
 class FoodCsvParser {

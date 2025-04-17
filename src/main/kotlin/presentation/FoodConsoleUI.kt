@@ -1,23 +1,36 @@
 package org.example.presentation
 
+import org.example.logic.GetCountriesFoodUseCase
+import org.example.logic.GetSweetWithNoEggsUseCase
+import org.example.logic.GetPotatoMealsUseCase
+import logic.GymHelperUseCase
+import IngredientGameUseCase
 import org.example.logic.GetSeaFoodByProteinRankUseCase
+
+
 import org.example.model.MenuOption
 import presentation.*
 
-class FoodConsoleUI(private val getSeaFoodByProteinRankUseCase: GetSeaFoodByProteinRankUseCase) {
-
+class FoodConsoleUI(
+    private val sweetNoEggsUseCase: GetSweetWithNoEggsUseCase,
+    private val getCountriesFoodUseCase: GetCountriesFoodUseCase,
+    private val getPotatoMealsUseCase: GetPotatoMealsUseCase,
+    private val gymHelperUseCase: GymHelperUseCase,
+    private val ingredientGameUseCase : IngredientGameUseCase,
+    private val getSeaFoodByProteinRankUseCase: GetSeaFoodByProteinRankUseCase
+) {
     private val healthyFastFood = GetHealthyFastFoodMealsUI()
     private val searchByName = SearchMealByNameUI()
     private val iraqiMeals = GetIraqiMealsUI()
     private val easyMeals = SuggestEasyMealsUI()
     private val guessGame = GuessGameUI()
-    private val sweetNoEggs = SuggestSweetNoEggsUI()
+    private val sweetNoEggs = SuggestSweetNoEggsUI(sweetNoEggsUseCase)
     private val ketoMeals = KetoDietMealUI()
     private val searchByDate = SearchByAddDateUI()
-    private val gymHelper = GymHelperUI()
-    private val countryFood = ExploreCountryFoodUI()
-    private val ingredientGame = IngredientGameUI()
-    private val potatoLovers = PotatoLoversUI()
+    private val gymHelper = GymHelperUI(gymHelperUseCase)
+    private val countryFood = ExploreCountryFoodUI(getCountriesFoodUseCase)
+    private val ingredientGame = IngredientGameUI(ingredientGameUseCase)
+    private val potatoLovers = PotatoLoversUI(getPotatoMealsUseCase)
     private val highCalorieMeal = HighCalorieMealUI()
     private val seafoodRanking = ProteinSeafoodRankingUI(getSeaFoodByProteinRankUseCase)
     private val italianForGroups = ItalianLargeGroupMealsUI()
@@ -41,8 +54,8 @@ class FoodConsoleUI(private val getSeaFoodByProteinRankUseCase: GetSeaFoodByProt
                 MenuOption.SEARCH_BY_DATE -> searchByDate.searchMealsByDate()
                 MenuOption.GYM_HELPER -> gymHelper.useGymHelper()
                 MenuOption.COUNTRY_FOOD -> countryFood.exploreCountryFoodCulture()
-                MenuOption.INGREDIENT_GAME -> ingredientGame.ingredientGameUI()
-                MenuOption.POTATO_LOVERS -> potatoLovers.potatoLoversUI()
+                MenuOption.INGREDIENT_GAME -> ingredientGame.start()
+                MenuOption.POTATO_LOVERS -> potatoLovers.showPotatoLoversUI()
                 MenuOption.HIGH_CALORIE_MEAL -> highCalorieMeal.highCalorieMealUI()
                 MenuOption.SEAFOOD_RANKING -> seafoodRanking.proteinSeafoodRanking()
                 MenuOption.ITALIAN_GROUP_MEALS -> italianForGroups.italianLargeGroupMealsUI()
