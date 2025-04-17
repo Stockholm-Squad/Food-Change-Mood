@@ -2,10 +2,10 @@ package org.example.presentation
 
 import data.FoodCsvParser
 import data.FoodCsvReader
-import model.Meal
 import org.example.data.FoodCsvRepository
 import org.example.logic.ItalianMealsForLargeGroupUseCase
 import org.example.logic.MealsRepository
+import org.example.utils.viewMealInListDetails
 import java.io.File
 
 class ItalianLargeGroupMealsUI {
@@ -40,20 +40,8 @@ class ItalianLargeGroupMealsUI {
             } else if (mealId == -1) {
                 break
             } else {
-                viewMealDetails(filteredList, mealId)
+                viewMealInListDetails(filteredList, mealId)
             }
         }
     }
-
-    private fun viewMealDetails(mealsList: List<Meal>, mealId: Int) {
-        val meal: Meal? = useCase.getMeal(mealsList, mealId)
-
-        if (meal == null) {
-            println("The meal with ID $mealId does not exist.")
-            return
-        }
-
-        println(meal)
-    }
-
 }
