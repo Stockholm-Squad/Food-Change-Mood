@@ -1,9 +1,15 @@
 package org.example.presentation
 
+import IngredientGameUseCase
+import data.FoodCsvParser
+import data.FoodCsvReader
+import org.example.data.FoodCsvRepository
 import org.example.model.MenuOption
 import presentation.*
+import java.io.File
 
 class FoodConsoleUI {
+    private val repository = FoodCsvRepository(FoodCsvReader(File("food.csv")), FoodCsvParser())
     private val healthyFastFood = GetHealthyFastFoodMealsUI()
     private val searchByName = SearchMealByNameUI()
     private val iraqiMeals = GetIraqiMealsUI()
@@ -14,7 +20,7 @@ class FoodConsoleUI {
     private val searchByDate = SearchByAddDateUI()
     private val gymHelper = GymHelperUI()
     private val countryFood = ExploreCountryFoodUI()
-    private val ingredientGame = IngredientGameUI()
+    private val ingredientGame = IngredientGameUI(IngredientGameUseCase(repository))
     private val potatoLovers = PotatoLoversUI()
     private val highCalorieMeal = HighCalorieMealUI()
     private val seafoodRanking = ProteinSeafoodRankingUI()
@@ -39,7 +45,7 @@ class FoodConsoleUI {
                 MenuOption.SEARCH_BY_DATE -> searchByDate.searchMealsByDate()
                 MenuOption.GYM_HELPER -> gymHelper.useGymHelper()
                 MenuOption.COUNTRY_FOOD -> countryFood.exploreCountryFoodCulture()
-                MenuOption.INGREDIENT_GAME -> ingredientGame.ingredientGameUI()
+                MenuOption.INGREDIENT_GAME -> ingredientGame.start()
                 MenuOption.POTATO_LOVERS -> potatoLovers.potatoLoversUI()
                 MenuOption.HIGH_CALORIE_MEAL -> highCalorieMeal.highCalorieMealUI()
                 MenuOption.SEAFOOD_RANKING -> seafoodRanking.proteinSeafoodRanking()
