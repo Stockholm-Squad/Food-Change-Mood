@@ -23,11 +23,11 @@ fun main() {
     val mealReader = FoodCsvReader(csvFile)
     val mealParser = FoodCsvParser()
     val foodCsvRepository: MealsRepository = FoodCsvRepository(foodCsvParser = mealParser, foodCsvReader = mealReader)
-    val getHealthFastFoodUseCase= GetHealthFastFoodUseCase(foodCsvRepository)    val sweetWithNoEggsUseCase: GetSweetWithNoEggsUseCase = GetSweetWithNoEggsUseCase(foodCsvRepository)
+    val getHealthFastFoodUseCase= GetHealthFastFoodUseCase(foodCsvRepository)
+    val sweetWithNoEggsUseCase: GetSweetWithNoEggsUseCase = GetSweetWithNoEggsUseCase(foodCsvRepository)
     val getCountriesFoodUseCase: GetCountriesFoodUseCase = GetCountriesFoodUseCase(foodCsvRepository)
     val getPotatoMealsUseCase = GetPotatoMealsUseCase(foodCsvRepository)
     val gymHelperUseCase: GymHelperUseCase = GymHelperUseCase(foodCsvRepository)
-
     val ingredientGameUseCase = IngredientGameUseCase(foodCsvRepository)
     val getSeaFoodByProteinRankUseCase = GetSeaFoodByProteinRankUseCase(foodCsvRepository)
     val searchByAddDateUseCase = SearchByAddDateUseCase(foodCsvRepository)
