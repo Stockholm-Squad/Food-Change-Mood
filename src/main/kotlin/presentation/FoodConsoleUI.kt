@@ -1,5 +1,6 @@
 package org.example.presentation
 
+import org.example.logic.GetCountriesFoodUseCase
 import org.example.logic.MealsRepository
 import org.example.model.MenuOption
 import presentation.*
@@ -14,7 +15,7 @@ class FoodConsoleUI(private val mealsRepository: MealsRepository) {
     private val ketoMeals = KetoDietMealUI()
     private val searchByDate = SearchByAddDateUI()
     private val gymHelper = GymHelperUI()
-    private val countryFood = ExploreCountryFoodUI(mealsRepository)
+    private val countryFood = ExploreCountryFoodUI(GetCountriesFoodUseCase(mealsRepository))
     private val ingredientGame = IngredientGameUI()
     private val potatoLovers = PotatoLoversUI()
     private val highCalorieMeal = HighCalorieMealUI()
