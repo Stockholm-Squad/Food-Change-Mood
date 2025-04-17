@@ -2,11 +2,12 @@ package logic
 
 import model.Meal
 import model.Nutrition
-import org.example.logic.MealRepository
+import org.example.logic.MealsRepository
+import org.example.utils.Messages
 import kotlin.math.abs
 
 class GymHelperUseCase(
-    private val mealRepository: MealRepository
+    private val mealRepository: MealsRepository
 ) {
     fun getGymHelperMeals(
         desiredCalories: Float,
@@ -28,7 +29,7 @@ class GymHelperUseCase(
                     desiredProteins = desiredProteins,
                     approximateAmount = approximateAmount
                 )
-            } ?: throw Exception(message = "No Meals fFound!! that match the desired protein and calories!!")
+            } ?: throw Throwable(message = Messages.NO_MEALS_FOR_GYM_HELPER.messages)
     }
 
     private fun Nutrition.sortByProteinsAndCalories(
@@ -48,12 +49,12 @@ class GymHelperUseCase(
         desiredProteins: Float,
         approximateAmount: Float
     ): Boolean {
-        return calories?.let { caloriesAmount ->
-            protein?.let { proteinsAmount ->
+        return calories.let { caloriesAmount ->
+            protein.let { proteinsAmount ->
                 isClosedToDesiredAmount(desiredCalories, caloriesAmount, approximateAmount)
                         && isClosedToDesiredAmount(desiredProteins, proteinsAmount, approximateAmount)
             }
-        } ?: false
+        }
     }
 
     private fun isClosedToDesiredAmount(

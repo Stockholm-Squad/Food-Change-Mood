@@ -1,9 +1,12 @@
 package org.example.presentation
 
+import logic.GymHelperUseCase
 import org.example.model.MenuOption
 import presentation.*
 
-class FoodConsoleUI {
+class FoodConsoleUI(
+    private val gymHelperUseCase: GymHelperUseCase?
+) {
     private val healthyFastFood = GetHealthyFastFoodMealsUI()
     private val searchByName = SearchMealByNameUI()
     private val iraqiMeals = GetIraqiMealsUI()
@@ -12,7 +15,7 @@ class FoodConsoleUI {
     private val sweetNoEggs = SuggestSweetNoEggsUI()
     private val ketoMeals = KetoDietMealUI()
     private val searchByDate = SearchByAddDateUI()
-    private val gymHelper = GymHelperUI()
+    private val gymHelper = GymHelperUI(gymHelperUseCase)
     private val countryFood = ExploreCountryFoodUI()
     private val ingredientGame = IngredientGameUI()
     private val potatoLovers = PotatoLoversUI()
