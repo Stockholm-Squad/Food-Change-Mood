@@ -50,7 +50,7 @@ class SearchByAddDateUI {
 
         while (true) {
             println()
-            println("-1 -> search again")
+            println("-1 -> search again or back")
             println("meal id -> view details")
             val input = readlnOrNull()
             val mealId = input?.toIntOrNull()
