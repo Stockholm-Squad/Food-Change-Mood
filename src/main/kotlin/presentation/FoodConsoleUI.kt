@@ -9,7 +9,7 @@ import org.example.model.MenuOption
 import presentation.*
 import java.io.File
 
-class FoodConsoleUI(private val repository: MealsRepository) {
+class FoodConsoleUI(private val game : IngredientGameUseCase) {
     private val healthyFastFood = GetHealthyFastFoodMealsUI()
     private val searchByName = SearchMealByNameUI()
     private val iraqiMeals = GetIraqiMealsUI()
@@ -20,7 +20,7 @@ class FoodConsoleUI(private val repository: MealsRepository) {
     private val searchByDate = SearchByAddDateUI()
     private val gymHelper = GymHelperUI()
     private val countryFood = ExploreCountryFoodUI()
-    private val ingredientGame = IngredientGameUI(IngredientGameUseCase(repository))
+    private val ingredientGame = IngredientGameUI(game)
     private val potatoLovers = PotatoLoversUI()
     private val highCalorieMeal = HighCalorieMealUI()
     private val seafoodRanking = ProteinSeafoodRankingUI()
