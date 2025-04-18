@@ -2,9 +2,11 @@ package org.example.logic
 
 import model.Nutrition
 
+//TODO rename the useCase
 class SoThinProblem(
     private val mealRepository: MealsRepository,
 ) {
+    //TODO handle the return type to be Meal
     fun suggestMealToSoThinProblem(): Triple<String?, String?, Pair<Int?, Float>> {
         return mealRepository.getAllMeals()
             .takeIf { meals ->

@@ -4,11 +4,14 @@ import model.Meal
 import org.example.logic.MealsRepository
 import java.util.Collections.emptyList
 
+//TODO rename the use case GetHealthyFastFoodUseCase
+//TODO handle logic here
 class GetHealthFastFoodUseCase(
     private val mealRepository: MealsRepository
 ) {
     fun getHealthyFastFood(): List<Meal> {
         val allMeals = mealRepository.getAllMeals()
+        //TODO return the data direct instead of making variables
         val (avrCalories, avrFat, avrCarbo) = calculateAverageNutrition(allMeals)
         return allMeals.filter { it.isHealthyFastFood(avrCalories, avrFat, avrCarbo) }.take(10)
     }

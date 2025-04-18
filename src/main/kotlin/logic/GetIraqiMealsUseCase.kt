@@ -6,6 +6,7 @@ import org.example.logic.MealsRepository
 class GetIraqiMealsUseCase(
     private val mealRepository: MealsRepository,
 ) {
+    //TODO handle it to return List<Meal> and handle 2 filters
     fun getIraqiMales(): List<Triple<String?, Int?, String?>> {
         return mealRepository.getAllMeals()
             .takeIf { meals ->
