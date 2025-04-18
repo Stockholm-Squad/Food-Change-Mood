@@ -1,13 +1,10 @@
 package org.example.presentation
 
-import logic.GymHelperUseCase
+
 import IngredientGameUseCase
 import logic.GetHealthFastFoodUseCase
-import org.example.logic.GetSeaFoodByProteinRankUseCase
-
-
+import logic.GymHelperUseCase
 import org.example.logic.*
-import org.example.logic.GetEasyFoodSuggestionsUseCase
 import org.example.model.MenuOption
 import presentation.*
 
@@ -45,33 +42,46 @@ class FoodConsoleUI(
 
         while (true) {
             printMenu()
-            val option = readln().toInt()
-
-            // Matching the input to the MenuOption enum
-            when (MenuOption.entries.find { it.option == option }) {
-                MenuOption.HEALTHY_FAST_FOOD -> healthyFastFood.showHealthyFastFoodMeals()
-                MenuOption.SEARCH_BY_NAME -> searchByName.handleSearchByName()
-                MenuOption.IRAQI_MEALS -> iraqiMeals.getIraqiMeals()
-                MenuOption.EASY_MEALS -> easyMeals.showEasySuggestions()
-                MenuOption.GUESS_GAME -> guessGame.playGuessGame()
-                MenuOption.SWEETS_NO_EGGS -> sweetNoEggs.showSweetsNoEggs()
-                MenuOption.KETO_MEALS -> ketoMeals.showKetoMeal()
-                MenuOption.SEARCH_BY_DATE -> searchByDate.searchMealsByDate()
-                MenuOption.GYM_HELPER -> gymHelper.useGymHelper()
-                MenuOption.COUNTRY_FOOD -> countryFood.exploreCountryFoodCulture()
-                MenuOption.INGREDIENT_GAME -> ingredientGame.start()
-                MenuOption.POTATO_LOVERS -> potatoLovers.showPotatoLoversUI()
-                MenuOption.HIGH_CALORIE_MEAL -> highCalorieMeal.getMaleWithHighCalorie()
-                MenuOption.SEAFOOD_RANKING -> seafoodRanking.proteinSeafoodRanking()
-                MenuOption.ITALIAN_GROUP_MEALS -> italianForGroups.italianLargeGroupMealsUI()
-                MenuOption.EXIT -> {
-                    println("👋 Goodbye foodie friend! Stay delicious! 🍕💖")
-                    break
-                }
-
-                else -> println("😕 Oops! That’s not on the menu. Pick a number between 0 and 15!")
-            }
+            val enteredOption = readlnOrNull()?.toIntOrNull()
+            if (handleEnteredMenuOption(enteredOption)) break
         }
+    }
+
+    private fun handleEnteredMenuOption(option: Int?): Boolean {
+        when (getEnteredOption(option)) {
+            MenuOption.HEALTHY_FAST_FOOD -> healthyFastFood.showHealthyFastFoodMeals()
+            MenuOption.SEARCH_BY_NAME -> searchByName.handleSearchByName()
+            MenuOption.IRAQI_MEALS -> iraqiMeals.getIraqiMeals()
+            MenuOption.EASY_MEALS -> easyMeals.showEasySuggestions()
+            MenuOption.GUESS_GAME -> guessGame.playGuessGame()
+            MenuOption.SWEETS_NO_EGGS -> sweetNoEggs.showSweetsNoEggs()
+            MenuOption.KETO_MEALS -> ketoMeals.showKetoMeal()
+            MenuOption.SEARCH_BY_DATE -> searchByDate.searchMealsByDate()
+            MenuOption.GYM_HELPER -> gymHelper.useGymHelper()
+            MenuOption.COUNTRY_FOOD -> countryFood.exploreCountryFoodCulture()
+            MenuOption.INGREDIENT_GAME -> ingredientGame.start()
+            MenuOption.POTATO_LOVERS -> potatoLovers.showPotatoLoversUI()
+            MenuOption.HIGH_CALORIE_MEAL -> highCalorieMeal.getMaleWithHighCalorie()
+            MenuOption.SEAFOOD_RANKING -> seafoodRanking.proteinSeafoodRanking()
+            MenuOption.ITALIAN_GROUP_MEALS -> italianForGroups.italianLargeGroupMealsUI()
+            MenuOption.EXIT -> {
+                exit()
+                return true
+            }
+
+            else -> invalidChoice()
+        }
+        return false
+    }
+
+    private fun getEnteredOption(option: Int?) = MenuOption.entries.find { it.option == option }
+
+    private fun invalidChoice() {
+        println("😕 Oops! That’s not on the menu. Pick a number between 0 and 15!")
+    }
+
+    private fun exit() {
+        println("👋 Goodbye foodie friend! Stay delicious! 🍕💖")
     }
 
     private fun welcomeUser() {
