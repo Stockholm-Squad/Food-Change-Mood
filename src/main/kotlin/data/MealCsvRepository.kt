@@ -7,7 +7,7 @@ import model.Meal
 import org.example.logic.MealsRepository
 
 
-class FoodCsvRepository(
+class MealCsvRepository(
     private val mealCsvReader: MealCsvReader,
     private val mealCsvParser: MealCsvParser
 ) : MealsRepository {
