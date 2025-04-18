@@ -1,17 +1,14 @@
 package org.example.logic
 
 import model.Meal
-import java.util.Collections.emptyList
 
 class GetEasyFoodSuggestionsUseCase(
     private val mealRepository: MealsRepository
 ) {
-    //TODO refactor it to take no parameter
-    fun getEasyFood(
-        filterEasyMeal: (Meal) -> Boolean = { it.isEasyMeal() }
-    ): List<Meal> {
+
+    fun getEasyFood(): List<Meal> {
         return mealRepository.getAllMeals()
-            .filter(filterEasyMeal)
+            .filter { it.isEasyMeal() }
             .shuffled()
             .take(10)
             .ifEmpty { throw NoSuchElementException("No easy meals found.") }
