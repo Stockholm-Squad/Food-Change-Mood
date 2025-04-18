@@ -12,6 +12,7 @@ import org.example.model.MenuOption
 import presentation.*
 
 class FoodConsoleUI(
+    private val ketoDietUseCase: KetoDietUseCase,
     private val getEasyFoodSuggestionsUseCase: GetEasyFoodSuggestionsUseCase,
     private val sweetNoEggsUseCase: GetSweetWithNoEggsUseCase,
     private val getCountriesFoodUseCase: GetCountriesFoodUseCase,
@@ -33,7 +34,7 @@ class FoodConsoleUI(
     private val easyMeals = SuggestEasyMealsUI(getEasyFoodSuggestionsUseCase)
     private val guessGame = GuessGameUI(getGuessGameUseCase)
     private val sweetNoEggs = SuggestSweetNoEggsUI(sweetNoEggsUseCase)
-    private val ketoMeals = KetoDietMealUI()
+    private val ketoMeals = KetoDietMealUI(ketoDietUseCase)
     private val searchByDate = SearchByAddDateUI(searchByAddDateUseCase)
     private val gymHelper = GymHelperUI(gymHelperUseCase)
     private val countryFood = ExploreCountryFoodUI(getCountriesFoodUseCase)
