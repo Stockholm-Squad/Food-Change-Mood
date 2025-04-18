@@ -14,8 +14,8 @@ import presentation.*
 class FoodConsoleUI(
     private val ketoDietUseCase: KetoDietUseCase,
     private val getEasyFoodSuggestionsUseCase: GetEasyFoodSuggestionsUseCase,
-    private val sweetNoEggsUseCase: GetSweetWithNoEggsUseCase,
-    private val getCountriesFoodUseCase: GetCountriesFoodUseCase,
+    private val sweetNoEggsUseCase: GetDessertsWithNoEggs,
+    private val getCountryFoodUseCase: GetCountryFoodUseCase,
     private val getPotatoMealsUseCase: GetPotatoMealsUseCase,
     private val gymHelperUseCase: GymHelperUseCase,
     private val ingredientGameUseCase: IngredientGameUseCase,
@@ -37,7 +37,7 @@ class FoodConsoleUI(
     private val ketoMeals = KetoDietMealUI(ketoDietUseCase)
     private val searchByDate = SearchByAddDateUI(searchByAddDateUseCase)
     private val gymHelper = GymHelperUI(gymHelperUseCase)
-    private val countryFood = ExploreCountryFoodUI(getCountriesFoodUseCase)
+    private val countryFood = ExploreCountryFoodUI(getCountryFoodUseCase)
     private val ingredientGame = IngredientGameUI(ingredientGameUseCase)
     private val potatoLovers = PotatoLoversUI(getPotatoMealsUseCase)
     private val highCalorieMeal = SuggestMealWithHighCaloriesUI(soThinProblem)
