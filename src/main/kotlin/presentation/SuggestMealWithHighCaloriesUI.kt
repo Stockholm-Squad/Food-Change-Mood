@@ -18,7 +18,7 @@ class SuggestMealWithHighCaloriesUI(
         println("--------------------------------------------------------------------------------------------------")
         println("Do you like it? (yes/no) 😊")
         when(readlnOrNull()?.trim()?.lowercase()) {
-            "no" -> return getMaleWithHighCalorie()
+            "no" ->  getMaleWithHighCalorie()
             "yes" -> println("Great! Enjoy 😋")
             else -> throw Exception("Invalid input! Expected yes or no.")
         }
