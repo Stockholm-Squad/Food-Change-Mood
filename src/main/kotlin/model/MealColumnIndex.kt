@@ -1,4 +1,4 @@
-package data
+package org.example.model
 
 
 enum class MealColumnIndex(

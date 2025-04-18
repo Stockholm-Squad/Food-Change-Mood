@@ -1,6 +1,6 @@
 package org.example.data
 
-import data.MealColumnIndex
+import org.example.model.MealColumnIndex
 import data.MealCsvParser
 import data.MealCsvReader
 import model.Meal
