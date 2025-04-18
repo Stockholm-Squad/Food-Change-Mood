@@ -25,6 +25,7 @@ val logicModule = module {
     single { GetIraqiMealsUseCase(get()) }
 
     single { GetSeaFoodByProteinRankUseCase(get()) }
+    single { KetoDietUseCase(get()) }
 
     single { GetGuessGameUseCase(get()) }
 

@@ -2,8 +2,8 @@ package org.example
 
 import appModule
 import dataModule
-import org.example.di.logicModule
 import org.example.di.uiModule
+import org.example.di.logicModule
 import org.example.presentation.FoodConsoleUI
 import org.example.utils.Constants
 import org.koin.core.context.startKoin
