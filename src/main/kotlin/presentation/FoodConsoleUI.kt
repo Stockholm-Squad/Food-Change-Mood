@@ -12,7 +12,7 @@ import org.example.model.MenuOption
 import presentation.*
 
 class FoodConsoleUI(
-    private val ketoDietUseCase: KetoDietUseCase
+    private val ketoDietUseCase: KetoDietUseCase,
     private val getEasyFoodSuggestionsUseCase: GetEasyFoodSuggestionsUseCase,
     private val sweetNoEggsUseCase: GetSweetWithNoEggsUseCase,
     private val getCountriesFoodUseCase: GetCountriesFoodUseCase,
