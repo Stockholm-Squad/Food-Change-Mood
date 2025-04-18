@@ -6,6 +6,7 @@ import data.FoodCsvReader
 import logic.GetHealthFastFoodUseCase
 import org.example.data.FoodCsvRepository
 import logic.GymHelperUseCase
+import logic.SearchMealByNameUseCase
 import org.example.logic.*
 import org.example.presentation.FoodConsoleUI
 
@@ -24,16 +25,16 @@ fun main() {
     val mealParser = FoodCsvParser()
     val foodCsvRepository: MealsRepository = FoodCsvRepository(foodCsvParser = mealParser, foodCsvReader = mealReader)
     val getHealthFastFoodUseCase= GetHealthFastFoodUseCase(foodCsvRepository)
-    val sweetWithNoEggsUseCase: GetSweetWithNoEggsUseCase = GetSweetWithNoEggsUseCase(foodCsvRepository)
-    val getCountriesFoodUseCase: GetCountriesFoodUseCase = GetCountriesFoodUseCase(foodCsvRepository)
+    val sweetWithNoEggsUseCase = GetSweetWithNoEggsUseCase(foodCsvRepository)
+    val getCountriesFoodUseCase = GetCountriesFoodUseCase(foodCsvRepository)
     val getPotatoMealsUseCase = GetPotatoMealsUseCase(foodCsvRepository)
-    val gymHelperUseCase: GymHelperUseCase = GymHelperUseCase(foodCsvRepository)
+    val gymHelperUseCase = GymHelperUseCase(foodCsvRepository)
     val ingredientGameUseCase = IngredientGameUseCase(foodCsvRepository)
     val getSeaFoodByProteinRankUseCase = GetSeaFoodByProteinRankUseCase(foodCsvRepository)
     val searchByAddDateUseCase = SearchByAddDateUseCase(foodCsvRepository)
     val italianMealsForLargeGroupUseCase = ItalianMealsForLargeGroupUseCase(foodCsvRepository)
-    val getEasyFoodSuggestionsUseCase: GetEasyFoodSuggestionsUseCase = GetEasyFoodSuggestionsUseCase(foodCsvRepository)
-    val soThinProblem: SoThinProblem = SoThinProblem(foodCsvRepository)
+    val getEasyFoodSuggestionsUseCase = GetEasyFoodSuggestionsUseCase(foodCsvRepository)
+    val soThinProblem = SoThinProblem(foodCsvRepository)
 
     val foodConsoleUI = FoodConsoleUI(
         sweetNoEggsUseCase = sweetWithNoEggsUseCase,
@@ -46,7 +47,8 @@ fun main() {
         italianMealsForLargeGroupUseCase = italianMealsForLargeGroupUseCase,
         getEasyFoodSuggestionsUseCase = getEasyFoodSuggestionsUseCase,
         getHealthFastFoodUseCase = getHealthFastFoodUseCase,
-        soThinProblem = soThinProblem
+        soThinProblem = soThinProblem,
+        searchMealByNameUseCase = SearchMealByNameUseCase(foodCsvRepository)
     )
     foodConsoleUI.start()
 
