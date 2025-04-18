@@ -1,5 +1,4 @@
-package data
-
+package org.example.model
 
 enum class NutritionIndex(val index: Int) {
     CALORIES(0),
