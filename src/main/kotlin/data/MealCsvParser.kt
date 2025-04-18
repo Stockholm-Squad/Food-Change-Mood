@@ -5,7 +5,7 @@ import model.Nutrition
 import org.example.data.NutritionIndex
 import org.example.utils.parseDate
 
-class FoodCsvParser {
+class MealCsvParser {
 
     fun parseLine(row: String): Meal {
         val listOfLines: List<String> = formatLineOfData(row)

@@ -1,7 +1,7 @@
 package org.example.data
 
 import data.MealColumnIndex
-import data.FoodCsvParser
+import data.MealCsvParser
 import data.FoodCsvReader
 import model.Meal
 import org.example.logic.MealsRepository
@@ -9,7 +9,7 @@ import org.example.logic.MealsRepository
 
 class FoodCsvRepository(
     private val foodCsvReader: FoodCsvReader,
-    private val foodCsvParser: FoodCsvParser
+    private val mealCsvParser: MealCsvParser
 ) : MealsRepository {
 
     override fun getAllMeals(): List<Meal> {
@@ -18,7 +18,7 @@ class FoodCsvRepository(
                 foodCsvReader.readLinesFromFile()
                     .mapNotNull { line ->
                         try {
-                            foodCsvParser.parseLine(line)
+                            mealCsvParser.parseLine(line)
                         } catch (e: Exception) {
                             println("Skipping invalid meal: ${line.getOrNull(MealColumnIndex.NAME.index)}")
                             null

@@ -1,7 +1,7 @@
 package org.example
 
 import IngredientGameUseCase
-import data.FoodCsvParser
+import data.MealCsvParser
 import data.FoodCsvReader
 import logic.GetHealthFastFoodUseCase
 import org.example.data.FoodCsvRepository
@@ -21,8 +21,8 @@ fun main() {
 
 
     val mealReader = FoodCsvReader(csvFile)
-    val mealParser = FoodCsvParser()
-    val foodCsvRepository: MealsRepository = FoodCsvRepository(foodCsvParser = mealParser, foodCsvReader = mealReader)
+    val mealParser = MealCsvParser()
+    val foodCsvRepository: MealsRepository = FoodCsvRepository(mealCsvParser = mealParser, foodCsvReader = mealReader)
     val getHealthFastFoodUseCase= GetHealthFastFoodUseCase(foodCsvRepository)
     val sweetWithNoEggsUseCase: GetSweetWithNoEggsUseCase = GetSweetWithNoEggsUseCase(foodCsvRepository)
     val getCountriesFoodUseCase: GetCountriesFoodUseCase = GetCountriesFoodUseCase(foodCsvRepository)
