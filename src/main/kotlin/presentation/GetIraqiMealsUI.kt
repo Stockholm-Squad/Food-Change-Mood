@@ -10,10 +10,10 @@ class GetIraqiMealsUI(
         getIraqiMealsUseCase.getIraqiMales()
             .takeIf { meals->
                 meals.isNotEmpty() }?.forEach { iraqiMeal ->
-                println("Name: ${iraqiMeal.first}")
-                println("Time: ${iraqiMeal.second}")
-                println("Description: ${iraqiMeal.third ?: "No description available"}")
+                println("Name: ${iraqiMeal.name}")
+                println("Time: ${iraqiMeal.minutes}")
+                println("Description: ${iraqiMeal.description ?: "No description available"}")
                 println("------------------------------------------------------------------------------")
-            } ?: throw IllegalStateException("Sorry, we don't have any iraqi meals available")
+            } ?: println("Sorry, we don't have any iraqi meals available")
     }
 }
