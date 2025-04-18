@@ -1,6 +1,6 @@
 package org.example.data
 
-import data.ColumnIndex
+import data.MealColumnIndex
 import data.FoodCsvParser
 import data.FoodCsvReader
 import model.Meal
@@ -20,7 +20,7 @@ class FoodCsvRepository(
                         try {
                             foodCsvParser.parseLine(line)
                         } catch (e: Exception) {
-                            println("Skipping invalid meal: ${line.getOrNull(ColumnIndex.NAME.index)}")
+                            println("Skipping invalid meal: ${line.getOrNull(MealColumnIndex.NAME.index)}")
                             null
                         }
                     }

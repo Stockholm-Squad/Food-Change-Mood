@@ -1,7 +1,7 @@
 package data
 
 
-enum class ColumnIndex(
+enum class MealColumnIndex(
     val index: Int
 ) {
     NAME(0),

@@ -10,19 +10,19 @@ class FoodCsvParser {
     fun parseLine(row: String): Meal {
         val listOfLines: List<String> = formatLineOfData(row)
         return Meal(
-            name = listOfLines[ColumnIndex.NAME.index],
-            id = listOfLines[ColumnIndex.ID.index].toIntOrNull() ?: throw IllegalArgumentException("Missing id"),
-            minutes = listOfLines[ColumnIndex.MINUTES.index].toIntOrNull() ?: 0,
-            contributorId = listOfLines[ColumnIndex.CONTRIBUTOR_ID.index].toIntOrNull()
+            name = listOfLines[MealColumnIndex.NAME.index],
+            id = listOfLines[MealColumnIndex.ID.index].toIntOrNull() ?: throw IllegalArgumentException("Missing id"),
+            minutes = listOfLines[MealColumnIndex.MINUTES.index].toIntOrNull() ?: 0,
+            contributorId = listOfLines[MealColumnIndex.CONTRIBUTOR_ID.index].toIntOrNull()
                 ?: throw IllegalArgumentException("Missing id"),
-            submitted = (listOfLines[ColumnIndex.SUBMITTED.index]).parseDate(),
-            tags = parseListOfData(listOfLines[ColumnIndex.TAGS.index]),
-            nutrition = constructNutritionFromToken(listOfLines[ColumnIndex.NUTRITION.index]),
-            numberOfSteps = listOfLines[ColumnIndex.N_STEPS.index].toIntOrNull() ?: 0,
-            steps = parseListOfData(listOfLines[ColumnIndex.STEPS.index]),
-            description = listOfLines[ColumnIndex.DESCRIPTION.index],
-            ingredients = parseListOfData(listOfLines[ColumnIndex.INGREDIENTS.index]),
-            numberOfIngredients = listOfLines[ColumnIndex.N_INGREDIENTS.index].toIntOrNull() ?: 0
+            submitted = (listOfLines[MealColumnIndex.SUBMITTED.index]).parseDate(),
+            tags = parseListOfData(listOfLines[MealColumnIndex.TAGS.index]),
+            nutrition = constructNutritionFromToken(listOfLines[MealColumnIndex.NUTRITION.index]),
+            numberOfSteps = listOfLines[MealColumnIndex.N_STEPS.index].toIntOrNull() ?: 0,
+            steps = parseListOfData(listOfLines[MealColumnIndex.STEPS.index]),
+            description = listOfLines[MealColumnIndex.DESCRIPTION.index],
+            ingredients = parseListOfData(listOfLines[MealColumnIndex.INGREDIENTS.index]),
+            numberOfIngredients = listOfLines[MealColumnIndex.N_INGREDIENTS.index].toIntOrNull() ?: 0
         )
     }
 
