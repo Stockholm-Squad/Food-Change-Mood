@@ -7,6 +7,7 @@ import data.MealCsvReader
 import logic.GetHealthFastFoodUseCase
 import org.example.data.MealCsvRepository
 import logic.GymHelperUseCase
+import logic.SearchMealByNameUseCase
 import org.example.data.CsvLineFormatter
 import org.example.logic.*
 import org.example.presentation.FoodConsoleUI
@@ -48,7 +49,8 @@ fun main() {
         italianMealsForLargeGroupUseCase = italianMealsForLargeGroupUseCase,
         getEasyFoodSuggestionsUseCase = getEasyFoodSuggestionsUseCase,
         getHealthFastFoodUseCase = getHealthFastFoodUseCase,
-        soThinProblem = soThinProblem
+        soThinProblem = soThinProblem,
+        searchMealByNameUseCase = SearchMealByNameUseCase(foodCsvRepository)
     )
     foodConsoleUI.start()
 
