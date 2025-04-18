@@ -5,6 +5,7 @@ import data.FoodCsvParser
 import data.FoodCsvReader
 import org.example.data.FoodCsvRepository
 import logic.GymHelperUseCase
+import logic.SearchMealByNameUseCase
 import org.example.logic.*
 import org.example.presentation.FoodConsoleUI
 
@@ -23,10 +24,10 @@ fun main() {
     val mealParser = FoodCsvParser()
     val foodCsvRepository: MealsRepository = FoodCsvRepository(foodCsvParser = mealParser, foodCsvReader = mealReader)
 
-    val sweetWithNoEggsUseCase: GetSweetWithNoEggsUseCase = GetSweetWithNoEggsUseCase(foodCsvRepository)
-    val getCountriesFoodUseCase: GetCountriesFoodUseCase = GetCountriesFoodUseCase(foodCsvRepository)
+    val sweetWithNoEggsUseCase = GetSweetWithNoEggsUseCase(foodCsvRepository)
+    val getCountriesFoodUseCase = GetCountriesFoodUseCase(foodCsvRepository)
     val getPotatoMealsUseCase = GetPotatoMealsUseCase(foodCsvRepository)
-    val gymHelperUseCase: GymHelperUseCase = GymHelperUseCase(foodCsvRepository)
+    val gymHelperUseCase = GymHelperUseCase(foodCsvRepository)
 
     val ingredientGameUseCase = IngredientGameUseCase(foodCsvRepository)
     val getSeaFoodByProteinRankUseCase = GetSeaFoodByProteinRankUseCase(foodCsvRepository)
@@ -42,6 +43,7 @@ fun main() {
         getSeaFoodByProteinRankUseCase = getSeaFoodByProteinRankUseCase,
         searchByAddDateUseCase = searchByAddDateUseCase,
         italianMealsForLargeGroupUseCase = italianMealsForLargeGroupUseCase,
+        searchMealByNameUseCase = SearchMealByNameUseCase(foodCsvRepository)
     )
     foodConsoleUI.start()
 

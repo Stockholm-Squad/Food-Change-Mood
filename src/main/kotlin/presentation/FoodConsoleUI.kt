@@ -2,9 +2,8 @@ package org.example.presentation
 
 import logic.GymHelperUseCase
 import IngredientGameUseCase
+import logic.SearchMealByNameUseCase
 import org.example.logic.GetSeaFoodByProteinRankUseCase
-
-
 import org.example.logic.*
 import org.example.model.MenuOption
 import presentation.*
@@ -14,13 +13,14 @@ class FoodConsoleUI(
     private val getCountriesFoodUseCase: GetCountriesFoodUseCase,
     private val getPotatoMealsUseCase: GetPotatoMealsUseCase,
     private val gymHelperUseCase: GymHelperUseCase,
-    private val ingredientGameUseCase : IngredientGameUseCase,
+    private val ingredientGameUseCase: IngredientGameUseCase,
     private val getSeaFoodByProteinRankUseCase: GetSeaFoodByProteinRankUseCase,
     private val searchByAddDateUseCase: SearchByAddDateUseCase,
     private val italianMealsForLargeGroupUseCase: ItalianMealsForLargeGroupUseCase,
+    private val searchMealByNameUseCase: SearchMealByNameUseCase,
 ) {
     private val healthyFastFood = GetHealthyFastFoodMealsUI()
-    private val searchByName = SearchMealByNameUI()
+    private val searchByName = SearchMealByNameUI(searchMealByNameUseCase)
     private val iraqiMeals = GetIraqiMealsUI()
     private val easyMeals = SuggestEasyMealsUI()
     private val guessGame = GuessGameUI()
