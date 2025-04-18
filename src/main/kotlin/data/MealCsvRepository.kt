@@ -1,6 +1,5 @@
 package org.example.data
 
-import org.example.model.MealColumnIndex
 import data.MealCsvParser
 import data.MealCsvReader
 import model.Meal
@@ -13,26 +12,28 @@ class MealCsvRepository(
 ) : MealsRepository {
 
     override fun getAllMeals(): List<Meal> {
-        if (allMeals.isEmpty()) {
-            allMeals = try {
-                mealCsvReader.readLinesFromFile()
-                    .mapNotNull { line ->
-                        try {
-                            mealCsvParser.parseLine(line)
-                        } catch (e: Exception) {
-                            println("Skipping invalid meal: ${line.getOrNull(MealColumnIndex.NAME.index)}")
-                            null
-                        }
-                    }
-            } catch (e: Exception) {
-                println("Critical error reading CSV: ${e.message}")
-                emptyList()
-            }
+        if (allMeals.isNotEmpty()) return allMeals
+
+        allMeals = try {
+            mealCsvReader.readLinesFromFile()
+                .mapNotNull { line ->
+                    parseLine(line)
+                }
+        } catch (e: Exception) {
+            println("Critical error reading CSV: ${e.message}")
+            emptyList()
         }
+
         return allMeals
     }
 
-    companion object{
-       private var allMeals: List<Meal> = emptyList()
+    private fun parseLine(line: String) = try {
+        mealCsvParser.parseLine(line)
+    } catch (e: Exception) {
+        null
+    }
+
+    companion object {
+        private var allMeals: List<Meal> = emptyList()
     }
 }
