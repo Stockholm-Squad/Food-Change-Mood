@@ -1,5 +1,6 @@
 package org.example.logic
 
+import CsvLineHandler
 import data.MealCsvParser
 import data.FoodCsvReader
 import model.Meal
@@ -19,7 +20,7 @@ class GetSweetWithNoEggsUseCase(private val mealRepository: MealsRepository) {
 }
 
 fun main() {
-    val mealReader = FoodCsvReader(File("food.csv"))
+    val mealReader = FoodCsvReader(File("food.csv"), CsvLineHandler())
     val mealParser = MealCsvParser()
     val foodCsvRepository: MealsRepository = FoodCsvRepository(mealCsvParser = mealParser, foodCsvReader = mealReader)
 

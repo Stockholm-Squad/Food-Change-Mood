@@ -1,5 +1,6 @@
 package org.example
 
+import CsvLineHandler
 import IngredientGameUseCase
 import data.MealCsvParser
 import data.FoodCsvReader
@@ -20,7 +21,7 @@ fun main() {
     if (isFileValid(csvFile, fileName)) return
 
 
-    val mealReader = FoodCsvReader(csvFile)
+    val mealReader = FoodCsvReader(csvFile, CsvLineHandler())
     val mealParser = MealCsvParser()
     val foodCsvRepository: MealsRepository = FoodCsvRepository(mealCsvParser = mealParser, foodCsvReader = mealReader)
     val getHealthFastFoodUseCase= GetHealthFastFoodUseCase(foodCsvRepository)
