@@ -1,27 +1,21 @@
 package org.example
 
-import CsvLineHandler
-import IngredientGameUseCase
-import data.MealCsvParser
-import data.MealCsvReader
-import logic.GetHealthFastFoodUseCase
-import logic.GetIraqiMealsUseCase
-import org.example.data.MealCsvRepository
-import logic.GymHelperUseCase
-import logic.SearchMealByNameUseCase
-import org.example.data.CsvLineFormatter
-import org.example.logic.*
+import appModule
+import dataModule
+import org.example.di.logicModule
+import org.example.di.uiModule
 import org.example.presentation.FoodConsoleUI
-
+import org.example.utils.Constants
+import org.koin.core.context.startKoin
+import org.koin.java.KoinJavaComponent.getKoin
 import java.io.File
 
 
 fun main() {
 
-    val fileName = "food.csv"
-    val csvFile = File(fileName)
+    val csvFile = File(Constants.MEAL_CSV_FILE)
 
-    if (isFileValid(csvFile, fileName)) return
+    if (isFileValid(csvFile, Constants.MEAL_CSV_FILE)) return
 
 
     val mealReader = MealCsvReader(csvFile, CsvLineHandler())
@@ -55,6 +49,13 @@ fun main() {
         getIraqiMealsUseCase = GetIraqiMealsUseCase(mealCsvRepository),
         getGuessGameUseCase=getGuessGameUseCase
     )
+
+    startKoin {
+        modules(appModule, dataModule, logicModule, uiModule)
+    }
+
+    val foodConsoleUI: FoodConsoleUI = getKoin().get()
+
     foodConsoleUI.start()
 
 }
