@@ -24,7 +24,7 @@ class GymHelperUseCase(
             }
             .takeIf { it.isNotEmpty() }
             ?.sortedBy {
-                it.nutrition.sortByProteinsAndCalories(
+                it.nutrition.sortMealByProteinsAndCalories(
                     desiredCalories = desiredCalories,
                     desiredProteins = desiredProteins,
                     approximateAmount = approximateAmount
@@ -32,7 +32,7 @@ class GymHelperUseCase(
             } ?: throw Throwable(message = Messages.NO_MEALS_FOR_GYM_HELPER.messages)
     }
 
-    private fun Nutrition.sortByProteinsAndCalories(
+    private fun Nutrition.sortMealByProteinsAndCalories(
         desiredCalories: Float,
         desiredProteins: Float,
         approximateAmount: Float
