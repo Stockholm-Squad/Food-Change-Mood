@@ -22,9 +22,6 @@ val uiModule = module {
 
             ketoDietUseCase = get(),
             getGuessGameUseCase = get ()
-
-            ketoDietUseCase = get()
-
         )
     }
 }
