@@ -4,6 +4,7 @@ import CsvLineHandler
 import data.MealCsvParser
 import data.MealCsvReader
 import model.Meal
+import org.example.data.CsvLineFormatter
 import org.example.data.MealCsvRepository
 import java.io.File
 
@@ -21,7 +22,7 @@ class GetSweetWithNoEggsUseCase(private val mealRepository: MealsRepository) {
 
 fun main() {
     val mealReader = MealCsvReader(File("food.csv"), CsvLineHandler())
-    val mealParser = MealCsvParser()
+    val mealParser = MealCsvParser(CsvLineFormatter())
     val mealCsvRepository: MealsRepository = MealCsvRepository(mealCsvParser = mealParser, mealCsvReader = mealReader)
 
     val meals = GetSweetWithNoEggsUseCase(mealCsvRepository).getDessertWithNoEggs()

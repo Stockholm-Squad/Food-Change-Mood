@@ -7,6 +7,7 @@ import data.MealCsvReader
 import logic.GetHealthFastFoodUseCase
 import org.example.data.MealCsvRepository
 import logic.GymHelperUseCase
+import org.example.data.CsvLineFormatter
 import org.example.logic.*
 import org.example.presentation.FoodConsoleUI
 
@@ -22,7 +23,7 @@ fun main() {
 
 
     val mealReader = MealCsvReader(csvFile, CsvLineHandler())
-    val mealParser = MealCsvParser()
+    val mealParser = MealCsvParser(CsvLineFormatter())
     val mealCsvRepository: MealsRepository = MealCsvRepository(mealCsvParser = mealParser, mealCsvReader = mealReader)
     val getHealthFastFoodUseCase= GetHealthFastFoodUseCase(mealCsvRepository)
     val sweetWithNoEggsUseCase: GetSweetWithNoEggsUseCase = GetSweetWithNoEggsUseCase(mealCsvRepository)
