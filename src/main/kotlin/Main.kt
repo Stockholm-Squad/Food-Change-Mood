@@ -1,12 +1,15 @@
 package org.example
 
+import CsvLineHandler
 import IngredientGameUseCase
-import data.FoodCsvParser
-import data.FoodCsvReader
+import data.MealCsvParser
+import data.MealCsvReader
 import logic.GetHealthFastFoodUseCase
-import org.example.data.FoodCsvRepository
+import logic.GetIraqiMealsUseCase
+import org.example.data.MealCsvRepository
 import logic.GymHelperUseCase
 import logic.SearchMealByNameUseCase
+import org.example.data.CsvLineFormatter
 import org.example.logic.*
 import org.example.presentation.FoodConsoleUI
 
@@ -21,20 +24,20 @@ fun main() {
     if (isFileValid(csvFile, fileName)) return
 
 
-    val mealReader = FoodCsvReader(csvFile)
-    val mealParser = FoodCsvParser()
-    val foodCsvRepository: MealsRepository = FoodCsvRepository(foodCsvParser = mealParser, foodCsvReader = mealReader)
-    val getHealthFastFoodUseCase= GetHealthFastFoodUseCase(foodCsvRepository)
-    val sweetWithNoEggsUseCase = GetSweetWithNoEggsUseCase(foodCsvRepository)
-    val getCountriesFoodUseCase = GetCountriesFoodUseCase(foodCsvRepository)
-    val getPotatoMealsUseCase = GetPotatoMealsUseCase(foodCsvRepository)
-    val gymHelperUseCase = GymHelperUseCase(foodCsvRepository)
-    val ingredientGameUseCase = IngredientGameUseCase(foodCsvRepository)
-    val getSeaFoodByProteinRankUseCase = GetSeaFoodByProteinRankUseCase(foodCsvRepository)
-    val searchByAddDateUseCase = SearchByAddDateUseCase(foodCsvRepository)
-    val italianMealsForLargeGroupUseCase = ItalianMealsForLargeGroupUseCase(foodCsvRepository)
-    val getEasyFoodSuggestionsUseCase = GetEasyFoodSuggestionsUseCase(foodCsvRepository)
-    val soThinProblem = SoThinProblem(foodCsvRepository)
+    val mealReader = MealCsvReader(csvFile, CsvLineHandler())
+    val mealParser = MealCsvParser(CsvLineFormatter())
+    val mealCsvRepository: MealsRepository = MealCsvRepository(mealCsvParser = mealParser, mealCsvReader = mealReader)
+    val getHealthFastFoodUseCase= GetHealthFastFoodUseCase(mealCsvRepository)
+    val sweetWithNoEggsUseCase: GetSweetWithNoEggsUseCase = GetSweetWithNoEggsUseCase(mealCsvRepository)
+    val getCountriesFoodUseCase: GetCountriesFoodUseCase = GetCountriesFoodUseCase(mealCsvRepository)
+    val getPotatoMealsUseCase = GetPotatoMealsUseCase(mealCsvRepository)
+    val gymHelperUseCase: GymHelperUseCase = GymHelperUseCase(mealCsvRepository)
+    val ingredientGameUseCase = IngredientGameUseCase(mealCsvRepository)
+    val getSeaFoodByProteinRankUseCase = GetSeaFoodByProteinRankUseCase(mealCsvRepository)
+    val searchByAddDateUseCase = SearchByAddDateUseCase(mealCsvRepository)
+    val italianMealsForLargeGroupUseCase = ItalianMealsForLargeGroupUseCase(mealCsvRepository)
+    val getEasyFoodSuggestionsUseCase: GetEasyFoodSuggestionsUseCase = GetEasyFoodSuggestionsUseCase(mealCsvRepository)
+    val soThinProblem: SoThinProblem = SoThinProblem(mealCsvRepository)
 
     val foodConsoleUI = FoodConsoleUI(
         sweetNoEggsUseCase = sweetWithNoEggsUseCase,
@@ -48,7 +51,8 @@ fun main() {
         getEasyFoodSuggestionsUseCase = getEasyFoodSuggestionsUseCase,
         getHealthFastFoodUseCase = getHealthFastFoodUseCase,
         soThinProblem = soThinProblem,
-        searchMealByNameUseCase = SearchMealByNameUseCase(foodCsvRepository)
+        searchMealByNameUseCase = SearchMealByNameUseCase(mealCsvRepository),
+        getIraqiMealsUseCase = GetIraqiMealsUseCase(mealCsvRepository)
     )
     foodConsoleUI.start()
 

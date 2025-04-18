@@ -11,7 +11,7 @@ class GymHelperUI(
          print("🔥 Enter desired calories: ")
          val desiredCalories = readlnOrNull()?.toFloatOrNull()
          if (desiredCalories == null) {
-             println("Invalid input")
+             println(Messages.INVALID_INPUT.messages)
              return
          }
 
@@ -19,7 +19,7 @@ class GymHelperUI(
          val desiredProteins = readlnOrNull()?.toFloatOrNull()
 
          if (desiredProteins == null) {
-             println("Invalid input")
+             println(Messages.INVALID_INPUT.messages)
              return
          }
 
