@@ -12,13 +12,13 @@ class SuggestMealWithHighCaloriesUI(
         val suggestMeal = soThinProblem.suggestMealToSoThinProblem()
         println("------------------------------------------------------------------------------------------------")
         println("name: " + suggestMeal.first)
-        println("des: " + suggestMeal.second)
+        println("description: " + suggestMeal.second)
         println("time: " + suggestMeal.third.first + " minute")
         println("calories: " + suggestMeal.third.second)
         println("--------------------------------------------------------------------------------------------------")
         println("Do you like it? (yes/no) 😊")
         when(readlnOrNull()?.trim()?.lowercase()) {
-            "no" -> return getMaleWithHighCalorie()
+            "no" ->  getMaleWithHighCalorie()
             "yes" -> println("Great! Enjoy 😋")
             else -> throw Exception("Invalid input! Expected yes or no.")
         }

@@ -3,26 +3,31 @@ package org.example.presentation
 import logic.GymHelperUseCase
 import IngredientGameUseCase
 import logic.SearchMealByNameUseCase
+import logic.GetHealthFastFoodUseCase
 import org.example.logic.GetSeaFoodByProteinRankUseCase
 import org.example.logic.*
+import org.example.logic.GetEasyFoodSuggestionsUseCase
 import org.example.model.MenuOption
 import presentation.*
 
 class FoodConsoleUI(
+    private val getEasyFoodSuggestionsUseCase: GetEasyFoodSuggestionsUseCase,
     private val sweetNoEggsUseCase: GetSweetWithNoEggsUseCase,
     private val getCountriesFoodUseCase: GetCountriesFoodUseCase,
     private val getPotatoMealsUseCase: GetPotatoMealsUseCase,
     private val gymHelperUseCase: GymHelperUseCase,
     private val ingredientGameUseCase: IngredientGameUseCase,
+    private val getHealthFastFoodUseCase: GetHealthFastFoodUseCase,
     private val getSeaFoodByProteinRankUseCase: GetSeaFoodByProteinRankUseCase,
     private val searchByAddDateUseCase: SearchByAddDateUseCase,
     private val italianMealsForLargeGroupUseCase: ItalianMealsForLargeGroupUseCase,
     private val searchMealByNameUseCase: SearchMealByNameUseCase,
+    private val soThinProblem: SoThinProblem,
 ) {
-    private val healthyFastFood = GetHealthyFastFoodMealsUI()
+    private val healthyFastFood = GetHealthyFastFoodMealsUI(getHealthFastFoodUseCase)
     private val searchByName = SearchMealByNameUI(searchMealByNameUseCase)
     private val iraqiMeals = GetIraqiMealsUI()
-    private val easyMeals = SuggestEasyMealsUI()
+    private val easyMeals = SuggestEasyMealsUI(getEasyFoodSuggestionsUseCase)
     private val guessGame = GuessGameUI()
     private val sweetNoEggs = SuggestSweetNoEggsUI(sweetNoEggsUseCase)
     private val ketoMeals = KetoDietMealUI()
@@ -31,7 +36,7 @@ class FoodConsoleUI(
     private val countryFood = ExploreCountryFoodUI(getCountriesFoodUseCase)
     private val ingredientGame = IngredientGameUI(ingredientGameUseCase)
     private val potatoLovers = PotatoLoversUI(getPotatoMealsUseCase)
-    private val highCalorieMeal = HighCalorieMealUI()
+    private val highCalorieMeal = SuggestMealWithHighCaloriesUI(soThinProblem)
     private val seafoodRanking = ProteinSeafoodRankingUI(getSeaFoodByProteinRankUseCase)
     private val italianForGroups = ItalianLargeGroupMealsUI(italianMealsForLargeGroupUseCase)
 
@@ -56,7 +61,7 @@ class FoodConsoleUI(
                 MenuOption.COUNTRY_FOOD -> countryFood.exploreCountryFoodCulture()
                 MenuOption.INGREDIENT_GAME -> ingredientGame.start()
                 MenuOption.POTATO_LOVERS -> potatoLovers.showPotatoLoversUI()
-                MenuOption.HIGH_CALORIE_MEAL -> highCalorieMeal.highCalorieMealUI()
+                MenuOption.HIGH_CALORIE_MEAL -> highCalorieMeal.getMaleWithHighCalorie()
                 MenuOption.SEAFOOD_RANKING -> seafoodRanking.proteinSeafoodRanking()
                 MenuOption.ITALIAN_GROUP_MEALS -> italianForGroups.italianLargeGroupMealsUI()
                 MenuOption.EXIT -> {
