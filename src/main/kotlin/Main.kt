@@ -5,6 +5,7 @@ import IngredientGameUseCase
 import data.MealCsvParser
 import data.MealCsvReader
 import logic.GetHealthFastFoodUseCase
+import logic.GetIraqiMealsUseCase
 import org.example.data.MealCsvRepository
 import logic.GymHelperUseCase
 import logic.SearchMealByNameUseCase
@@ -50,7 +51,8 @@ fun main() {
         getEasyFoodSuggestionsUseCase = getEasyFoodSuggestionsUseCase,
         getHealthFastFoodUseCase = getHealthFastFoodUseCase,
         soThinProblem = soThinProblem,
-        searchMealByNameUseCase = SearchMealByNameUseCase(foodCsvRepository)
+        searchMealByNameUseCase = SearchMealByNameUseCase(mealCsvRepository),
+        getIraqiMealsUseCase = GetIraqiMealsUseCase(mealCsvRepository)
     )
     foodConsoleUI.start()
 

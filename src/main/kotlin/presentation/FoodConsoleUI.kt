@@ -4,6 +4,7 @@ import logic.GymHelperUseCase
 import IngredientGameUseCase
 import logic.SearchMealByNameUseCase
 import logic.GetHealthFastFoodUseCase
+import logic.GetIraqiMealsUseCase
 import org.example.logic.GetSeaFoodByProteinRankUseCase
 import org.example.logic.*
 import org.example.logic.GetEasyFoodSuggestionsUseCase
@@ -23,10 +24,11 @@ class FoodConsoleUI(
     private val italianMealsForLargeGroupUseCase: ItalianMealsForLargeGroupUseCase,
     private val searchMealByNameUseCase: SearchMealByNameUseCase,
     private val soThinProblem: SoThinProblem,
+    private val getIraqiMealsUseCase: GetIraqiMealsUseCase,
 ) {
     private val healthyFastFood = GetHealthyFastFoodMealsUI(getHealthFastFoodUseCase)
     private val searchByName = SearchMealByNameUI(searchMealByNameUseCase)
-    private val iraqiMeals = GetIraqiMealsUI()
+    private val iraqiMeals = GetIraqiMealsUI(getIraqiMealsUseCase)
     private val easyMeals = SuggestEasyMealsUI(getEasyFoodSuggestionsUseCase)
     private val guessGame = GuessGameUI()
     private val sweetNoEggs = SuggestSweetNoEggsUI(sweetNoEggsUseCase)
