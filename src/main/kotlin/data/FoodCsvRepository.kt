@@ -2,20 +2,20 @@ package org.example.data
 
 import data.MealColumnIndex
 import data.MealCsvParser
-import data.FoodCsvReader
+import data.MealCsvReader
 import model.Meal
 import org.example.logic.MealsRepository
 
 
 class FoodCsvRepository(
-    private val foodCsvReader: FoodCsvReader,
+    private val mealCsvReader: MealCsvReader,
     private val mealCsvParser: MealCsvParser
 ) : MealsRepository {
 
     override fun getAllMeals(): List<Meal> {
         if (allMeals.isEmpty()) {
             allMeals = try {
-                foodCsvReader.readLinesFromFile()
+                mealCsvReader.readLinesFromFile()
                     .mapNotNull { line ->
                         try {
                             mealCsvParser.parseLine(line)

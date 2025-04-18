@@ -3,7 +3,7 @@ package data
 import CsvLineHandler
 import java.io.File
 
-class FoodCsvReader(
+class MealCsvReader(
     private val csvFile: File,
     private val csvLineHandler: CsvLineHandler
 ) {

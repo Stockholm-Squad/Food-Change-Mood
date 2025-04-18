@@ -3,7 +3,7 @@ package org.example
 import CsvLineHandler
 import IngredientGameUseCase
 import data.MealCsvParser
-import data.FoodCsvReader
+import data.MealCsvReader
 import logic.GetHealthFastFoodUseCase
 import org.example.data.FoodCsvRepository
 import logic.GymHelperUseCase
@@ -21,9 +21,9 @@ fun main() {
     if (isFileValid(csvFile, fileName)) return
 
 
-    val mealReader = FoodCsvReader(csvFile, CsvLineHandler())
+    val mealReader = MealCsvReader(csvFile, CsvLineHandler())
     val mealParser = MealCsvParser()
-    val foodCsvRepository: MealsRepository = FoodCsvRepository(mealCsvParser = mealParser, foodCsvReader = mealReader)
+    val foodCsvRepository: MealsRepository = FoodCsvRepository(mealCsvParser = mealParser, mealCsvReader = mealReader)
     val getHealthFastFoodUseCase= GetHealthFastFoodUseCase(foodCsvRepository)
     val sweetWithNoEggsUseCase: GetSweetWithNoEggsUseCase = GetSweetWithNoEggsUseCase(foodCsvRepository)
     val getCountriesFoodUseCase: GetCountriesFoodUseCase = GetCountriesFoodUseCase(foodCsvRepository)
