@@ -16,16 +16,15 @@ class GymHelperUseCase(
     ): List<Meal> {
         return mealRepository.getAllMeals()
             .filter {
-                //TODO handle the function renaming here
-                it.nutrition.isMealsClosedToDesiredCaloriesAndProteins(
+                it.nutrition?.isMealApproxmatlyMatchesCaloriesAndProteins(
                     desiredCalories = desiredCalories,
                     desiredProteins = desiredProteins,
                     approximateAmount = approximateAmount
-                )
+                ) ?: false
             }
             .takeIf { it.isNotEmpty() }
             ?.sortedBy {
-                it.nutrition.sortByProteinsAndCalories(
+                it.nutrition.sortMealByProteinsAndCalories(
                     desiredCalories = desiredCalories,
                     desiredProteins = desiredProteins,
                     approximateAmount = approximateAmount
@@ -33,33 +32,54 @@ class GymHelperUseCase(
             } ?: throw Throwable(message = Messages.NO_MEALS_FOR_GYM_HELPER.messages)
     }
 
-    private fun Nutrition.sortByProteinsAndCalories(
+    private fun Nutrition.sortMealByProteinsAndCalories(
         desiredCalories: Float,
         desiredProteins: Float,
         approximateAmount: Float
     ): Boolean {
-        return this.isMealsClosedToDesiredCaloriesAndProteins(
+        return this.isMealApproxmatlyMatchesCaloriesAndProteins(
             desiredCalories = desiredCalories,
             desiredProteins = desiredProteins,
             approximateAmount = approximateAmount
         )
     }
 
-    //TODO handle them to be readable more
-    private fun Nutrition.isMealsClosedToDesiredCaloriesAndProteins(
+    private fun Nutrition.isMealApproxmatlyMatchesCaloriesAndProteins(
         desiredCalories: Float,
         desiredProteins: Float,
         approximateAmount: Float
     ): Boolean {
-        return calories.let { caloriesAmount ->
-            protein.let { proteinsAmount ->
-                isClosedToDesiredAmount(desiredCalories, caloriesAmount, approximateAmount)
-                        && isClosedToDesiredAmount(desiredProteins, proteinsAmount, approximateAmount)
-            }
-        }
+        return this.isMealMatchesCalories(desiredCalories = desiredCalories, approximateAmount = approximateAmount) &&
+                this.isMealMatchesProteins(desiredProteins = desiredProteins, approximateAmount = approximateAmount)
     }
 
-    private fun isClosedToDesiredAmount(
+    private fun Nutrition.isMealMatchesCalories(
+        desiredCalories: Float,
+        approximateAmount: Float
+    ): Boolean {
+        return this.calories?.let {
+            isAmountApproximatlyMatches(
+                desiredAmount = desiredCalories,
+                amount = it,
+                approximateAmount = approximateAmount
+            )
+        } ?: false
+    }
+
+    private fun Nutrition.isMealMatchesProteins(
+        desiredProteins: Float,
+        approximateAmount: Float
+    ): Boolean {
+        return this.protein?.let {
+            isAmountApproximatlyMatches(
+                desiredAmount = desiredProteins,
+                amount = it,
+                approximateAmount = approximateAmount
+            )
+        } ?: false
+    }
+
+    private fun isAmountApproximatlyMatches(
         desiredAmount: Float,
         amount: Float,
         approximateAmount: Float
