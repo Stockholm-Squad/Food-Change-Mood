@@ -16,7 +16,10 @@ val logicModule = module {
     single { ItalianMealsForLargeGroupUseCase(get()) }
     single { SoThinProblemUseCase(get()) }
 
-    single { SearchMealByNameUseCase(get()) }
+    single { GetMealByNameUseCase(
+        get(),
+        searchingByKmp = TODO()
+    ) }
     single { GetIraqiMealsUseCase(get()) }
 
     single { GetSeaFoodByProteinRankUseCase(get()) }

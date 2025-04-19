@@ -1,8 +1,8 @@
 package org.example.logic.usecases
 
 import model.Meal
-import org.example.logic.MealsRepository
 import org.example.logic.SearchingByKmp
+import org.example.logic.repository.MealsRepository
 
 
 class GetMealByNameUseCase(
