@@ -4,11 +4,9 @@ import model.Meal
 import model.Nutrition
 import org.example.logic.repository.MealsRepository
 
-//TODO rename the useCase
 class SoThinProblemUseCase(
     private val mealRepository: MealsRepository,
 ) {
-    //TODO handle the return type to be Meal
     fun suggestRandomMealForSoThinPeople(): Meal {
         return mealRepository.getAllMeals()
             .takeIf { meals -> meals.isNotEmpty() }
