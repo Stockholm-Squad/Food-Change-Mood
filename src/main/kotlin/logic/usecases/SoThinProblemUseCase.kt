@@ -1,7 +1,8 @@
-package org.example.logic
+package org.example.logic.usecases
 
 import model.Meal
 import model.Nutrition
+import org.example.logic.repository.MealsRepository
 
 //TODO rename the useCase
 class SoThinProblemUseCase(

@@ -1,6 +1,6 @@
 package org.example.presentation
 
-import org.example.logic.GetPotatoMealsUseCase
+import org.example.logic.usecases.GetPotatoMealsUseCase
 
 class PotatoLoversUI(private val getPotatoMealsUseCase: GetPotatoMealsUseCase) {
 

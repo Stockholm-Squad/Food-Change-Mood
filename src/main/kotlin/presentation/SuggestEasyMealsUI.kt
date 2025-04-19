@@ -1,7 +1,6 @@
 package presentation;
 
-import org.example.logic.GetEasyFoodSuggestionsUseCase
-import kotlin.jvm.Throws
+import org.example.logic.usecases.GetEasyFoodSuggestionsUseCase
 
 class SuggestEasyMealsUI (private val getEasyFoodSuggestionsUseCase: GetEasyFoodSuggestionsUseCase) {
 

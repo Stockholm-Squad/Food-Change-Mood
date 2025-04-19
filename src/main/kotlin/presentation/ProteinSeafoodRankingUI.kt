@@ -1,6 +1,6 @@
 package org.example.presentation
 
-import org.example.logic.GetSeaFoodByProteinRankUseCase
+import org.example.logic.usecases.GetSeaFoodByProteinRankUseCase
 
 class ProteinSeafoodRankingUI(private val getSeaFoodByProteinRankUseCase: GetSeaFoodByProteinRankUseCase) {
 

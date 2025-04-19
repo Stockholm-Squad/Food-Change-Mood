@@ -1,7 +1,6 @@
 package org.example.presentation
 
-import IngredientGameUseCase
-import java.util.Scanner
+import org.example.logic.usecases.IngredientGameUseCase
 
 class IngredientGameUI(private val game: IngredientGameUseCase) {
 

@@ -1,4 +1,4 @@
-package org.example.data
+package org.example.data.utils
 
 class CsvLineFormatter {
     fun formatRowOfData(str: String): List<String> {

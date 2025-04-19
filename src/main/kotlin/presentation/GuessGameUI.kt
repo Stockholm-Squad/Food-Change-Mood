@@ -1,6 +1,6 @@
 package presentation;
 
-import org.example.logic.GetGuessGameUseCase
+import org.example.logic.usecases.GetGuessGameUseCase
 
 class GuessGameUI (
     private val getGuessGameUseCase: GetGuessGameUseCase
