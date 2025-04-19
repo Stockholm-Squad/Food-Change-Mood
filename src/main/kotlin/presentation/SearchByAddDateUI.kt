@@ -1,7 +1,7 @@
 package presentation;
 
 import model.Meal
-import org.example.logic.usecases.SearchByAddDateUseCase
+import org.example.logic.usecases.GetMealsByDateUseCase
 import org.example.utils.DateValidator.Companion.isValidDate
 import org.example.utils.viewMealInListDetails
 
@@ -13,7 +13,7 @@ import org.example.utils.viewMealInListDetails
         - No meals were found for the given date. Ensure different exceptions are used for both cases.
  */
 
-class SearchByAddDateUI(private val searchByAddDateUseCase: SearchByAddDateUseCase) {
+class SearchByAddDateUI(private val getMealsByDateUseCase: GetMealsByDateUseCase) {
 
     fun searchMealsByDate() {
         while (true) {
@@ -32,7 +32,7 @@ class SearchByAddDateUI(private val searchByAddDateUseCase: SearchByAddDateUseCa
     }
 
     private fun searchFood(date: String) {
-        val filteredList = searchByAddDateUseCase.getMealsByDate(date)
+        val filteredList = getMealsByDateUseCase.getMealsByDate(date)
 
         printMealsIdName(filteredList)
 

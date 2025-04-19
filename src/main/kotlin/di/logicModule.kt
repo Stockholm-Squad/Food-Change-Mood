@@ -13,7 +13,7 @@ val logicModule = module {
     single { GetPotatoMealsUseCase(get()) }
     single { GymHelperUseCase(get()) }
     single { IngredientGameUseCase(get()) }
-    single { SearchByAddDateUseCase(get()) }
+    single { GetMealsByDateUseCase(get()) }
     single { ItalianMealsForLargeGroupUseCase(get()) }
     single { SoThinProblemUseCase(get()) }
 
