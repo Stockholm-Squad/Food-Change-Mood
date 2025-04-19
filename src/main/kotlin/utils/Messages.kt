@@ -1,5 +1,6 @@
 package org.example.utils
 
+//TODO move them to Constants file
 enum class Messages(
     val messages: String
 ) {

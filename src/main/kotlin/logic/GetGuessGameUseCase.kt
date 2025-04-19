@@ -5,7 +5,7 @@ import model.Meal
 class GetGuessGameUseCase(
     private val mealsRepository: MealsRepository
 ) {
-    //TODO handle the game here instead of handling it throw UI
+
    private fun getRandomMeal(): Meal {
         val meals = mealsRepository.getAllMeals()
         return meals.random()
@@ -37,5 +37,7 @@ class GetGuessGameUseCase(
         }
 
         println("❌ You've used all attempts. The correct time was $correctTime minutes.")
-    }
+
+  
+    
 }

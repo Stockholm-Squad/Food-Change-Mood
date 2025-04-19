@@ -3,7 +3,7 @@ package org.example.presentation
 import logic.GymHelperUseCase
 import IngredientGameUseCase
 import logic.SearchMealByNameUseCase
-import logic.GetHealthFastFoodUseCase
+import logic.GetHealthyFastFoodUseCase
 import logic.GetIraqiMealsUseCase
 import org.example.logic.GetSeaFoodByProteinRankUseCase
 import org.example.logic.*
@@ -19,12 +19,12 @@ class FoodConsoleUI(
     private val getPotatoMealsUseCase: GetPotatoMealsUseCase,
     private val gymHelperUseCase: GymHelperUseCase,
     private val ingredientGameUseCase: IngredientGameUseCase,
-    private val getHealthFastFoodUseCase: GetHealthFastFoodUseCase,
+    private val getHealthFastFoodUseCase: GetHealthyFastFoodUseCase,
     private val getSeaFoodByProteinRankUseCase: GetSeaFoodByProteinRankUseCase,
     private val searchByAddDateUseCase: SearchByAddDateUseCase,
     private val italianMealsForLargeGroupUseCase: ItalianMealsForLargeGroupUseCase,
     private val searchMealByNameUseCase: SearchMealByNameUseCase,
-    private val soThinProblem: SoThinProblem,
+    private val soThinProblem: SoThinProblemUseCase,
     private val getIraqiMealsUseCase: GetIraqiMealsUseCase,
     private val getGuessGameUseCase: GetGuessGameUseCase
 ) {
@@ -40,7 +40,7 @@ class FoodConsoleUI(
     private val countryFood = ExploreCountryFoodUI(getCountriesFoodUseCase)
     private val ingredientGame = IngredientGameUI(ingredientGameUseCase)
     private val potatoLovers = PotatoLoversUI(getPotatoMealsUseCase)
-    private val highCalorieMeal = SuggestMealWithHighCaloriesUI(soThinProblem)
+    private val highCalorieMeal = SuggestMealForSoThinPeopleUI(soThinProblem)
     private val seafoodRanking = ProteinSeafoodRankingUI(getSeaFoodByProteinRankUseCase)
     private val italianForGroups = ItalianLargeGroupMealsUI(italianMealsForLargeGroupUseCase)
 

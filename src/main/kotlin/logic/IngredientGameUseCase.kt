@@ -1,7 +1,7 @@
 import model.Meal
 import org.example.logic.MealsRepository
 
-
+//TODO Make the game more readable and try to use functional programming
 class IngredientGameUseCase(
     private val repository: MealsRepository
 ) {
@@ -21,7 +21,7 @@ class IngredientGameUseCase(
 
     private val gameState = GameState()
     private lateinit var currentQuestion: Question
-
+    //TODO rename the function name to be ex: showIngredientGame
     fun startNewRound(): Question {
         val meal = getValidRandomMeal()
         val correctIngredient = meal.ingredients!!.random() + " true"

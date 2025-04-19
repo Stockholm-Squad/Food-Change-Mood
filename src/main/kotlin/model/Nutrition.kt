@@ -1,5 +1,6 @@
 package model
 
+//TODO set its value to be nullable
 data class Nutrition(
     val calories: Float = 0f,
     val totalFat: Float = 0f,

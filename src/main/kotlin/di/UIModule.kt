@@ -21,8 +21,11 @@ val uiModule = module {
             soThinProblem = get(),
             getIraqiMealsUseCase = get(),
             ketoDietUseCase = get(),
-            getGuessGameUseCase = get (),
 
+        
+
+
+            getGuessGameUseCase = get ()
 
         )
     }

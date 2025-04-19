@@ -16,6 +16,7 @@ class GymHelperUseCase(
     ): List<Meal> {
         return mealRepository.getAllMeals()
             .filter {
+                //TODO handle the function renaming here
                 it.nutrition.isMealsClosedToDesiredCaloriesAndProteins(
                     desiredCalories = desiredCalories,
                     desiredProteins = desiredProteins,
@@ -44,6 +45,7 @@ class GymHelperUseCase(
         )
     }
 
+    //TODO handle them to be readable more
     private fun Nutrition.isMealsClosedToDesiredCaloriesAndProteins(
         desiredCalories: Float,
         desiredProteins: Float,

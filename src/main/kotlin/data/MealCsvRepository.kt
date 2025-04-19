@@ -11,6 +11,8 @@ class MealCsvRepository(
     private val mealCsvParser: MealCsvParser
 ) : MealsRepository {
 
+    //TODO handle datasource and pass it here instead of passing the reader and parser
+    //TODO make package utiles --> put handler and formatter to them
     override fun getAllMeals(): List<Meal> {
         if (allMeals.isNotEmpty()) return allMeals
 
