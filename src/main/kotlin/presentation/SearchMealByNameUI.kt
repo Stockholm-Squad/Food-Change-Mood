@@ -1,6 +1,6 @@
 package presentation
 
-import logic.GetMealByNameUseCase
+import org.example.logic.usecases.GetMealByNameUseCase
 
 
 class SearchMealByNameUI(private val getMealByNameUseCase: GetMealByNameUseCase) {

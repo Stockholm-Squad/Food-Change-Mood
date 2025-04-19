@@ -1,4 +1,4 @@
-package logic
+package org.example.logic.usecases
 
 import model.Meal
 import org.example.logic.MealsRepository
