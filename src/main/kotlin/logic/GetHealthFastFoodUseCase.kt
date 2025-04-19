@@ -1,9 +1,8 @@
-
 package logic
 
 import model.Meal
 import org.example.logic.MealsRepository
-import java.util.Collections.emptyList
+
 
 class GetHealthyFastFoodUseCase(
     private val mealRepository: MealsRepository
@@ -17,4 +16,5 @@ class GetHealthyFastFoodUseCase(
             )
     }
 }
+
 
