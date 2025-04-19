@@ -3,7 +3,7 @@ package org.example.logic.usecases
 import model.Meal
 import model.Nutrition
 import org.example.logic.repository.MealsRepository
-import org.example.utils.Messages
+import org.example.utils.Constants
 import kotlin.math.abs
 
 class GymHelperUseCase(
@@ -29,7 +29,7 @@ class GymHelperUseCase(
                     desiredProteins = desiredProteins,
                     approximateAmount = approximateAmount
                 )
-            } ?: throw Throwable(message = Messages.NO_MEALS_FOR_GYM_HELPER.messages)
+            } ?: throw Throwable(message = Constants.NO_MEALS_FOR_GYM_HELPER)
     }
 
     private fun Nutrition.sortMealByProteinsAndCalories(
