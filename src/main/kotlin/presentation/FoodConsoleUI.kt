@@ -24,7 +24,7 @@ class FoodConsoleUI(
     private val searchByAddDateUseCase: SearchByAddDateUseCase,
     private val italianMealsForLargeGroupUseCase: ItalianMealsForLargeGroupUseCase,
     private val searchMealByNameUseCase: SearchMealByNameUseCase,
-    private val soThinProblem: SoThinProblem,
+    private val soThinProblem: SoThinProblemUseCase,
     private val getIraqiMealsUseCase: GetIraqiMealsUseCase,
     private val getGuessGameUseCase: GetGuessGameUseCase
 ) {
@@ -40,7 +40,7 @@ class FoodConsoleUI(
     private val countryFood = ExploreCountryFoodUI(getCountriesFoodUseCase)
     private val ingredientGame = IngredientGameUI(ingredientGameUseCase)
     private val potatoLovers = PotatoLoversUI(getPotatoMealsUseCase)
-    private val highCalorieMeal = SuggestMealWithHighCaloriesUI(soThinProblem)
+    private val highCalorieMeal = SuggestMealForSoThinPeopleUI(soThinProblem)
     private val seafoodRanking = ProteinSeafoodRankingUI(getSeaFoodByProteinRankUseCase)
     private val italianForGroups = ItalianLargeGroupMealsUI(italianMealsForLargeGroupUseCase)
 
