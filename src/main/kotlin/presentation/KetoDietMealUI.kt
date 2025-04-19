@@ -1,12 +1,12 @@
 package presentation;
 
-import org.example.logic.usecases.KetoDietUseCase
+import org.example.logic.usecases.GetMealForKetoDietUseCase
 
-class KetoDietMealUI(private val ketoDietUseCase: KetoDietUseCase) {
+class KetoDietMealUI(private val getMealForKetoDietUseCase: GetMealForKetoDietUseCase) {
 
     fun showKetoMeal() {
         println("Finding keto-friendly meal for you...")
-        val meal = ketoDietUseCase.getKetoMeal()
+        val meal = getMealForKetoDietUseCase.getKetoMeal()
 
         if (meal == null) {
             println("You've seen all available keto meals!")

@@ -4,7 +4,7 @@ import model.Meal
 import model.Nutrition
 import org.example.logic.repository.MealsRepository
 
-class SoThinProblemUseCase(
+class GetMealsForSoThinProblemUseCase(
     private val mealRepository: MealsRepository,
 ) {
     fun suggestRandomMealForSoThinPeople(): Meal {

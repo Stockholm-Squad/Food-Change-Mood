@@ -11,15 +11,15 @@ val uiModule = module {
             sweetNoEggsUseCase = get(),
             getCountryFoodUseCase = get(),
             getPotatoMealsUseCase = get(),
-            gymHelperUseCase = get(),
-            ingredientGameUseCase = get(),
+            getMealsForGymHelperUseCase = get(),
+            getIngredientGameUseCase = get(),
             getSeaFoodByProteinRankUseCase = get(),
             getMealsByDateUseCase = get(),
-            italianMealsForLargeGroupUseCase = get(),
+            getMealsForLargeGroupUseCase = get(),
             getMealByNameUseCase = get(),
             soThinProblem = get(),
             getIraqiMealsUseCase = get(),
-            ketoDietUseCase = get(),
+            getMealForKetoDietUseCase = get(),
             getGuessGameUseCase = get ()
         )
     }

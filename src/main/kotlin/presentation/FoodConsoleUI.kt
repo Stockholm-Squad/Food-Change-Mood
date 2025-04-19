@@ -1,7 +1,7 @@
 package org.example.presentation
 
-import org.example.logic.usecases.GymHelperUseCase
-import org.example.logic.usecases.IngredientGameUseCase
+import org.example.logic.usecases.GetMealsForGymHelperUseCase
+import org.example.logic.usecases.GetIngredientGameUseCase
 import org.example.logic.usecases.GetHealthyFastFoodUseCase
 import org.example.logic.usecases.GetIraqiMealsUseCase
 import org.example.logic.usecases.GetEasyFoodSuggestionsUseCase
@@ -10,19 +10,19 @@ import org.example.utils.MenuOption
 import presentation.*
 
 class FoodConsoleUI(
-    private val ketoDietUseCase: KetoDietUseCase,
+    private val getMealForKetoDietUseCase: GetMealForKetoDietUseCase,
     private val getEasyFoodSuggestionsUseCase: GetEasyFoodSuggestionsUseCase,
     private val sweetNoEggsUseCase: GetDessertsWithNoEggs,
     private val getCountryFoodUseCase: GetCountryFoodUseCase,
     private val getPotatoMealsUseCase: GetPotatoMealsUseCase,
-    private val gymHelperUseCase: GymHelperUseCase,
-    private val ingredientGameUseCase: IngredientGameUseCase,
+    private val getMealsForGymHelperUseCase: GetMealsForGymHelperUseCase,
+    private val getIngredientGameUseCase: GetIngredientGameUseCase,
     private val getHealthFastFoodUseCase: GetHealthyFastFoodUseCase,
     private val getSeaFoodByProteinRankUseCase: GetSeaFoodByProteinRankUseCase,
     private val getMealsByDateUseCase: GetMealsByDateUseCase,
-    private val italianMealsForLargeGroupUseCase: ItalianMealsForLargeGroupUseCase,
+    private val getMealsForLargeGroupUseCase: GetMealsForLargeGroupUseCase,
     private val getMealByNameUseCase: GetMealByNameUseCase,
-    private val soThinProblem: SoThinProblemUseCase,
+    private val soThinProblem: GetMealsForSoThinProblemUseCase,
     private val getIraqiMealsUseCase: GetIraqiMealsUseCase,
     private val getGuessGameUseCase: GetGuessGameUseCase
 ) {
@@ -32,15 +32,15 @@ class FoodConsoleUI(
     private val easyMeals = SuggestEasyMealsUI(getEasyFoodSuggestionsUseCase)
     private val guessGame = GuessGameUI(getGuessGameUseCase)
     private val sweetNoEggs = SuggestSweetNoEggsUI(sweetNoEggsUseCase)
-    private val ketoMeals = KetoDietMealUI(ketoDietUseCase)
+    private val ketoMeals = KetoDietMealUI(getMealForKetoDietUseCase)
     private val searchByDate = SearchByAddDateUI(getMealsByDateUseCase)
-    private val gymHelper = GymHelperUI(gymHelperUseCase)
+    private val gymHelper = GymHelperUI(getMealsForGymHelperUseCase)
     private val countryFood = ExploreCountryFoodUI(getCountryFoodUseCase)
-    private val ingredientGame = IngredientGameUI(ingredientGameUseCase)
+    private val ingredientGame = IngredientGameUI(getIngredientGameUseCase)
     private val potatoLovers = PotatoLoversUI(getPotatoMealsUseCase)
     private val highCalorieMeal = SuggestMealForSoThinPeopleUI(soThinProblem)
     private val seafoodRanking = ProteinSeafoodRankingUI(getSeaFoodByProteinRankUseCase)
-    private val italianForGroups = ItalianLargeGroupMealsUI(italianMealsForLargeGroupUseCase)
+    private val italianForGroups = ItalianLargeGroupMealsUI(getMealsForLargeGroupUseCase)
 
     fun start() {
         welcomeUser()

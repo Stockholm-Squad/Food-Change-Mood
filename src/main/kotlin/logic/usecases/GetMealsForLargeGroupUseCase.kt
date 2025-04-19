@@ -3,7 +3,7 @@ package org.example.logic.usecases
 import model.Meal
 import org.example.logic.repository.MealsRepository
 
-class ItalianMealsForLargeGroupUseCase(
+class GetMealsForLargeGroupUseCase(
     private val mealsRepository: MealsRepository
 ) {
 

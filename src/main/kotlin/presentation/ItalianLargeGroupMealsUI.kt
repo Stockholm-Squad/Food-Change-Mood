@@ -1,14 +1,14 @@
 package org.example.presentation
 
-import org.example.logic.usecases.ItalianMealsForLargeGroupUseCase
+import org.example.logic.usecases.GetMealsForLargeGroupUseCase
 import org.example.utils.viewMealInListDetails
 
-class ItalianLargeGroupMealsUI(private val italianMealsForLargeGroupUseCase: ItalianMealsForLargeGroupUseCase) {
+class ItalianLargeGroupMealsUI(private val getMealsForLargeGroupUseCase: GetMealsForLargeGroupUseCase) {
 
     fun italianLargeGroupMealsUI() {
         println("🍝 Planning a big Italian feast? Here's a list of meals perfect for large groups:")
         println("Loading...")
-        val filteredList = italianMealsForLargeGroupUseCase.getItalianMealsForLargeGroup()
+        val filteredList = getMealsForLargeGroupUseCase.getItalianMealsForLargeGroup()
         filteredList.forEach { meal ->
             println("${meal.id} -> ${meal.name}")
         }

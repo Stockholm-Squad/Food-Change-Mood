@@ -6,7 +6,7 @@ import org.example.logic.repository.MealsRepository
 import org.example.utils.Constants
 import kotlin.math.abs
 
-class GymHelperUseCase(
+class GetMealsForGymHelperUseCase(
     private val mealRepository: MealsRepository
 ) {
     fun getGymHelperMeals(
