@@ -14,8 +14,14 @@ class SoThinProblemUseCase(
                 meals.isNotEmpty()
             }
             ?.filter { meal ->
+                meal.id !in seenMeal &&
                         meal.nutrition.hasMoreThanMinCalories()
-            }?.random()
+            }
+            ?.randomOrNull()
+            ?.also { meal ->
+                seenMeal.add((meal.id))
+            }
+
             ?: throw IllegalStateException("Sorry, No meal found with more than 700 calories")
     }
 
@@ -25,5 +31,7 @@ class SoThinProblemUseCase(
 
     companion object {
         private const val MIN_CALORIES = 700
+        private val seenMeal: MutableSet<Int> = mutableSetOf()
+
     }
 }
