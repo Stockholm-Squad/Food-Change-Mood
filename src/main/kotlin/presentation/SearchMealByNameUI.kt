@@ -1,8 +1,9 @@
-package presentation;
+package presentation
 
-import org.example.logic.usecases.SearchMealByNameUseCase
+import org.example.logic.usecases.GetMealByNameUseCase
 
-class SearchMealByNameUI(private val searchMealByNameUseCase: SearchMealByNameUseCase) {
+
+class SearchMealByNameUI(private val getMealByNameUseCase: GetMealByNameUseCase) {
 
     fun handleSearchByName() {
         print("🔍 Enter a meal keyword to search: ")
@@ -13,7 +14,7 @@ class SearchMealByNameUI(private val searchMealByNameUseCase: SearchMealByNameUs
             return
         }
 
-        val matchingMeals = searchMealByNameUseCase.searchMealsByName(name)
+        val matchingMeals = getMealByNameUseCase.getMealByName(name)
 
         if (matchingMeals.isEmpty()) {
             println("❌ No meals found with the name '$name'.")
