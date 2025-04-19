@@ -3,7 +3,8 @@ package logic
 import model.Meal
 import org.example.logic.MealsRepository
 
-
+//TODO rename GetMealsByNameUseCase
+//TODO Move the algorithm to another class to be used later
 class SearchMealByNameUseCase(private val mealsRepository: MealsRepository) {
 
     /**

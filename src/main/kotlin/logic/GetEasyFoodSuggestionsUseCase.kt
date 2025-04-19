@@ -6,6 +6,7 @@ import java.util.Collections.emptyList
 class GetEasyFoodSuggestionsUseCase(
     private val mealRepository: MealsRepository
 ) {
+    //TODO refactor it to take no parameter
     fun getEasyFood(
         filterEasyMeal: (Meal) -> Boolean = { it.isEasyMeal() }
     ): List<Meal> {
