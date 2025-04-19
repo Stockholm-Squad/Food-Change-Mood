@@ -7,9 +7,10 @@ import model.Meal
 import org.example.data.CsvLineFormatter
 import org.example.data.MealCsvRepository
 import java.io.File
-
+//TODO handle name of the useCase
 class GetSweetWithNoEggsUseCase(private val mealRepository: MealsRepository) {
 
+    //TODO handle it to return direct instead of init variables
     fun getDessertWithNoEggs(): List<Meal> {
 
         val meals = mealRepository.getAllMeals()

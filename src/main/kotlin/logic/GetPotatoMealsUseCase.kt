@@ -2,6 +2,8 @@ package org.example.logic
 
 import model.Meal
 
+//TODO handle it to be separated or handle the name to be GetRandomPotatoMealsUseCase and make the 2 functions to be one
+
 class GetPotatoMealsUseCase(private val mealsRepository: MealsRepository) {
 
     /**

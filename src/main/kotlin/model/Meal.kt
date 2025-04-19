@@ -2,6 +2,9 @@ package model
 
 import java.util.Date
 
+//TODO remove unneeded comments or add documentation
+//TODO let the nutrition to be nullable
+
 
 data class Meal(
     val name: String?,

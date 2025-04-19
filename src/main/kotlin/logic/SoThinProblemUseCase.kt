@@ -1,28 +1,28 @@
 package org.example.logic
 
+import model.Meal
 import model.Nutrition
 
 //TODO rename the useCase
-class SoThinProblem(
+class SoThinProblemUseCase(
     private val mealRepository: MealsRepository,
 ) {
     //TODO handle the return type to be Meal
-    fun suggestMealToSoThinProblem(): Triple<String?, String?, Pair<Int?, Float>> {
+    fun suggestRandomMealForSoThinPeople(): Meal {
         return mealRepository.getAllMeals()
             .takeIf { meals ->
                 meals.isNotEmpty()
             }
             ?.filter { meal ->
-                meal.nutrition.hasMoreThanMinCalories()
+                meal.id !in seenMeal &&
+                        meal.nutrition.hasMoreThanMinCalories()
             }
-            ?.map { suggestMeal ->
-                Triple(
-                    suggestMeal.name,
-                    suggestMeal.description,
-                    Pair(suggestMeal.minutes, suggestMeal.nutrition.calories)
-                )
+            ?.randomOrNull()
+            ?.also { meal ->
+                seenMeal.add((meal.id))
             }
-            ?.random() ?: throw IllegalStateException("Sorry, No meal found with more than 700 calories")
+
+            ?: throw IllegalStateException("Sorry, No meal found with more than 700 calories")
     }
 
     private fun Nutrition.hasMoreThanMinCalories(): Boolean {
@@ -31,5 +31,7 @@ class SoThinProblem(
 
     companion object {
         private const val MIN_CALORIES = 700
+        private val seenMeal: MutableSet<Int> = mutableSetOf()
+
     }
 }

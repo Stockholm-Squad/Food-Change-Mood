@@ -6,6 +6,8 @@ class KetoDietUseCase(private val mealRepository: MealsRepository) {
 
     private val suggestedMeals = mutableSetOf<Int>()
 
+    //TODO handle renaming of this function
+    //TODO handle it to be functional programming
     fun getNextKetoMeal(): Meal? {
         val allMeals = mealRepository.getAllMeals()
 
