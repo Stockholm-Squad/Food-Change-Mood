@@ -12,7 +12,8 @@ class MealCsvRepository(
     override fun getAllMeals(): List<Meal> {
         if (allMeals.isNotEmpty()) return allMeals
 
-        return mealDatasource?.getAllMeals() ?: emptyList()
+        allMeals = mealDatasource?.getAllMeals() ?: emptyList()
+        return allMeals
     }
 
     companion object {
