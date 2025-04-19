@@ -5,7 +5,7 @@ import org.example.logic.MealsRepository
 import java.util.Collections.emptyList
 
 class GetHealthFastFoodUseCase(
-    private val mealRepository: MealsRepository
+    private val mealsRepository: MealsRepository
 ) {
     fun getHealthyFastFood(): List<Meal> {
         val allMeals = mealRepository.getAllMeals()
