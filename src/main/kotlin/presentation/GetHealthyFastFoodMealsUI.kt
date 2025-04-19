@@ -1,6 +1,6 @@
 package presentation;
 
-import logic.GetHealthyFastFoodUseCase
+import org.example.logic.usecases.GetHealthyFastFoodUseCase
 
 class GetHealthyFastFoodMealsUI(
     private val getHealthFastFoodUseCase: GetHealthyFastFoodUseCase

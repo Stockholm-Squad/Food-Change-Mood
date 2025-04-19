@@ -1,21 +1,19 @@
 package org.example.presentation
 
-import logic.GymHelperUseCase
-import IngredientGameUseCase
-import logic.SearchMealByNameUseCase
-import logic.GetHealthyFastFoodUseCase
-import logic.GetIraqiMealsUseCase
-import org.example.logic.GetSeaFoodByProteinRankUseCase
-import org.example.logic.*
-import org.example.logic.GetEasyFoodSuggestionsUseCase
+import org.example.logic.usecases.GymHelperUseCase
+import org.example.logic.usecases.IngredientGameUseCase
+import org.example.logic.usecases.GetHealthyFastFoodUseCase
+import org.example.logic.usecases.GetIraqiMealsUseCase
+import org.example.logic.usecases.GetEasyFoodSuggestionsUseCase
+import org.example.logic.usecases.*
 import org.example.model.MenuOption
 import presentation.*
 
 class FoodConsoleUI(
     private val ketoDietUseCase: KetoDietUseCase,
     private val getEasyFoodSuggestionsUseCase: GetEasyFoodSuggestionsUseCase,
-    private val sweetNoEggsUseCase: GetSweetWithNoEggsUseCase,
-    private val getCountriesFoodUseCase: GetCountriesFoodUseCase,
+    private val sweetNoEggsUseCase: GetDessertsWithNoEggs,
+    private val getCountryFoodUseCase: GetCountryFoodUseCase,
     private val getPotatoMealsUseCase: GetPotatoMealsUseCase,
     private val gymHelperUseCase: GymHelperUseCase,
     private val ingredientGameUseCase: IngredientGameUseCase,
@@ -37,7 +35,7 @@ class FoodConsoleUI(
     private val ketoMeals = KetoDietMealUI(ketoDietUseCase)
     private val searchByDate = SearchByAddDateUI(searchByAddDateUseCase)
     private val gymHelper = GymHelperUI(gymHelperUseCase)
-    private val countryFood = ExploreCountryFoodUI(getCountriesFoodUseCase)
+    private val countryFood = ExploreCountryFoodUI(getCountryFoodUseCase)
     private val ingredientGame = IngredientGameUI(ingredientGameUseCase)
     private val potatoLovers = PotatoLoversUI(getPotatoMealsUseCase)
     private val highCalorieMeal = SuggestMealForSoThinPeopleUI(soThinProblem)
