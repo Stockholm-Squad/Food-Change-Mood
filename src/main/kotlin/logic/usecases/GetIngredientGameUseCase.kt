@@ -25,7 +25,7 @@ class GetIngredientGameUseCase(
 
     fun startIngredientGame(): Question {
         val meal = getRandomValidMeal()
-        val correctIngredient = meal.ingredients!!.random() + " true"
+        val correctIngredient = meal.ingredients!!.random()
         currentQuestion = Question(
             mealName = meal.name.toString(),
             options = generateOptions(correctIngredient),
