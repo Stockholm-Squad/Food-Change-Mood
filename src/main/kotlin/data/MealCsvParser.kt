@@ -2,7 +2,7 @@ package data
 
 import model.Meal
 import model.Nutrition
-import org.example.data.CsvLineFormatter
+import org.example.data.utils.CsvLineFormatter
 import org.example.model.MealColumnIndex
 import org.example.model.NutritionIndex
 import org.example.utils.parseDate

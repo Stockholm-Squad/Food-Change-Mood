@@ -1,9 +1,9 @@
 package presentation;
 
-import logic.GetHealthFastFoodUseCase
+import org.example.logic.usecases.GetHealthyFastFoodUseCase
 
 class GetHealthyFastFoodMealsUI(
-    private val getHealthFastFoodUseCase: GetHealthFastFoodUseCase
+    private val getHealthFastFoodUseCase: GetHealthyFastFoodUseCase
 ) {
 
     fun showHealthyFastFoodMeals() {

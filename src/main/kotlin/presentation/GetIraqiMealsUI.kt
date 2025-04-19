@@ -1,6 +1,6 @@
 package org.example.presentation
 
-import logic.GetIraqiMealsUseCase
+import org.example.logic.usecases.GetIraqiMealsUseCase
 
 class GetIraqiMealsUI(
     private val getIraqiMealsUseCase: GetIraqiMealsUseCase

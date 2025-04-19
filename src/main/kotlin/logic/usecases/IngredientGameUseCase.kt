@@ -1,5 +1,7 @@
+package org.example.logic.usecases
+
 import model.Meal
-import org.example.logic.MealsRepository
+import org.example.logic.repository.MealsRepository
 
 //TODO Make the game more readable and try to use functional programming
 class IngredientGameUseCase(

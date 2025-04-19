@@ -9,7 +9,7 @@ val uiModule = module {
             getHealthFastFoodUseCase = get(),
             getEasyFoodSuggestionsUseCase = get(),
             sweetNoEggsUseCase = get(),
-            getCountriesFoodUseCase = get(),
+            getCountryFoodUseCase = get(),
             getPotatoMealsUseCase = get(),
             gymHelperUseCase = get(),
             ingredientGameUseCase = get(),
@@ -19,7 +19,6 @@ val uiModule = module {
             searchMealByNameUseCase = get(),
             soThinProblem = get(),
             getIraqiMealsUseCase = get(),
-
             ketoDietUseCase = get(),
             getGuessGameUseCase = get ()
         )

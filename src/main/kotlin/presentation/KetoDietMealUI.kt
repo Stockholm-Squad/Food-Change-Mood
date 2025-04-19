@@ -1,6 +1,6 @@
 package presentation;
 
-import org.example.logic.KetoDietUseCase
+import org.example.logic.usecases.KetoDietUseCase
 
 class KetoDietMealUI(private val ketoDietUseCase: KetoDietUseCase) {
 

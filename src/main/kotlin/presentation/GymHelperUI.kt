@@ -1,6 +1,6 @@
 package presentation;
 
-import logic.GymHelperUseCase
+import org.example.logic.usecases.GymHelperUseCase
 import org.example.utils.Messages
 
 class GymHelperUI(

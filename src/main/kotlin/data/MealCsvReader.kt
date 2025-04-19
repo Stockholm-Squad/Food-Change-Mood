@@ -1,6 +1,6 @@
 package data
 
-import CsvLineHandler
+import org.example.data.utils.CsvLineHandler
 import java.io.File
 
 class MealCsvReader(
