@@ -1,8 +1,11 @@
 package presentation;
 
-class GuessGameUI {
+import org.example.logic.GetGuessGameUseCase
 
+class GuessGameUI (
+    private val getGuessGameUseCase: GetGuessGameUseCase
+){
     fun playGuessGame() {
-        println("🎲 Let the guessing begin! Can you guess the right meal?")
+       getGuessGameUseCase.guessGame()
     }
 }
