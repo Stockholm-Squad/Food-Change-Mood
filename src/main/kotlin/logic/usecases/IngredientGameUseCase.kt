@@ -3,7 +3,6 @@ package org.example.logic.usecases
 import model.Meal
 import org.example.logic.repository.MealsRepository
 
-//TODO Make the game more readable and try to use functional programming
 class IngredientGameUseCase(
     private val repository: MealsRepository
 ) {
@@ -23,54 +22,50 @@ class IngredientGameUseCase(
 
     private val gameState = GameState()
     private lateinit var currentQuestion: Question
-    //TODO rename the function name to be ex: showIngredientGame
-    fun startNewRound(): Question {
-        val meal = getValidRandomMeal()
-        val correctIngredient = meal.ingredients!!.random() + " true"
 
-        val incorrectIngredients = generateIncorrectIngredients(correctIngredient)
-        val options = (incorrectIngredients + correctIngredient).shuffled()
+    fun startIngredientGame(): Question {
+        val meal = getRandomValidMeal()
+        val correctIngredient = meal.ingredients!!.random() + " true"
         currentQuestion = Question(
             mealName = meal.name.toString(),
-            options = options,
+            options = generateOptions(correctIngredient),
             correctIngredient = correctIngredient
         )
-
         return currentQuestion
     }
 
     fun submitAnswer(selectedIngredient: String): GameState {
-        if (gameState.isGameOver) return gameState
-        println("${currentQuestion.correctIngredient} $selectedIngredient")
-        val isCorrect = currentQuestion.correctIngredient == selectedIngredient
+        return if (isGameOver()) gameState
+        else updateGameState(selectedIngredient)
+    }
 
-        if (isCorrect) {
-            gameState.score += 1000
-            gameState.correctAnswers += 1
+    private fun isGameOver(): Boolean {
+        return gameState.isGameOver
+    }
 
-            if (gameState.correctAnswers >= 15) {
-                gameState.isGameOver = true
-            }
-        } else {
-            gameState.isGameOver = true
+    private fun updateGameState(selectedIngredient: String): GameState =
+        gameState.apply {
+            val isCorrect = selectedIngredient == currentQuestion.correctIngredient
+            score += if (isCorrect) 1000 else 0
+            correctAnswers += if (isCorrect) 1 else 0
+            isGameOver = !isCorrect || correctAnswers >= 15
         }
 
-        return gameState
-    }
 
-    private fun getValidRandomMeal(): Meal {
-        val meals = repository.getAllMeals().filter { !it.ingredients.isNullOrEmpty() && !it.name.isNullOrEmpty()}
-        if (meals.isEmpty()) throw IllegalStateException("No valid meals available")
-        val meal = meals.random()
-        return meal
-    }
+    private fun getRandomValidMeal(): Meal =
+        repository.getAllMeals()
+            .filter { !it.ingredients.isNullOrEmpty() && !it.name.isNullOrEmpty() }
+            .takeIf { it.isNotEmpty() }
+            ?.random()
+            ?: throw IllegalStateException("No valid meals available")
 
-    private fun generateIncorrectIngredients(correctIngredient: String): List<String> {
-        val allIngredients = repository.getAllMeals()
-            .flatMap { it.ingredients.orEmpty() }
+    private fun generateOptions(correctIngredient: String): List<String> =
+        (repository.getAllMeals()
+            .asSequence()
+            .flatMap { it.ingredients.orEmpty().asSequence() }
             .filter { it != correctIngredient }
             .distinct()
-
-        return allIngredients.shuffled().take(2)
-    }
+            .shuffled()
+            .take(2) + correctIngredient)
+            .shuffled().toList()
 }
