@@ -6,7 +6,7 @@ class KetoDietMealUI(private val ketoDietUseCase: KetoDietUseCase) {
 
     fun showKetoMeal() {
         println("Finding keto-friendly meal for you...")
-        val meal = ketoDietUseCase.getNextKetoMeal()
+        val meal = ketoDietUseCase.getKetoMeal()
 
         if (meal == null) {
             println("You've seen all available keto meals!")

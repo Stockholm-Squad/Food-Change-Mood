@@ -11,7 +11,7 @@ class IngredientGameUI(private val game: IngredientGameUseCase) {
         println("--------------------------------------------------")
 
         while (true) {
-            val question = game.startNewRound()
+            val question = game.startIngredientGame()
             displayQuestion(question)
 
             val userChoice = getUserChoice(question.options.size)
