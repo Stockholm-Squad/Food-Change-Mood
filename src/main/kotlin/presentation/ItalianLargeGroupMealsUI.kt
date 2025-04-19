@@ -26,7 +26,7 @@ class ItalianLargeGroupMealsUI(private val italianMealsForLargeGroupUseCase: Ita
             } else if (mealId == -1) {
                 break
             } else {
-                viewMealInListDetails(filteredList, mealId)
+                filteredList.viewMealInListDetails(mealId)
             }
         }
     }

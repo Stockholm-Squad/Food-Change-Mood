@@ -1,5 +1,6 @@
 package org.example.utils
 
+import model.Meal
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Date
@@ -12,4 +13,17 @@ fun String.parseDate(): Date? {
         return null
     }
 
+}
+
+fun List<Meal>.viewMealInListDetails(mealId: Int) {
+    val meal: Meal? = this.find { meal ->
+        meal.id == mealId
+    }
+
+    if (meal == null) {
+        println("The meal with ID $mealId does not exist.")
+        return
+    }
+
+    println(meal)
 }

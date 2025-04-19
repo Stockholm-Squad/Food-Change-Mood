@@ -17,13 +17,6 @@ class DateValidator {
                 false
             }
         }
-
-        //TODO remove it and use the one in stringExtensions file
-        fun getDateFromString(date: String): Date {
-            val localDate = LocalDate.parse(date)
-            val instant = localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()
-            return Date.from(instant)
-        }
     }
 
 

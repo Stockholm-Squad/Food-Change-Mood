@@ -2,7 +2,7 @@ package org.example.logic.usecases
 
 import model.Meal
 import org.example.logic.repository.MealsRepository
-import org.example.utils.DateValidator
+import org.example.utils.parseDate
 
 class GetMealsByDateUseCase(
     private val mealsRepository: MealsRepository
@@ -16,7 +16,7 @@ class GetMealsByDateUseCase(
     }
 
     private fun isMealWithDate(meal: Meal, date: String): Boolean {
-        val utilDate = DateValidator.getDateFromString(date)
+        val utilDate = date.parseDate()
         return meal.submitted == utilDate
     }
 }

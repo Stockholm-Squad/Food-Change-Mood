@@ -49,7 +49,7 @@ class SearchByAddDateUI(private val getMealsByDateUseCase: GetMealsByDateUseCase
             } else if (mealId == -1) {
                 break
             } else {
-                viewMealInListDetails(filteredList, mealId)
+                filteredList.viewMealInListDetails(mealId)
             }
         }
     }
