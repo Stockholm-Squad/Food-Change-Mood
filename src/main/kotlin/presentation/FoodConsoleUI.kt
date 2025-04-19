@@ -19,7 +19,7 @@ class FoodConsoleUI(
     private val ingredientGameUseCase: IngredientGameUseCase,
     private val getHealthFastFoodUseCase: GetHealthyFastFoodUseCase,
     private val getSeaFoodByProteinRankUseCase: GetSeaFoodByProteinRankUseCase,
-    private val searchByAddDateUseCase: SearchByAddDateUseCase,
+    private val getMealsByDateUseCase: GetMealsByDateUseCase,
     private val italianMealsForLargeGroupUseCase: ItalianMealsForLargeGroupUseCase,
     private val getMealByNameUseCase: GetMealByNameUseCase,
     private val soThinProblem: SoThinProblemUseCase,
@@ -33,7 +33,7 @@ class FoodConsoleUI(
     private val guessGame = GuessGameUI(getGuessGameUseCase)
     private val sweetNoEggs = SuggestSweetNoEggsUI(sweetNoEggsUseCase)
     private val ketoMeals = KetoDietMealUI(ketoDietUseCase)
-    private val searchByDate = SearchByAddDateUI(searchByAddDateUseCase)
+    private val searchByDate = SearchByAddDateUI(getMealsByDateUseCase)
     private val gymHelper = GymHelperUI(gymHelperUseCase)
     private val countryFood = ExploreCountryFoodUI(getCountryFoodUseCase)
     private val ingredientGame = IngredientGameUI(ingredientGameUseCase)
