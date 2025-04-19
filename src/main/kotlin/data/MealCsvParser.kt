@@ -3,8 +3,8 @@ package data
 import model.Meal
 import model.Nutrition
 import org.example.data.utils.CsvLineFormatter
-import org.example.model.MealColumnIndex
-import org.example.model.NutritionIndex
+import org.example.utils.MealColumnIndex
+import org.example.utils.NutritionIndex
 import org.example.utils.parseDate
 
 class MealCsvParser(

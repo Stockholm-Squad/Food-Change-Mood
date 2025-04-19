@@ -2,18 +2,15 @@ package model
 
 import java.util.Date
 
-//TODO remove unneeded comments or add documentation
-//TODO let the nutrition to be nullable
-
 
 data class Meal(
     val name: String?,
-    val id: Int, // Non-nullable because every meal must have an ID
+    val id: Int,
     val minutes: Int?,
-    val contributorId: Int, // Non-nullable because every meal has a contributor
+    val contributorId: Int,
     val submitted: Date?,
     val tags: List<String>?,
-    val nutrition: Nutrition, // Non-nullable but with default values
+    val nutrition: Nutrition?,
     val numberOfSteps: Int?,
     val steps: List<String>?,
     val description: String?,

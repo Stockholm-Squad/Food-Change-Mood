@@ -1,6 +1,5 @@
-package org.example.model
+package org.example.utils
 
-//TODO Move it to utils package
 
 enum class MealColumnIndex(
     val index: Int

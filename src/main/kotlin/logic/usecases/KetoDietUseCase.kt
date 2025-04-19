@@ -13,11 +13,19 @@ class KetoDietUseCase(private val mealRepository: MealsRepository) {
         val allMeals = mealRepository.getAllMeals()
 
         val ketoMeals = allMeals.filter { meal ->
-            meal.nutrition.carbohydrates < 10 && meal.nutrition.totalFat > 15 && meal.nutrition.protein in 10f..30f
+            meal.nutrition?.let { nutrition ->
+                if (nutrition.carbohydrates != null && nutrition.totalFat != null && nutrition.protein != null) {
+                    nutrition.carbohydrates < 10 &&
+                            nutrition.totalFat > 15 &&
+                            nutrition.protein in 10f..30f
+                } else {
+                    false
+                }
+            } == true
         }.filterNot { meal ->
             suggestedMeals.contains(meal.id)
         }
-
+        
         if (ketoMeals.isEmpty()) {
             return null
         }

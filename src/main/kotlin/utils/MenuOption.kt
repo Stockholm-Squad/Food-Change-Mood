@@ -1,5 +1,5 @@
-package org.example.model
-//TODO Move it to utils package
+package org.example.utils
+
 
 enum class MenuOption(val option: Int) {
     HEALTHY_FAST_FOOD(1),
