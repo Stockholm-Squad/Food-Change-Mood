@@ -1,26 +1,31 @@
 package org.example.presentation
+import model.Meal
+import org.example.logic.SoThinProblemUseCase
 
-import org.example.logic.SoThinProblem
 
-
-class SuggestMealWithHighCaloriesUI(
-    private val soThinProblem: SoThinProblem,
+class SuggestMealForSoThinPeopleUI(
+    private val soThinProblemUseCase: SoThinProblemUseCase,
 ) {
     fun getMaleWithHighCalorie() {
         println("-------------------------------------------------------------------------------------------------")
         println("🔥 Feeling too thin? This meal above 700 calories!")
-        val suggestMeal = soThinProblem.suggestMealToSoThinProblem()
+        val suggestMeal = soThinProblemUseCase.suggestRandomMealForSoThinPeople()
         println("------------------------------------------------------------------------------------------------")
-        println("name: " + suggestMeal.first)
-        println("description: " + suggestMeal.second)
-        println("time: " + suggestMeal.third.first + " minute")
-        println("calories: " + suggestMeal.third.second)
+        println("Name: " + suggestMeal.name)
+        println("Description: " + suggestMeal.description)
         println("--------------------------------------------------------------------------------------------------")
         println("Do you like it? (yes/no) 😊")
         when(readlnOrNull()?.trim()?.lowercase()) {
             "no" ->  getMaleWithHighCalorie()
-            "yes" -> println("Great! Enjoy 😋")
-            else -> throw Exception("Invalid input! Expected yes or no.")
+            "yes" -> displayFullDetails(suggestMeal)
+            else -> println("Invalid input! Expected yes or no.")
         }
+    }
+    private fun displayFullDetails(meal:Meal){
+        println("Meal Name: "+meal.name)
+        println("Meal Description: "+meal.description)
+        println("Meal Preparation Time: "+meal.minutes +" minutes")
+        println("Meal "+meal.nutrition)
+
     }
 }
