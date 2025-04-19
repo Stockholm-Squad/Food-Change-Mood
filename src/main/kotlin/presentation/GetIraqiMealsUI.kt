@@ -7,7 +7,7 @@ class GetIraqiMealsUI(
 ) {
     fun getIraqiMeals() {
         println("🍽 Ready for some amazing Iraqi meals? Let's go!")
-        getIraqiMealsUseCase.getIraqiMales()
+        getIraqiMealsUseCase.getIraqiMeals()
             .takeIf { meals->
                 meals.isNotEmpty() }?.forEach { iraqiMeal ->
                 println("Name: ${iraqiMeal.name}")

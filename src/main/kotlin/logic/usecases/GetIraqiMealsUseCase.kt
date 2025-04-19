@@ -6,7 +6,7 @@ import org.example.logic.repository.MealsRepository
 class GetIraqiMealsUseCase(
     private val mealRepository: MealsRepository,
 ) {
-    fun getIraqiMales(): List<Meal> {
+    fun getIraqiMeals(): List<Meal> {
         return mealRepository.getAllMeals()
             .takeIf { meals ->
                 meals.isNotEmpty()
