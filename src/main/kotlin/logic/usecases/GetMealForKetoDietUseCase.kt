@@ -3,7 +3,7 @@ package org.example.logic.usecases
 import model.Meal
 import org.example.logic.repository.MealsRepository
 
-class KetoDietUseCase(private val mealRepository: MealsRepository) {
+class GetMealForKetoDietUseCase(private val mealRepository: MealsRepository) {
 
     private val suggestedMeals = mutableSetOf<Int>()
 

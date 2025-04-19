@@ -1,11 +1,11 @@
 package presentation;
 
-import org.example.logic.usecases.GymHelperUseCase
+import org.example.logic.usecases.GetMealsForGymHelperUseCase
 import org.example.utils.Constants
 
 
 class GymHelperUI(
-    private val gymHelperUseCase: GymHelperUseCase?
+    private val getMealsForGymHelperUseCase: GetMealsForGymHelperUseCase?
 ) {
 
     fun useGymHelper() {
@@ -25,7 +25,7 @@ class GymHelperUI(
         }
 
         try {
-            gymHelperUseCase?.getGymHelperMeals(
+            getMealsForGymHelperUseCase?.getGymHelperMeals(
                 desiredCalories = desiredCalories,
                 desiredProteins = desiredProteins
             )?.takeIf {

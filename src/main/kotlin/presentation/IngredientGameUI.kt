@@ -1,8 +1,8 @@
 package org.example.presentation
 
-import org.example.logic.usecases.IngredientGameUseCase
+import org.example.logic.usecases.GetIngredientGameUseCase
 
-class IngredientGameUI(private val game: IngredientGameUseCase) {
+class IngredientGameUI(private val game: GetIngredientGameUseCase) {
 
     fun start() {
         println("🧠 Ingredient Game is starting! Let's see how well you know your meals!")
@@ -29,7 +29,7 @@ class IngredientGameUI(private val game: IngredientGameUseCase) {
         }
     }
 
-    private fun displayQuestion(question: IngredientGameUseCase.Question) {
+    private fun displayQuestion(question: GetIngredientGameUseCase.Question) {
         println("\nMeal: ${question.mealName}")
         println("Choose the correct ingredient:")
 

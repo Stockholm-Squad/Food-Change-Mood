@@ -1,11 +1,11 @@
-package org.example.logic
+package org.example.logic.usecases
 
 
 /**
  * A class responsible for implementing the Knuth-Morris-Pratt (KMP) search algorithm
  * to find substrings in text.
  */
-class SearchingByKmp {
+class SearchingByKmpUseCase {
 
     /**
      * Searches for a pattern in a meal name using the KMP algorithm.
@@ -14,7 +14,7 @@ class SearchingByKmp {
      * @param pattern The pattern string to search for (nullable).
      * @return `true` if the pattern is found in the meal name, otherwise `false`.
      */
-    fun kmpSearch(mealName: String?, pattern: String?): Boolean {
+    fun searchByKmp(mealName: String?, pattern: String?): Boolean {
         // Validate input: Return false if either mealName or pattern is null/empty
         if (mealName == null || pattern == null || pattern.isEmpty()) return false
 

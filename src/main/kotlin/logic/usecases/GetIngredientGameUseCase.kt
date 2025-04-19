@@ -3,7 +3,7 @@ package org.example.logic.usecases
 import model.Meal
 import org.example.logic.repository.MealsRepository
 
-class IngredientGameUseCase(
+class GetIngredientGameUseCase(
     private val repository: MealsRepository
 ) {
 
@@ -25,7 +25,7 @@ class IngredientGameUseCase(
 
     fun startIngredientGame(): Question {
         val meal = getRandomValidMeal()
-        val correctIngredient = meal.ingredients!!.random() + " true"
+        val correctIngredient = meal.ingredients!!.random()
         currentQuestion = Question(
             mealName = meal.name.toString(),
             options = generateOptions(correctIngredient),

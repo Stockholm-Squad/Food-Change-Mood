@@ -1,13 +1,12 @@
 package org.example.logic.usecases
 
 import model.Meal
-import org.example.logic.SearchingByKmp
 import org.example.logic.repository.MealsRepository
 
 
 class GetMealByNameUseCase(
     private val mealsRepository: MealsRepository,
-    private val searchingByKmp: SearchingByKmp
+    private val searchingByKmpUseCase: SearchingByKmpUseCase
 ) {
 
     /**
@@ -20,7 +19,7 @@ class GetMealByNameUseCase(
         if (query.isNullOrEmpty()) return emptyList()
 
         return mealsRepository.getAllMeals().filter { meal ->
-            searchingByKmp.kmpSearch(meal.name, query)
+            searchingByKmpUseCase.searchByKmp(meal.name, query)
         }
     }
 }

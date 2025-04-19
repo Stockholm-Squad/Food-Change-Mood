@@ -1,15 +1,15 @@
 package org.example.presentation
 import model.Meal
-import org.example.logic.usecases.SoThinProblemUseCase
+import org.example.logic.usecases.GetMealsForSoThinProblemUseCase
 
 
 class SuggestMealForSoThinPeopleUI(
-    private val soThinProblemUseCase: SoThinProblemUseCase,
+    private val getMealsForSoThinProblemUseCase: GetMealsForSoThinProblemUseCase,
 ) {
     fun getMaleWithHighCalorie() {
         println("-------------------------------------------------------------------------------------------------")
         println("🔥 Feeling too thin? This meal above 700 calories!")
-        val suggestMeal = soThinProblemUseCase.suggestRandomMealForSoThinPeople()
+        val suggestMeal = getMealsForSoThinProblemUseCase.suggestRandomMealForSoThinPeople()
         println("------------------------------------------------------------------------------------------------")
         println("Name: " + suggestMeal.name)
         println("Description: " + suggestMeal.description)

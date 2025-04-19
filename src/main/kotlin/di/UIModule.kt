@@ -1,26 +1,9 @@
 package org.example.di
 
 import org.example.presentation.FoodConsoleUI
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val uiModule = module {
-    single<FoodConsoleUI> {
-        FoodConsoleUI(
-            getHealthFastFoodUseCase = get(),
-            getEasyFoodSuggestionsUseCase = get(),
-            sweetNoEggsUseCase = get(),
-            getCountryFoodUseCase = get(),
-            getPotatoMealsUseCase = get(),
-            gymHelperUseCase = get(),
-            ingredientGameUseCase = get(),
-            getSeaFoodByProteinRankUseCase = get(),
-            getMealsByDateUseCase = get(),
-            italianMealsForLargeGroupUseCase = get(),
-            getMealByNameUseCase = get(),
-            soThinProblem = get(),
-            getIraqiMealsUseCase = get(),
-            ketoDietUseCase = get(),
-            getGuessGameUseCase = get ()
-        )
-    }
+    singleOf(::FoodConsoleUI)
 }
