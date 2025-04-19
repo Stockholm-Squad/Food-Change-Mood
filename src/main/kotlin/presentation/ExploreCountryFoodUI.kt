@@ -1,6 +1,6 @@
 package org.example.presentation
 
-import org.example.logic.GetCountryFoodUseCase
+import org.example.logic.usecases.GetCountryFoodUseCase
 
 class ExploreCountryFoodUI(private val getCountriesFood: GetCountryFoodUseCase) {
 

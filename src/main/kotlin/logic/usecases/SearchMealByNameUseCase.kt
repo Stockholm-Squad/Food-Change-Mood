@@ -1,7 +1,7 @@
-package logic
+package org.example.logic.usecases
 
 import model.Meal
-import org.example.logic.MealsRepository
+import org.example.logic.repository.MealsRepository
 
 //TODO rename GetMealsByNameUseCase
 //TODO Move the algorithm to another class to be used later

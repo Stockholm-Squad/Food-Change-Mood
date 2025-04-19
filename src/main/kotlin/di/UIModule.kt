@@ -1,7 +1,6 @@
 package org.example.di
 
 import org.example.presentation.FoodConsoleUI
-import org.koin.core.scope.get
 import org.koin.dsl.module
 
 val uiModule = module {
@@ -21,12 +20,7 @@ val uiModule = module {
             soThinProblem = get(),
             getIraqiMealsUseCase = get(),
             ketoDietUseCase = get(),
-
-        
-
-
             getGuessGameUseCase = get ()
-
         )
     }
 }

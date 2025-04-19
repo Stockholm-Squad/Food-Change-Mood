@@ -1,22 +1,15 @@
-package org.example.data
+package org.example.data.dataSource
 
 import data.MealCsvParser
 import data.MealCsvReader
 import model.Meal
-import org.example.logic.MealsRepository
 
-
-class MealCsvRepository(
+class MealCsvDataSource(
     private val mealCsvReader: MealCsvReader,
     private val mealCsvParser: MealCsvParser
-) : MealsRepository {
-
-    //TODO handle datasource and pass it here instead of passing the reader and parser
-    //TODO make package utiles --> put handler and formatter to them
+) : MealDataSource {
     override fun getAllMeals(): List<Meal> {
-        if (allMeals.isNotEmpty()) return allMeals
-
-        allMeals = try {
+        return try {
             mealCsvReader.readLinesFromFile()
                 .mapNotNull { line ->
                     parseLine(line)
@@ -25,17 +18,11 @@ class MealCsvRepository(
             println("Critical error reading CSV: ${e.message}")
             emptyList()
         }
-
-        return allMeals
     }
 
     private fun parseLine(line: String) = try {
         mealCsvParser.parseLine(line)
     } catch (e: Exception) {
         null
-    }
-
-    companion object {
-        private var allMeals: List<Meal> = emptyList()
     }
 }

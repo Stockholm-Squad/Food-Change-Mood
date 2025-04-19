@@ -1,16 +1,11 @@
 package org.example.di
 
-import IngredientGameUseCase
-import logic.GetHealthFastFoodUseCase
-import logic.GetIraqiMealsUseCase
-import logic.GymHelperUseCase
-import logic.SearchMealByNameUseCase
-import org.example.logic.*
+import org.example.logic.usecases.*
 import org.koin.dsl.module
 
 val logicModule = module {
 
-    single { GetHealthFastFoodUseCase(get()) }
+    single { GetHealthyFastFoodUseCase(get()) }
     single { GetEasyFoodSuggestionsUseCase(get()) }
     single { GetDessertsWithNoEggs(get()) }
     single { GetCountryFoodUseCase(get()) }
@@ -19,7 +14,7 @@ val logicModule = module {
     single { IngredientGameUseCase(get()) }
     single { SearchByAddDateUseCase(get()) }
     single { ItalianMealsForLargeGroupUseCase(get()) }
-    single { SoThinProblem(get()) }
+    single { SoThinProblemUseCase(get()) }
 
     single { SearchMealByNameUseCase(get()) }
     single { GetIraqiMealsUseCase(get()) }

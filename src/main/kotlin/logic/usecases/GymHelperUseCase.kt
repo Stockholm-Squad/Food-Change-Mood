@@ -1,8 +1,8 @@
-package logic
+package org.example.logic.usecases
 
 import model.Meal
 import model.Nutrition
-import org.example.logic.MealsRepository
+import org.example.logic.repository.MealsRepository
 import org.example.utils.Messages
 import kotlin.math.abs
 

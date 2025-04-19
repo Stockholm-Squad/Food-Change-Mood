@@ -1,6 +1,7 @@
-package org.example.logic
+package org.example.logic.usecases
 
 import model.Meal
+import org.example.logic.repository.MealsRepository
 
 //TODO handle name of the useCase
 class GetDessertsWithNoEggs(private val mealRepository: MealsRepository) {

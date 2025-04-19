@@ -1,3 +1,5 @@
+package org.example.data.utils
+
 class CsvLineHandler {
 
     private var currentLine = StringBuilder()

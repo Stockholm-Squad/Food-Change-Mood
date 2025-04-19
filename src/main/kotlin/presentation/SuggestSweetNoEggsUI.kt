@@ -1,6 +1,6 @@
 package presentation;
 
-import org.example.logic.GetDessertsWithNoEggs
+import org.example.logic.usecases.GetDessertsWithNoEggs
 
 class SuggestSweetNoEggsUI(private val getSweetWithNoEggs: GetDessertsWithNoEggs) {
 

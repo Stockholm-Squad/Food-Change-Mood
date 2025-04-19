@@ -1,6 +1,6 @@
 package org.example.presentation
 import model.Meal
-import org.example.logic.SoThinProblemUseCase
+import org.example.logic.usecases.SoThinProblemUseCase
 
 
 class SuggestMealForSoThinPeopleUI(

@@ -1,7 +1,7 @@
 package presentation;
 
 import model.Meal
-import org.example.logic.SearchByAddDateUseCase
+import org.example.logic.usecases.SearchByAddDateUseCase
 import org.example.utils.DateValidator.Companion.isValidDate
 import org.example.utils.viewMealInListDetails
 

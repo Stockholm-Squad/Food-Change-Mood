@@ -1,13 +1,11 @@
 package org.example.presentation
 
-import logic.GymHelperUseCase
-import IngredientGameUseCase
-import logic.SearchMealByNameUseCase
-import logic.GetHealthyFastFoodUseCase
-import logic.GetIraqiMealsUseCase
-import org.example.logic.GetSeaFoodByProteinRankUseCase
-import org.example.logic.*
-import org.example.logic.GetEasyFoodSuggestionsUseCase
+import org.example.logic.usecases.GymHelperUseCase
+import org.example.logic.usecases.IngredientGameUseCase
+import org.example.logic.usecases.GetHealthyFastFoodUseCase
+import org.example.logic.usecases.GetIraqiMealsUseCase
+import org.example.logic.usecases.GetEasyFoodSuggestionsUseCase
+import org.example.logic.usecases.*
 import org.example.model.MenuOption
 import presentation.*
 

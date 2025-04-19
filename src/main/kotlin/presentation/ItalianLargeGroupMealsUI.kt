@@ -1,6 +1,6 @@
 package org.example.presentation
 
-import org.example.logic.ItalianMealsForLargeGroupUseCase
+import org.example.logic.usecases.ItalianMealsForLargeGroupUseCase
 import org.example.utils.viewMealInListDetails
 
 class ItalianLargeGroupMealsUI(private val italianMealsForLargeGroupUseCase: ItalianMealsForLargeGroupUseCase) {
