@@ -5,7 +5,7 @@ import org.example.logic.MealsRepository
 
 
 class GetHealthyFastFoodUseCase(
-    private val mealRepository: MealsRepository
+    private val mealsRepository: MealsRepository
 ) {
      fun getHealthyFastFood(): List<Meal> {
         return mealsRepository.getAllMeals().filter { it.minutes!=null&&it.minutes<=15 }

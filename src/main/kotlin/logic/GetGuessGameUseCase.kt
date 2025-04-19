@@ -10,8 +10,8 @@ class GetGuessGameUseCase(
         val meals = mealsRepository.getAllMeals()
         return meals.random()
     }
-    val meal =getGuessGameUseCase.getRandomMeal()
-    fun GuessGame() {
+    val meal =getRandomMeal()
+    fun guessGame() {
         println("🎲  Can you guess the right the preparation time (in minutes) for the meal: ${meal.name}?")
         val correctTime=meal.minutes
         var attempts = 3
@@ -40,4 +40,4 @@ class GetGuessGameUseCase(
 
   
     
-}
+}}
