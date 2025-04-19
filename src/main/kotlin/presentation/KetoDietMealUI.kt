@@ -15,7 +15,7 @@ class KetoDietMealUI(private val ketoDietUseCase: KetoDietUseCase) {
 
         println("Suggested Keto Meal: ${meal.name}")
         println("Description: ${meal.description}")
-        println("Nutrition -> Carbs: ${meal.nutrition.carbohydrates}g, Fat: ${meal.nutrition.totalFat}g, Protein: ${meal.nutrition.protein}g")
+        println("Nutrition -> Carbs: ${meal.nutrition?.carbohydrates}g, Fat: ${meal.nutrition?.totalFat}g, Protein: ${meal.nutrition?.protein}g")
 
         println("\nDo you like this meal? (yes/no)")
         when (readln().trim().lowercase()) {

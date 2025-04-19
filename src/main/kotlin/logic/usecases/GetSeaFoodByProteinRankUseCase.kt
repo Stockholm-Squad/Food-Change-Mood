@@ -7,7 +7,7 @@ class GetSeaFoodByProteinRankUseCase(private val mealsRepository: MealsRepositor
     fun getSeaFoodByProteinRank(): List<Meal> {
         return mealsRepository.getAllMeals()
             .filter { it.description?.contains("seafood", ignoreCase = true) == true }
-            .sortedByDescending { it.nutrition.protein }
+            .sortedByDescending { it.nutrition?.protein }
             .takeIf { it.isNotEmpty() }
             ?: throw NoSuchElementException("No seafood meals found.")
     }

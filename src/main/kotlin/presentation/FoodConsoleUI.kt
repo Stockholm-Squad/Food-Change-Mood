@@ -6,7 +6,7 @@ import org.example.logic.usecases.GetHealthyFastFoodUseCase
 import org.example.logic.usecases.GetIraqiMealsUseCase
 import org.example.logic.usecases.GetEasyFoodSuggestionsUseCase
 import org.example.logic.usecases.*
-import org.example.model.MenuOption
+import org.example.utils.MenuOption
 import presentation.*
 
 class FoodConsoleUI(

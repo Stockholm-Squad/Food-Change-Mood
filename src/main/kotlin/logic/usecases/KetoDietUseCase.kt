@@ -10,7 +10,17 @@ class KetoDietUseCase(private val mealRepository: MealsRepository) {
     fun getKetoMeal(): Meal? {
         return mealRepository.getAllMeals()
             .asSequence()
-            .filter { it.nutrition.carbohydrates < 10 && it.nutrition.totalFat > 15 && it.nutrition.protein in 10f..30f }
+            .filter { meal ->
+                meal.nutrition?.let { nutrition ->
+                    if (nutrition.carbohydrates != null && nutrition.totalFat != null && nutrition.protein != null) {
+                        nutrition.carbohydrates < 10 &&
+                                nutrition.totalFat > 15 &&
+                                nutrition.protein in 10f..30f
+                    } else {
+                        false
+                    }
+                } == true
+            }
             .filterNot { suggestedMeals.contains(it.id) }
             .shuffled()
             .firstOrNull()

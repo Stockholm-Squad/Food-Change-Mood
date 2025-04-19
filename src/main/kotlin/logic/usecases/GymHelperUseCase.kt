@@ -24,7 +24,8 @@ class GymHelperUseCase(
             }
             .takeIf { it.isNotEmpty() }
             ?.sortedBy {
-                it.nutrition.sortMealByProteinsAndCalories(
+                it.nutrition
+                    ?.sortMealByProteinsAndCalories(
                     desiredCalories = desiredCalories,
                     desiredProteins = desiredProteins,
                     approximateAmount = approximateAmount

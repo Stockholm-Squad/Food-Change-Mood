@@ -1,6 +1,6 @@
-package org.example.model
+package org.example.utils
 
-//TODO Move it to utils package
+
 enum class NutritionIndex(val index: Int) {
     CALORIES(0),
     TOTAL_FAT(1),

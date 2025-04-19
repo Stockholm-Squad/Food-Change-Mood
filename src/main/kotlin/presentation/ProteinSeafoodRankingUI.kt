@@ -7,7 +7,7 @@ class ProteinSeafoodRankingUI(private val getSeaFoodByProteinRankUseCase: GetSea
     fun proteinSeafoodRanking() {
         try {
             getSeaFoodByProteinRankUseCase.getSeaFoodByProteinRank()
-                .mapIndexed { index, meal -> println("Rank: ${index + 1} Meal name: ${meal.name} Protein amount : ${meal.nutrition.protein}") }
+                .mapIndexed { index, meal -> println("Rank: ${index + 1} Meal name: ${meal.name} Protein amount : ${meal.nutrition?.protein}") }
         } catch (exception: NoSuchElementException) {
             println("No seafood meals were found in the list.")
         }

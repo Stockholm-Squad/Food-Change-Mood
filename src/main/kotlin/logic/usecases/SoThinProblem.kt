@@ -8,26 +8,22 @@ class SoThinProblem(
     private val mealRepository: MealsRepository,
 ) {
     //TODO handle the return type to be Meal
-    fun suggestMealToSoThinProblem(): Triple<String?, String?, Pair<Int?, Float>> {
+    fun suggestMealToSoThinProblem(): Triple<String?, String?, Pair<Int?, Float?>> {
         return mealRepository.getAllMeals()
-            .takeIf { meals ->
-                meals.isNotEmpty()
-            }
-            ?.filter { meal ->
-                meal.nutrition.hasMoreThanMinCalories()
-            }
+            .takeIf { meals -> meals.isNotEmpty() }
+            ?.filter { meal -> meal.nutrition?.hasMoreThanMinCalories() == true }
             ?.map { suggestMeal ->
                 Triple(
                     suggestMeal.name,
                     suggestMeal.description,
-                    Pair(suggestMeal.minutes, suggestMeal.nutrition.calories)
+                    Pair(suggestMeal.minutes, suggestMeal.nutrition?.calories)
                 )
             }
             ?.random() ?: throw IllegalStateException("Sorry, No meal found with more than 700 calories")
     }
 
     private fun Nutrition.hasMoreThanMinCalories(): Boolean {
-        return this.calories > MIN_CALORIES
+        return (this.calories != null) && (this.calories > MIN_CALORIES)
     }
 
     companion object {

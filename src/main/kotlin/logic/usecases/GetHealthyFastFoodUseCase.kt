@@ -10,9 +10,9 @@ class GetHealthyFastFoodUseCase(
      fun getHealthyFastFood(): List<Meal> {
         return mealsRepository.getAllMeals().filter { it.minutes!=null&&it.minutes<=15 }
             .sortedWith(
-                compareBy<Meal>{it.nutrition.totalFat}
-                    .thenBy { it.nutrition.saturatedFat }
-                    .thenBy { it.nutrition.carbohydrates }
+                compareBy<Meal>{it.nutrition?.totalFat}
+                    .thenBy { it.nutrition?.saturatedFat }
+                    .thenBy { it.nutrition?.carbohydrates }
             )
     }
 }
