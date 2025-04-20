@@ -2,6 +2,7 @@ package org.example.data.repository
 
 import model.Meal
 import org.example.data.dataSource.MealDataSource
+import org.example.logic.model.FoodChangeModeResults
 import org.example.logic.repository.MealsRepository
 
 
@@ -9,13 +10,19 @@ class MealCsvRepository(
     private val mealDatasource: MealDataSource?
 ) : MealsRepository {
 
-    //TODO change the return type to be from result instead of List<Meal> direct
-    //TODO update all usage of this function to receive Result instead of List<Meal> direct
-    override fun getAllMeals(): List<Meal> {
-        if (allMeals.isNotEmpty()) return allMeals
-        //TODO make try & catch exception and return fail or success based on the result from getAllMeals
-        allMeals = mealDatasource?.getAllMeals() ?: emptyList()
+
+    override fun getAllMeals(): FoodChangeModeResults<List<Meal>> {
         return allMeals
+            .takeIf { it.isNotEmpty() }
+            ?.let { FoodChangeModeResults.Success(it) }
+            ?: runCatching {
+                mealDatasource?.getAllMeals() ?: emptyList()
+            }.onSuccess {
+                allMeals = it
+            }.fold(
+                onSuccess = { FoodChangeModeResults.Success(it) },
+                onFailure = { FoodChangeModeResults.Fail(it) }
+            )
     }
 
     companion object {
