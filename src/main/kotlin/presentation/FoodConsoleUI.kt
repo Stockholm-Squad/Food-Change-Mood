@@ -6,6 +6,7 @@ import org.example.logic.usecases.GetHealthyFastFoodUseCase
 import org.example.logic.usecases.GetIraqiMealsUseCase
 import org.example.logic.usecases.GetEasyFoodSuggestionsUseCase
 import org.example.logic.usecases.*
+import org.example.utils.DateValidator
 import org.example.utils.MenuOption
 import presentation.*
 
@@ -24,7 +25,8 @@ class FoodConsoleUI(
     private val getMealByNameUseCase: GetMealByNameUseCase,
     private val soThinProblem: GetMealsForSoThinProblemUseCase,
     private val getIraqiMealsUseCase: GetIraqiMealsUseCase,
-    private val getGuessGameUseCase: GetGuessGameUseCase
+    private val getGuessGameUseCase: GetGuessGameUseCase,
+    private val dateValidator: DateValidator
 ) {
     private val healthyFastFood = GetHealthyFastFoodMealsUI(getHealthFastFoodUseCase)
     private val searchByName = SearchMealByNameUI(getMealByNameUseCase)
@@ -33,7 +35,7 @@ class FoodConsoleUI(
     private val guessGame = GuessGameUI(getGuessGameUseCase)
     private val sweetNoEggs = SuggestSweetNoEggsUI(sweetNoEggsUseCase)
     private val ketoMeals = KetoDietMealUI(getMealForKetoDietUseCase)
-    private val searchByDate = SearchByAddDateUI(getMealsByDateUseCase)
+    private val searchByDate = SearchByAddDateUI(getMealsByDateUseCase, dateValidator)
     private val gymHelper = GymHelperUI(getMealsForGymHelperUseCase)
     private val countryFood = ExploreCountryFoodUI(getCountryFoodUseCase)
     private val ingredientGame = IngredientGameUI(getIngredientGameUseCase)

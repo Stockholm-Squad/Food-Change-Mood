@@ -7,17 +7,13 @@ import java.time.format.DateTimeParseException
 import java.util.*
 
 class DateValidator {
-    companion object {
-        fun isValidDate(date: String): Boolean {
-            val formatter = DateTimeFormatter.ISO_LOCAL_DATE // Default format: yyyy-MM-dd
-            return try {
-                LocalDate.parse(date, formatter) // Try to parse the date
-                true
-            } catch (e: DateTimeParseException) {
-                false
-            }
+    fun isValidDate(date: String): Boolean {
+        val formatter = DateTimeFormatter.ISO_LOCAL_DATE // Default format: yyyy-MM-dd
+        return try {
+            LocalDate.parse(date, formatter) // Try to parse the date
+            true
+        } catch (e: DateTimeParseException) {
+            false
         }
     }
-
-
 }

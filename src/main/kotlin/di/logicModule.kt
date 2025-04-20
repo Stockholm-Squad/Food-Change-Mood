@@ -2,6 +2,8 @@ package org.example.di
 
 import org.example.logic.usecases.SearchingByKmpUseCase
 import org.example.logic.usecases.*
+import org.example.utils.DateValidator
+import org.koin.core.scope.get
 import org.koin.dsl.module
 
 val logicModule = module {
@@ -25,5 +27,7 @@ val logicModule = module {
     single { GetMealForKetoDietUseCase(get()) }
 
     single { GetGuessGameUseCase(get()) }
+
+    single{ DateValidator() }
 
 }
