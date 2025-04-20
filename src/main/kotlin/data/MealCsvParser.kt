@@ -5,7 +5,7 @@ import model.Nutrition
 import org.example.data.utils.CsvLineFormatter
 import org.example.utils.MealColumnIndex
 import org.example.utils.NutritionIndex
-import org.example.utils.parseDate
+import org.example.utils.getDateFromString
 
 class MealCsvParser(
     private val csvLineFormatter: CsvLineFormatter
@@ -19,7 +19,7 @@ class MealCsvParser(
             minutes = mealData[MealColumnIndex.MINUTES.index].toIntOrNull() ?: 0,
             contributorId = mealData[MealColumnIndex.CONTRIBUTOR_ID.index].toIntOrNull()
                 ?: throw IllegalArgumentException("Missing id"),
-            submitted = (mealData[MealColumnIndex.SUBMITTED.index]).parseDate(),
+            submitted = getDateFromString(mealData[MealColumnIndex.SUBMITTED.index]),
             tags = parseListOfData(mealData[MealColumnIndex.TAGS.index]),
             nutrition = constructNutritionFromToken(mealData[MealColumnIndex.NUTRITION.index]),
             numberOfSteps = mealData[MealColumnIndex.N_STEPS.index].toIntOrNull() ?: 0,
