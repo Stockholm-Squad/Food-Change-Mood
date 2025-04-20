@@ -3,7 +3,6 @@ package org.example.logic.usecases
 import model.Meal
 import org.example.logic.repository.MealsRepository
 
-
 class GetCountryFoodUseCase(private val mealRepository: MealsRepository) {
     fun getRandomMealsForCountry(countryName: String): List<Meal> {
         return try {

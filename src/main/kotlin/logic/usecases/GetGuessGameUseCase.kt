@@ -3,6 +3,7 @@ package org.example.logic.usecases
 import model.Meal
 import org.example.logic.repository.MealsRepository
 
+//TODO handle this useCase to be single responsibility
 class GetGuessGameUseCase(
     private val mealsRepository: MealsRepository
 ) {

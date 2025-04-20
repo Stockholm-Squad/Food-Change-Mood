@@ -11,7 +11,7 @@ class MealCsvReader(
         val lines = mutableListOf<String>()
         val csvFileReader = csvFile.bufferedReader()
 
-        csvFileReader.readLine()
+        csvFileReader.readLine() //TODO handle it within try and catch
         csvFileReader.forEachLine { line ->
             csvLineHandler.handleLine(line)?.apply {
                 lines.add(this)

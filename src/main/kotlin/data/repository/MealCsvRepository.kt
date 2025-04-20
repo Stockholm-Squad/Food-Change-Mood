@@ -9,9 +9,11 @@ class MealCsvRepository(
     private val mealDatasource: MealDataSource?
 ) : MealsRepository {
 
+    //TODO change the return type to be from result instead of List<Meal> direct
+    //TODO update all usage of this function to receive Result instead of List<Meal> direct
     override fun getAllMeals(): List<Meal> {
         if (allMeals.isNotEmpty()) return allMeals
-
+        //TODO make try & catch exception and return fail or success based on the result from getAllMeals
         allMeals = mealDatasource?.getAllMeals() ?: emptyList()
         return allMeals
     }

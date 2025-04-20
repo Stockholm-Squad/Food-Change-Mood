@@ -15,6 +15,7 @@ class MealCsvDataSource(
                     parseLine(line)
                 }
         } catch (e: Exception) {
+            //TODO throw exception here and delete returning of empty list
             println("Critical error reading CSV: ${e.message}")
             emptyList()
         }

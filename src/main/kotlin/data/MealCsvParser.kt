@@ -12,6 +12,8 @@ class MealCsvParser(
 ) {
 
     fun parseLine(row: String): Meal {
+        //TODO Handle all throws to be more generic not IllegalArgumentException only
+        //TODO handle it within try and catch
         val mealData: List<String> = csvLineFormatter.formatRowOfData(row)
         return Meal(
             name = mealData[MealColumnIndex.NAME.index],
