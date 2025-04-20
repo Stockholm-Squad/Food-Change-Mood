@@ -1,5 +1,6 @@
 package model
 
+import org.example.utils.print
 import java.util.Date
 
 
@@ -23,7 +24,7 @@ data class Meal(
         id= $id,
         minutes= ${minutes ?: "N/A"},
         contributorId= $contributorId,
-        submitted= ${submitted?.toString() ?: "N/A"},
+        submitted= ${submitted?.print() ?: "N/A"},
         tags= ${tags?.joinToString(", ") ?: "N/A"},
         nutrition= $nutrition,
         numberOfSteps= ${numberOfSteps ?: "N/A"},
