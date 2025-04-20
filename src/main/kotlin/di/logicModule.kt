@@ -27,6 +27,4 @@ val logicModule = module {
 
     single { GetGuessGameUseCase(get()) }
 
-    single{ DateValidator() }
-
 }
