@@ -1,6 +1,7 @@
 package org.example.logic.usecases
 
 import model.Meal
+import org.example.logic.model.FoodChangeModeResults
 import org.example.logic.repository.MealsRepository
 
 
@@ -9,17 +10,19 @@ class GetMealByNameUseCase(
     private val searchingByKmpUseCase: SearchingByKmpUseCase
 ) {
 
-    /**
-     * Searches for meals whose name contains the given query (case-insensitive).
-     *
-     * @param query The name or part of the name to search for.
-     * @return A list of meals matching the query.
-     */
-    fun getMealByName(query: String?): List<Meal> {
-        if (query.isNullOrEmpty()) return emptyList()
+    fun getMealByName(query: String?): FoodChangeModeResults<List<Meal>> {
+        if (query.isNullOrEmpty()) {
+            return FoodChangeModeResults.Fail(IllegalArgumentException("Search query cannot be empty."))
+        }
 
-        return mealsRepository.getAllMeals().filter { meal ->
-            searchingByKmpUseCase.searchByKmp(meal.name, query)
+        return when (val results = mealsRepository.getAllMeals()) {
+            is FoodChangeModeResults.Success -> results.model
+                .filter { meal -> searchingByKmpUseCase.searchByKmp(meal.name, query) }
+                .takeIf { it.isNotEmpty() }
+                ?.let { FoodChangeModeResults.Success(it) }
+                ?: FoodChangeModeResults.Fail(NoSuchElementException("No meals found matching '$query'."))
+
+            is FoodChangeModeResults.Fail -> FoodChangeModeResults.Fail(results.exception)
         }
     }
 }
