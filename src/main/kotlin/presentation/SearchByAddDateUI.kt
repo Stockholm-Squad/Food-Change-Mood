@@ -1,10 +1,5 @@
 package presentation;
 
-import model.Meal
-import org.example.logic.usecases.GetMealsByDateUseCase
-import org.example.utils.DateValidator
-import org.example.utils.viewMealInListDetails
-
 /*
 8- Search Foods by Add Date: Use Kotlin’s Date class to represent the date in the meal entity.
     Let the user input a date and return a list of IDs and names of meals added on that date.
@@ -13,52 +8,3 @@ import org.example.utils.viewMealInListDetails
         - No meals were found for the given date. Ensure different exceptions are used for both cases.
  */
 
-class SearchByAddDateUI(private val getMealsByDateUseCase: GetMealsByDateUseCase, private val dateValidator: DateValidator) {
-
-    fun searchMealsByDate() {
-        while (true) {
-            println("📅 Enter date (YYYY-MM-DD): ex: 2002-02-02\n or 0 to exit")
-            val date = readlnOrNull()
-
-            if (date != null && date == "0") {
-                return
-            } else if (date != null && dateValidator.isValidDate(date)) {
-                println("Loading...")
-                searchFood(date)
-            } else {
-                println("Enter a valid Date or zero => 0")
-            }
-        }
-    }
-
-    private fun searchFood(date: String) {
-        val filteredList = getMealsByDateUseCase.getMealsByDate(date)
-
-        printMealsIdName(filteredList)
-
-        while (true) {
-            println()
-            println("-1 -> search again or back")
-            println("meal id -> view details")
-            val input = readlnOrNull()
-            val mealId = input?.toIntOrNull()
-
-            if (mealId == null) {
-                println("Enter a valid ID or -1")
-                continue
-            } else if (mealId == -1) {
-                break
-            } else {
-                filteredList.viewMealInListDetails(mealId)
-            }
-        }
-    }
-
-    private fun printMealsIdName(mealsList: List<Meal>) {
-        mealsList.forEach { meal ->
-            println("${meal.id} -> ${meal.name}")
-        }
-    }
-
-
-}

@@ -1,4 +1,4 @@
-package org.example.presentation
+package org.example.presentation.features
 
 import org.example.logic.usecases.GetIngredientGameUseCase
 
@@ -51,4 +51,3 @@ class IngredientGameUI(private val game: GetIngredientGameUseCase) {
         }
     }
 }
-

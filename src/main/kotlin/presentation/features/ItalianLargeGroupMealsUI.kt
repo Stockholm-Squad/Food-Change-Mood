@@ -1,4 +1,4 @@
-package org.example.presentation
+package org.example.presentation.features
 
 import org.example.logic.usecases.GetMealsForLargeGroupUseCase
 import org.example.utils.viewMealInListDetails

@@ -1,7 +1,7 @@
-package presentation
+package org.example.presentation.features
 
+import org.example.logic.model.FoodChangeModeResults
 import org.example.logic.usecases.GetMealByNameUseCase
-
 
 class SearchMealByNameUI(private val getMealByNameUseCase: GetMealByNameUseCase) {
 
@@ -9,21 +9,20 @@ class SearchMealByNameUI(private val getMealByNameUseCase: GetMealByNameUseCase)
         print("🔍 Enter a meal keyword to search: ")
         val name = readlnOrNull()?.trim()
 
-        if (name.isNullOrEmpty()) {
-            println("⚠️ Please enter a valid meal name.")
-            return
-        }
+        val result = getMealByNameUseCase.getMealByName(name)
 
-        val matchingMeals = getMealByNameUseCase.getMealByName(name)
-
-        if (matchingMeals.isEmpty()) {
-            println("❌ No meals found with the name '$name'.")
-        } else {
-            println("✅ Found ${matchingMeals.size} meal(s) matching '$name':")
-            matchingMeals.forEach { meal ->
-                println("- ${meal.name}")
+        when (result) {
+            is FoodChangeModeResults.Success -> {
+                println("✅ Found ${result.model.size} meal(s) matching '$name':")
+                result.model.forEach { meal ->
+                    println("- ${meal.name}")
+                }
+            }
+            is FoodChangeModeResults.Fail -> {
+                println("❌ ${result.exception.message}")
             }
         }
+
         askForMoreMeals()
     }
 
