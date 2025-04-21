@@ -1,9 +1,9 @@
 package org.example.logic.repository
 
 import model.Meal
-import org.example.logic.model.FoodChangeModeResults
+import org.example.logic.model.Results
 
 
 interface MealsRepository {
-    fun getAllMeals(): FoodChangeModeResults<List<Meal>>
+    fun getAllMeals(): Results<List<Meal>>
 }

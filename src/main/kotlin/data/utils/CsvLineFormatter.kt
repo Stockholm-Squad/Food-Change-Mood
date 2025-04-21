@@ -3,7 +3,7 @@ package org.example.data.utils
 class CsvLineFormatter {
     private var insideQuotes = false
 
-    fun formatRowOfData(str: String): List<String> {
+    fun formatMealLine(str: String): List<String> {
         val mealData = mutableListOf<String>()
         val mealColumnBuilder = StringBuilder()
 
