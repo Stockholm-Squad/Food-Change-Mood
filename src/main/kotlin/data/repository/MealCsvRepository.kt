@@ -15,18 +15,7 @@ class MealCsvRepository(
     override fun getAllMeals(): List<Meal> {
         if (allMeals.isNotEmpty()) return allMeals
 
-        allMeals = when (val result = mealDatasource?.getAllMeals()) {
-            is Result.Success -> {
-                result.value
-            }
-            is Result.Failure -> {
-                println("Failed to fetch meals: ${result.cause.message}")
-                result.cause.printStackTrace()
-                emptyList()
-            }
-
-            null -> emptyList()
-        }
+        allMeals = mealDatasource?.getAllMeals() ?: emptyList()
 
         return allMeals
     }
