@@ -3,16 +3,16 @@ package data
 import model.Meal
 import model.Nutrition
 import org.example.data.utils.CsvLineFormatter
+import org.example.logic.model.Results
 import org.example.utils.MealColumnIndex
 import org.example.utils.NutritionIndex
 import org.example.utils.getDateFromString
-import org.example.model.Result
 import java.util.Date
 
 class MealCsvParser(
     private val csvLineFormatter: CsvLineFormatter
 ) {
-    fun parseLine(row: String): Result<Meal> {
+    fun parseLine(row: String): Results<Meal> {
         return try {
             val mealRow = csvLineFormatter.formatMealLine(row)
             validateMealRow(mealRow = mealRow)
@@ -30,17 +30,17 @@ class MealCsvParser(
                 ingredients = parseListOfString(extractStringColumn(mealRow, MealColumnIndex.INGREDIENTS)),
                 numberOfIngredients = extractIntColumn(mealRow, MealColumnIndex.N_INGREDIENTS, defaultValue = 0)
             )
-            Result.Success(meal)
+            Results.Success(meal)
         } catch (e: Exception) {
-            Result.Failure(e)
+            Results.Fail(e)
         }
     }
 
-    private fun validateMealRow(mealRow: List<String>): Result<Unit> {
+    private fun validateMealRow(mealRow: List<String>): Results<Unit> {
         if (mealRow.size < MealColumnIndex.entries.size) {
-            return Result.Failure( Throwable("Insufficient data in row: $mealRow"))
+            return Results.Fail( Throwable("Insufficient data in row: $mealRow"))
         }
-        return Result.Success(Unit)
+        return Results.Success(Unit)
     }
 
     private fun extractStringColumn(
