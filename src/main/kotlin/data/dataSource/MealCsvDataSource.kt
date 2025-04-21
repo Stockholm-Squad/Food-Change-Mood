@@ -3,20 +3,24 @@ package org.example.data.dataSource
 import data.MealCsvParser
 import data.MealCsvReader
 import data.ParsingResult
+import data.ReaderResult
 import model.Meal
 
 class MealCsvDataSource(
     private val mealCsvReader: MealCsvReader,
     private val mealCsvParser: MealCsvParser
 ) : MealDataSource {
-    override fun getAllMeals(): List<Meal> {
-        return try {
-            mealCsvReader.readLinesFromFile()
-                .mapNotNull { line ->
+    override fun getAllMeals(): ReaderResult<List<Meal>> {
+        return when (val readResult = mealCsvReader.readLinesFromFile()) {
+            is ReaderResult.Success -> {
+                val meals = readResult.value.mapNotNull { line ->
                     parseLine(line)?.value
                 }
-        } catch (e: Exception) {
-            throw DataSourceException("Critical error reading CSV", e)
+                ReaderResult.Success(meals)
+            }
+            is ReaderResult.Failure -> {
+                ReaderResult.Failure("Failed to read meals from CSV: ${readResult.errorMessage}", readResult.cause)
+            }
         }
     }
 
@@ -33,6 +37,7 @@ class MealCsvDataSource(
         null
     }
 }
+
 
 
 // Custom exception for data source errors

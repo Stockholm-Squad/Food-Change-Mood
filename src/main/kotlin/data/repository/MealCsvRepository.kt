@@ -1,5 +1,6 @@
 package org.example.data.repository
 
+import data.ReaderResult
 import model.Meal
 import org.example.data.dataSource.MealDataSource
 import org.example.logic.repository.MealsRepository
@@ -14,7 +15,21 @@ class MealCsvRepository(
     override fun getAllMeals(): List<Meal> {
         if (allMeals.isNotEmpty()) return allMeals
         //TODO make try & catch exception and return fail or success based on the result from getAllMeals
-        allMeals = mealDatasource?.getAllMeals() ?: emptyList()
+//        allMeals = mealDatasource?.getAllMeals() ?: emptyList()
+
+        allMeals = when (val result = mealDatasource?.getAllMeals()) {
+            is ReaderResult.Success -> {
+                result.value
+            }
+            is ReaderResult.Failure -> {
+                println("Failed to fetch meals: ${result.errorMessage}")
+                result.cause?.printStackTrace()
+                emptyList()
+            }
+
+            null -> emptyList()
+        }
+
         return allMeals
     }
 
