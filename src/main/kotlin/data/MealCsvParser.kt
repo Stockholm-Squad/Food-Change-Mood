@@ -11,11 +11,11 @@ import java.util.Date
 class MealCsvParser(
     private val csvLineFormatter: CsvLineFormatter
 ) {
-    fun parseLine(row: String): Meal {
+    fun parseLine(row: String): ParsingResult<Meal> {
         return try {
             val mealRow = csvLineFormatter.formatMealLine(row)
             validateMealRow(mealRow = mealRow)
-            Meal(
+            val meal = Meal(
                 name = extractStringColumn(mealRow, MealColumnIndex.NAME),
                 id = extractIntColumn(mealRow, MealColumnIndex.ID, "Missing ID"),
                 minutes = extractIntColumn(mealRow, MealColumnIndex.MINUTES, defaultValue = 0),
@@ -29,15 +29,17 @@ class MealCsvParser(
                 ingredients = parseListOfString(extractStringColumn(mealRow, MealColumnIndex.INGREDIENTS)),
                 numberOfIngredients = extractIntColumn(mealRow, MealColumnIndex.N_INGREDIENTS, defaultValue = 0)
             )
+            ParsingResult.Success(meal)
         } catch (e: Exception) {
-            throw ParseException("Failed to parse CSV line: $row", e)
+            ParsingResult.Failure("Failed to parse CSV line: $row", e)
         }
     }
 
-    private fun validateMealRow(mealRow: List<String>) {
+    private fun validateMealRow(mealRow: List<String>): ParsingResult<Unit> {
         if (mealRow.size < MealColumnIndex.entries.size) {
-            throw InsufficientDataException("Insufficient data in row: $mealRow")
+            return ParsingResult.Failure("Insufficient data in row: $mealRow")
         }
+        return ParsingResult.Success(Unit)
     }
 
     private fun extractStringColumn(
@@ -68,7 +70,7 @@ class MealCsvParser(
             try {
                 getDateFromString(dateField)
             } catch (e: Exception) {
-                throw InvalidDataException("Invalid date format at index ${index.index}: $dateField", e)
+                throw RuntimeException("Invalid date format at index ${index.index}: $dateField", e)
             }
         }
     }
@@ -112,8 +114,8 @@ class MealCsvParser(
     }
 }
 
-// Custom exceptions for better error handling
-sealed class ParsingException(message: String, cause: Throwable? = null) : RuntimeException(message, cause)
-class ParseException(message: String, cause: Throwable? = null) : ParsingException(message, cause)
-class InsufficientDataException(message: String) : ParsingException(message)
-class InvalidDataException(message: String, cause: Throwable? = null) : ParsingException(message, cause)
+// Custom Result class for better error handling
+sealed class ParsingResult<out T> {
+    data class Success<T>(val value: T) : ParsingResult<T>()
+    data class Failure(val errorMessage: String, val cause: Throwable? = null) : ParsingResult<Nothing>()
+}
