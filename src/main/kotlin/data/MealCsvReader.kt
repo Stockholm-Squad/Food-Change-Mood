@@ -2,6 +2,7 @@ package data
 
 import org.example.data.utils.CsvLineHandler
 import java.io.File
+import java.io.IOException
 
 class MealCsvReader(
     private val csvFile: File,
@@ -9,15 +10,19 @@ class MealCsvReader(
 ) {
     fun readLinesFromFile(): List<String> {
         val lines = mutableListOf<String>()
-        val csvFileReader = csvFile.bufferedReader()
+        csvFile.bufferedReader().use { csvFileReader ->
+            try {
+                csvFileReader.readLine()
 
-        csvFileReader.readLine() //TODO handle it within try and catch
-        csvFileReader.forEachLine { line ->
-            csvLineHandler.handleLine(line)?.apply {
-                lines.add(this)
+                csvFileReader.forEachLine { line ->
+                    csvLineHandler.handleLine(line)?.let { processedLine ->
+                        lines.add(processedLine)
+                    }
+                }
+            } catch (e: Exception) {
+                throw IOException("Error while reading from the CSV file", e)
             }
         }
-        csvFileReader.close()
         return lines
     }
 }
