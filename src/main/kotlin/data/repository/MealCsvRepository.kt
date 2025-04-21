@@ -14,16 +14,14 @@ class MealCsvRepository(
     //TODO update all usage of this function to receive Result instead of List<Meal> direct
     override fun getAllMeals(): List<Meal> {
         if (allMeals.isNotEmpty()) return allMeals
-        //TODO make try & catch exception and return fail or success based on the result from getAllMeals
-//        allMeals = mealDatasource?.getAllMeals() ?: emptyList()
 
         allMeals = when (val result = mealDatasource?.getAllMeals()) {
             is Result.Success -> {
                 result.value
             }
             is Result.Failure -> {
-                println("Failed to fetch meals: ${result.errorMessage}")
-                result.cause?.printStackTrace()
+                println("Failed to fetch meals: ${result.cause.message}")
+                result.cause.printStackTrace()
                 emptyList()
             }
 

@@ -18,7 +18,7 @@ class MealCsvDataSource(
                 Result.Success(meals)
             }
             is Result.Failure -> {
-                Result.Failure("Failed to read meals from CSV: ${readResult.errorMessage}", readResult.cause)
+                Result.Failure(readResult.cause)
             }
         }
     }
@@ -27,7 +27,7 @@ class MealCsvDataSource(
         when (val result = mealCsvParser.parseLine(line)) {
             is Result.Success -> result
             is Result.Failure -> {
-                println("Failed to parse line: ${result.errorMessage}")
+                println("Failed to parse line: ${result.cause.message}")
                 null
             }
         }

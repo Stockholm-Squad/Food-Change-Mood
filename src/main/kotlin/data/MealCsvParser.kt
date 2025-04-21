@@ -32,13 +32,13 @@ class MealCsvParser(
             )
             Result.Success(meal)
         } catch (e: Exception) {
-            Result.Failure("Failed to parse CSV line: $row", e)
+            Result.Failure(e)
         }
     }
 
     private fun validateMealRow(mealRow: List<String>): Result<Unit> {
         if (mealRow.size < MealColumnIndex.entries.size) {
-            return Result.Failure("Insufficient data in row: $mealRow")
+            return Result.Failure( Throwable("Insufficient data in row: $mealRow"))
         }
         return Result.Success(Unit)
     }

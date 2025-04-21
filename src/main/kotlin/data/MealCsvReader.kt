@@ -23,7 +23,7 @@ class MealCsvReader(
             }
             Result.Success(lines)
         } catch (e: Exception) {
-            Result.Failure("Error while reading from the CSV file", e)
+            Result.Failure(e)
         }
 
     }
