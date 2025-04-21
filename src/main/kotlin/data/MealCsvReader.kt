@@ -1,8 +1,8 @@
 package data
 
+import org.example.Results.ReaderResult
 import org.example.data.utils.CsvLineHandler
 import java.io.File
-import java.io.IOException
 
 class MealCsvReader(
     private val csvFile: File,
@@ -29,8 +29,3 @@ class MealCsvReader(
     }
 }
 
-
-sealed class ReaderResult<out T> {
-    data class Success<T>(val value: T) : ReaderResult<T>()
-    data class Failure(val errorMessage: String, val cause: Throwable? = null) : ReaderResult<Nothing>()
-}

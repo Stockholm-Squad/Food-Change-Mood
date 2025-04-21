@@ -1,7 +1,7 @@
 package org.example.data.repository
 
-import data.ReaderResult
 import model.Meal
+import org.example.Results.ReaderResult
 import org.example.data.dataSource.MealDataSource
 import org.example.logic.repository.MealsRepository
 

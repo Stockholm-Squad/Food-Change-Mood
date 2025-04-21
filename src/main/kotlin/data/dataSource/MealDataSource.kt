@@ -1,7 +1,7 @@
 package org.example.data.dataSource
 
-import data.ReaderResult
 import model.Meal
+import org.example.Results.ReaderResult
 
 interface MealDataSource {
     fun getAllMeals(): ReaderResult<List<Meal>>

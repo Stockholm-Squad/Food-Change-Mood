@@ -2,6 +2,7 @@ package data
 
 import model.Meal
 import model.Nutrition
+import org.example.Results.ParsingResult
 import org.example.data.utils.CsvLineFormatter
 import org.example.utils.MealColumnIndex
 import org.example.utils.NutritionIndex
@@ -114,8 +115,3 @@ class MealCsvParser(
     }
 }
 
-// Custom Result class for better error handling
-sealed class ParsingResult<out T> {
-    data class Success<T>(val value: T) : ParsingResult<T>()
-    data class Failure(val errorMessage: String, val cause: Throwable? = null) : ParsingResult<Nothing>()
-}

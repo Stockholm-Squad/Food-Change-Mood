@@ -2,9 +2,9 @@ package org.example.data.dataSource
 
 import data.MealCsvParser
 import data.MealCsvReader
-import data.ParsingResult
-import data.ReaderResult
 import model.Meal
+import org.example.Results.ParsingResult
+import org.example.Results.ReaderResult
 
 class MealCsvDataSource(
     private val mealCsvReader: MealCsvReader,
@@ -37,8 +37,3 @@ class MealCsvDataSource(
         null
     }
 }
-
-
-
-// Custom exception for data source errors
-class DataSourceException(message: String, cause: Throwable? = null) : RuntimeException(message, cause)
