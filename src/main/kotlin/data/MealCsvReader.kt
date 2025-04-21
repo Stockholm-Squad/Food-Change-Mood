@@ -17,6 +17,7 @@ class MealCsvReader(
                 lines.add(this)
             }
         }
+        csvFileReader.close()
         return lines
     }
 }
