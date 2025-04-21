@@ -1,6 +1,6 @@
 package data
 
-import org.example.Results.ReaderResult
+import org.example.model.Result
 import org.example.data.utils.CsvLineHandler
 import java.io.File
 
@@ -8,7 +8,7 @@ class MealCsvReader(
     private val csvFile: File,
     private val csvLineHandler: CsvLineHandler
 ) {
-    fun readLinesFromFile(): ReaderResult<List<String>> {
+    fun readLinesFromFile(): Result<List<String>> {
         return try {
 
             val lines = mutableListOf<String>()
@@ -21,9 +21,9 @@ class MealCsvReader(
                     }
                 }
             }
-            ReaderResult.Success(lines)
+            Result.Success(lines)
         } catch (e: Exception) {
-            ReaderResult.Failure("Error while reading from the CSV file", e)
+            Result.Failure("Error while reading from the CSV file", e)
         }
 
     }

@@ -1,7 +1,7 @@
 package org.example.data.repository
 
 import model.Meal
-import org.example.Results.ReaderResult
+import org.example.model.Result
 import org.example.data.dataSource.MealDataSource
 import org.example.logic.repository.MealsRepository
 
@@ -18,10 +18,10 @@ class MealCsvRepository(
 //        allMeals = mealDatasource?.getAllMeals() ?: emptyList()
 
         allMeals = when (val result = mealDatasource?.getAllMeals()) {
-            is ReaderResult.Success -> {
+            is Result.Success -> {
                 result.value
             }
-            is ReaderResult.Failure -> {
+            is Result.Failure -> {
                 println("Failed to fetch meals: ${result.errorMessage}")
                 result.cause?.printStackTrace()
                 emptyList()
