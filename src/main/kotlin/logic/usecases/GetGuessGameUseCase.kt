@@ -1,45 +1,21 @@
 package org.example.logic.usecases
 
 import model.Meal
+import org.example.logic.model.Results
 import org.example.logic.repository.MealsRepository
 
-//TODO handle this useCase to be single responsibility
+
 class GetGuessGameUseCase(
     private val mealsRepository: MealsRepository
 ) {
 
-   private fun getRandomMeal(): Meal {
-        val meals = mealsRepository.getAllMeals()
-        return meals.random()
-    }
-    val meal =getRandomMeal()
-    fun guessGame() {
-        println("🎲  Can you guess the right the preparation time (in minutes) for the meal: ${meal.name}?")
-        val correctTime=meal.minutes
-        var attempts = 3
-        while (attempts > 0) {
-            print("Enter your guess: ")
-            val guess = readLine()?.toIntOrNull()
 
-            if (guess == null) {
-                println("Invalid input. Please enter a number.")
-                continue
+    fun getRandomMeal(): Results<Meal> {
+        return when (val meals = mealsRepository.getAllMeals()) {
+            is Results.Success -> {
+                Results.Success(meals.model.random())
             }
-
-            if (guess == correctTime) {
-                println("🎉 Correct! The preparation time is $correctTime minutes.")
-                return
-            } else if (guess < correctTime!!) {
-                println("Too low.")
-            } else {
-                println("Too high.")
-            }
-
-            attempts--
+            is Results.Fail -> Results.Fail(meals.exception)
         }
-
-        println("❌ You've used all attempts. The correct time was $correctTime minutes.")
-
-  
-    
-}}
+    }
+}
