@@ -6,33 +6,87 @@ import org.example.data.utils.CsvLineFormatter
 import org.example.utils.MealColumnIndex
 import org.example.utils.NutritionIndex
 import org.example.utils.getDateFromString
+import java.util.Date
 
 class MealCsvParser(
     private val csvLineFormatter: CsvLineFormatter
 ) {
-
     fun parseLine(row: String): Meal {
-        //TODO Handle all throws to be more generic not IllegalArgumentException only
-        //TODO handle it within try and catch
-        val mealData: List<String> = csvLineFormatter.formatRowOfData(row)
-        return Meal(
-            name = mealData[MealColumnIndex.NAME.index],
-            id = mealData[MealColumnIndex.ID.index].toIntOrNull() ?: throw IllegalArgumentException("Missing id"),
-            minutes = mealData[MealColumnIndex.MINUTES.index].toIntOrNull() ?: 0,
-            contributorId = mealData[MealColumnIndex.CONTRIBUTOR_ID.index].toIntOrNull()
-                ?: throw IllegalArgumentException("Missing id"),
-            submitted = getDateFromString(mealData[MealColumnIndex.SUBMITTED.index]),
-            tags = parseListOfData(mealData[MealColumnIndex.TAGS.index]),
-            nutrition = constructNutritionFromToken(mealData[MealColumnIndex.NUTRITION.index]),
-            numberOfSteps = mealData[MealColumnIndex.N_STEPS.index].toIntOrNull() ?: 0,
-            steps = parseListOfData(mealData[MealColumnIndex.STEPS.index]),
-            description = mealData[MealColumnIndex.DESCRIPTION.index],
-            ingredients = parseListOfData(mealData[MealColumnIndex.INGREDIENTS.index]),
-            numberOfIngredients = mealData[MealColumnIndex.N_INGREDIENTS.index].toIntOrNull() ?: 0
-        )
+        return try {
+            val mealRow = csvLineFormatter.formatMealLine(row)
+            validateMealRow(mealRow = mealRow)
+            Meal(
+                name = extractStringColumn(mealRow, MealColumnIndex.NAME),
+                id = extractIntColumn(mealRow, MealColumnIndex.ID, "Missing ID"),
+                minutes = extractIntColumn(mealRow, MealColumnIndex.MINUTES, defaultValue = 0),
+                contributorId = extractIntColumn(mealRow, MealColumnIndex.CONTRIBUTOR_ID, "Missing Contributor ID"),
+                submitted = extractDateColumn(mealRow, MealColumnIndex.SUBMITTED),
+                tags = parseListOfString(extractStringColumn(mealRow, MealColumnIndex.TAGS)),
+                nutrition = constructNutritionFromToken(extractStringColumn(mealRow, MealColumnIndex.NUTRITION)),
+                numberOfSteps = extractIntColumn(mealRow, MealColumnIndex.N_STEPS, defaultValue = 0),
+                steps = parseListOfString(extractStringColumn(mealRow, MealColumnIndex.STEPS)),
+                description = extractStringColumn(mealRow, MealColumnIndex.DESCRIPTION),
+                ingredients = parseListOfString(extractStringColumn(mealRow, MealColumnIndex.INGREDIENTS)),
+                numberOfIngredients = extractIntColumn(mealRow, MealColumnIndex.N_INGREDIENTS, defaultValue = 0)
+            )
+        } catch (e: Exception) {
+            throw ParseException("Failed to parse CSV line: $row", e)
+        }
     }
 
-    private fun parseListOfData(raw: String): List<String> {
+    private fun validateMealRow(mealRow: List<String>) {
+        if (mealRow.size < MealColumnIndex.entries.size) {
+            throw InsufficientDataException("Insufficient data in row: $mealRow")
+        }
+    }
+
+    private fun extractStringColumn(
+        mealRow: List<String>,
+        index: MealColumnIndex
+    ): String {
+        return safeAccessColumn(mealRow, index.index, "String") { it.trim() }
+    }
+
+    private fun extractIntColumn(
+        mealRow: List<String>,
+        index: MealColumnIndex,
+        errorMessage: String? = null,
+        defaultValue: Int? = null
+    ): Int {
+        return safeAccessColumn(mealRow, index.index, "Integer") { it.toIntOrNull() }
+            ?: run {
+                if (errorMessage != null) throw IllegalArgumentException(errorMessage)
+                defaultValue ?: throw IllegalArgumentException("Invalid integer value at index ${index.index}")
+            }
+    }
+
+    private fun extractDateColumn(
+        mealRow: List<String>,
+        index: MealColumnIndex
+    ): Date? {
+        return safeAccessColumn(mealRow, index.index, "Date") { dateField ->
+            try {
+                getDateFromString(dateField)
+            } catch (e: Exception) {
+                throw InvalidDataException("Invalid date format at index ${index.index}: $dateField", e)
+            }
+        }
+    }
+
+    private fun <T> safeAccessColumn(
+        mealRow: List<String>,
+        columnIndex: Int,
+        columnType: String,
+        transform: (String) -> T
+    ): T {
+        return if (columnIndex in mealRow.indices) {
+            transform(mealRow[columnIndex])
+        } else {
+            throw IndexOutOfBoundsException("Column '${MealColumnIndex.entries.find { it.index == columnIndex }?.name}' ($columnType) is out of bounds in row: $mealRow")
+        }
+    }
+
+    private fun parseListOfString(raw: String): List<String> {
         return raw
             .split(",")
             .map {
@@ -45,7 +99,7 @@ class MealCsvParser(
     }
 
     private fun constructNutritionFromToken(raw: String): Nutrition {
-        val nutrition = parseListOfData(raw).map { it.trim().toFloatOrNull() }
+        val nutrition = parseListOfString(raw).map { it.trim().toFloatOrNull() }
         return Nutrition(
             calories = nutrition[NutritionIndex.CALORIES.index] ?: 0.0F,
             totalFat = nutrition[NutritionIndex.TOTAL_FAT.index] ?: 0.0F,
@@ -56,6 +110,10 @@ class MealCsvParser(
             carbohydrates = nutrition[NutritionIndex.CARBOHYDRATES.index] ?: 0.0F,
         )
     }
-
-
 }
+
+// Custom exceptions for better error handling
+sealed class ParsingException(message: String, cause: Throwable? = null) : RuntimeException(message, cause)
+class ParseException(message: String, cause: Throwable? = null) : ParsingException(message, cause)
+class InsufficientDataException(message: String) : ParsingException(message)
+class InvalidDataException(message: String, cause: Throwable? = null) : ParsingException(message, cause)
