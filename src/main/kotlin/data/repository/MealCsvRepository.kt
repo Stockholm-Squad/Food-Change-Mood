@@ -1,7 +1,6 @@
 package org.example.data.repository
 
 import model.Meal
-import org.example.model.Result
 import org.example.data.dataSource.MealDataSource
 import org.example.logic.repository.MealsRepository
 
@@ -14,9 +13,8 @@ class MealCsvRepository(
     //TODO update all usage of this function to receive Result instead of List<Meal> direct
     override fun getAllMeals(): List<Meal> {
         if (allMeals.isNotEmpty()) return allMeals
-
+        //TODO make try & catch exception and return fail or success based on the result from getAllMeals
         allMeals = mealDatasource?.getAllMeals() ?: emptyList()
-
         return allMeals
     }
 
