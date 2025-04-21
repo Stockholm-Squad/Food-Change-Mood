@@ -15,18 +15,15 @@ class GymHelperUI(
                 getMealsForGymHelperUseCase?.getGymHelperMeals(
                     desiredCalories = desiredCalories,
                     desiredProteins = desiredProteins
-                )?.apply {
+                ).apply {
                     when (this) {
                         is Results.Fail -> this@GymHelperUI.handleFailure(this.exception)
                         is Results.Success<List<Meal>> -> this@GymHelperUI.handleSuccess(this.model)
+                        null -> handleUnExpectedError()
                     }
                 }
             } ?: showInvalidInput()
         } ?: showInvalidInput()
-    }
-
-    private fun showInvalidInput() {
-        println(Constants.INVALID_INPUT)
     }
 
     private fun getDesiredProteins(): Float? {
@@ -39,14 +36,22 @@ class GymHelperUI(
         return readlnOrNull()?.toFloatOrNull()
     }
 
+    private fun handleFailure(exception: Throwable) {
+        println(exception.message)
+    }
+
     private fun handleSuccess(gymHelperMeals: List<Meal>) {
         gymHelperMeals.forEach {
             println(it)
         }
     }
 
-    private fun handleFailure(exception: Throwable) {
-        println(exception.message)
+    private fun handleUnExpectedError() {
+        this@GymHelperUI.handleFailure(Throwable("UnExpected Error ${GymHelperUI::class.simpleName}"))
+    }
+
+    private fun showInvalidInput() {
+        println(Constants.INVALID_INPUT)
     }
 
 }
