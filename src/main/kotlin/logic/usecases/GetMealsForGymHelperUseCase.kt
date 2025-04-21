@@ -2,6 +2,7 @@ package org.example.logic.usecases
 
 import model.Meal
 import model.Nutrition
+import org.example.logic.model.Results
 import org.example.logic.repository.MealsRepository
 import org.example.utils.Constants
 import kotlin.math.abs
@@ -9,49 +10,78 @@ import kotlin.math.abs
 class GetMealsForGymHelperUseCase(
     private val mealRepository: MealsRepository
 ) {
+    private val gymHelperModel = GymHelperModel()
+
     fun getGymHelperMeals(
         desiredCalories: Float,
         desiredProteins: Float,
         approximateAmount: Float = 20F
-    ): List<Meal> {
-        return mealRepository.getAllMeals()
-            .filter {
-                it.nutrition?.isMealApproxmatlyMatchesCaloriesAndProteins(
-                    desiredCalories = desiredCalories,
-                    desiredProteins = desiredProteins,
-                    approximateAmount = approximateAmount
-                ) ?: false
+    ): Results<List<Meal>> {
+        initGymHelperModel(desiredCalories, desiredProteins, approximateAmount).also {
+            return mealRepository.getAllMeals().apply {
+                when (this) {
+                    is Results.Fail -> handleGetAllMealsFailure()
+                    is Results.Success -> handleGetAllMealsSuccess(
+                        this.model,
+                        this@GetMealsForGymHelperUseCase.gymHelperModel
+                    )
+                }
             }
+        }
+    }
+
+    private fun initGymHelperModel(desiredCalories: Float, desiredProteins: Float, approximateAmount: Float) {
+        this.gymHelperModel.apply {
+            this.desiredCalories = desiredCalories
+            this.desiredProteins = desiredProteins
+            this.approximateAmount = approximateAmount
+        }
+    }
+
+    private fun handleGetAllMealsSuccess(allMeals: List<Meal>, gymHelperModel: GymHelperModel): Results<List<Meal>> {
+        return getGymHelperMeals(allMeals, gymHelperModel)?.let {
+            Results.Success(it)
+        }
+            ?: Results.Fail(Throwable(message = Constants.NO_MEALS_FOR_GYM_HELPER))
+    }
+
+    private fun getGymHelperMeals(
+        allMeals: List<Meal>,
+        gymHelperModel: GymHelperModel
+    ): List<Meal>? {
+        return allMeals.filter {
+            it.nutrition?.isMealApproxmatlyMatchesCaloriesAndProteins(
+                gymHelperModel
+            ) ?: false
+        }
             .takeIf { it.isNotEmpty() }
             ?.sortedBy {
                 it.nutrition
                     ?.sortMealByProteinsAndCalories(
-                    desiredCalories = desiredCalories,
-                    desiredProteins = desiredProteins,
-                    approximateAmount = approximateAmount
-                )
-            } ?: throw Throwable(message = Constants.NO_MEALS_FOR_GYM_HELPER)
+                        gymHelperModel
+                    )
+            }
     }
 
+    private fun handleGetAllMealsFailure() = Results.Fail(Throwable(Constants.NO_MEALS_FOR_GYM_HELPER))
+
     private fun Nutrition.sortMealByProteinsAndCalories(
-        desiredCalories: Float,
-        desiredProteins: Float,
-        approximateAmount: Float
+        gymHelperModel: GymHelperModel
     ): Boolean {
         return this.isMealApproxmatlyMatchesCaloriesAndProteins(
-            desiredCalories = desiredCalories,
-            desiredProteins = desiredProteins,
-            approximateAmount = approximateAmount
+            gymHelperModel
         )
     }
 
-    private fun Nutrition.isMealApproxmatlyMatchesCaloriesAndProteins(
-        desiredCalories: Float,
-        desiredProteins: Float,
-        approximateAmount: Float
-    ): Boolean {
-        return this.isMealMatchesCalories(desiredCalories = desiredCalories, approximateAmount = approximateAmount) &&
-                this.isMealMatchesProteins(desiredProteins = desiredProteins, approximateAmount = approximateAmount)
+    private fun Nutrition.isMealApproxmatlyMatchesCaloriesAndProteins(gymHelperModel: GymHelperModel): Boolean {
+        return this.isMealMatchesCalories(
+            desiredCalories = gymHelperModel.desiredCalories,
+            approximateAmount = gymHelperModel.approximateAmount
+        ) &&
+                this.isMealMatchesProteins(
+                    desiredProteins = gymHelperModel.desiredProteins,
+                    approximateAmount = gymHelperModel.approximateAmount
+                )
     }
 
     private fun Nutrition.isMealMatchesCalories(
@@ -86,3 +116,10 @@ class GetMealsForGymHelperUseCase(
         approximateAmount: Float
     ) = ((abs(desiredAmount - amount) * 100) / desiredAmount) <= approximateAmount
 }
+
+
+data class GymHelperModel(
+    var desiredCalories: Float = 0.0F,
+    var desiredProteins: Float = 0.0F,
+    var approximateAmount: Float = 20F
+)

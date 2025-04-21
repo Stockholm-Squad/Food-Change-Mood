@@ -1,5 +1,7 @@
 package org.example.presentation.features
 
+import model.Meal
+import org.example.logic.model.Results
 import org.example.logic.usecases.GetMealsForGymHelperUseCase
 import org.example.utils.Constants
 
@@ -8,35 +10,43 @@ class GymHelperUI(
 ) {
 
     fun useGymHelper() {
-        print("🔥 Enter desired calories: ")
-        val desiredCalories = readlnOrNull()?.toFloatOrNull()
-        if (desiredCalories == null) {
-            println(Constants.INVALID_INPUT)
-            return
-        }
+        this.getDesiredCalories()?.let { desiredCalories ->
+            this@GymHelperUI.getDesiredProteins()?.let { desiredProteins ->
+                getMealsForGymHelperUseCase?.getGymHelperMeals(
+                    desiredCalories = desiredCalories,
+                    desiredProteins = desiredProteins
+                )?.apply {
+                    when (this) {
+                        is Results.Fail -> this@GymHelperUI.handleFailure(this.exception)
+                        is Results.Success<List<Meal>> -> this@GymHelperUI.handleSuccess(this.model)
+                    }
+                }
+            } ?: showInvalidInput()
+        } ?: showInvalidInput()
+    }
 
+    private fun showInvalidInput() {
+        println(Constants.INVALID_INPUT)
+    }
+
+    private fun getDesiredProteins(): Float? {
         print("🔥 Enter desired proteins: ")
-        val desiredProteins = readlnOrNull()?.toFloatOrNull()
+        return readlnOrNull()?.toFloatOrNull()
+    }
 
-        if (desiredProteins == null) {
-            println(Constants.INVALID_INPUT)
-            return
+    private fun getDesiredCalories(): Float? {
+        print("🔥 Enter desired calories: ")
+        return readlnOrNull()?.toFloatOrNull()
+    }
+
+    private fun handleSuccess(gymHelperMeals: List<Meal>) {
+        gymHelperMeals.forEach {
+            println(it)
         }
+    }
 
-        try {
-            getMealsForGymHelperUseCase?.getGymHelperMeals(
-                desiredCalories = desiredCalories,
-                desiredProteins = desiredProteins
-            )?.takeIf {
-                it.isNotEmpty()
-            }?.forEach {
-                println(it)
-            } ?: println(Constants.NO_MEALS_FOR_GYM_HELPER)
-
-        } catch (throwable: Throwable) {
-            println(throwable.message)
-        }
-
+    private fun handleFailure(exception: Throwable) {
+        println(exception.message)
     }
 
 }
