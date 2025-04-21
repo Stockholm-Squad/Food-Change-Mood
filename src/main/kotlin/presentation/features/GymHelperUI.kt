@@ -1,8 +1,7 @@
-package presentation;
+package org.example.presentation.features
 
 import org.example.logic.usecases.GetMealsForGymHelperUseCase
 import org.example.utils.Constants
-
 
 class GymHelperUI(
     private val getMealsForGymHelperUseCase: GetMealsForGymHelperUseCase?

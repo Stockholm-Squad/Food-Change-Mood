@@ -1,4 +1,4 @@
-package org.example.presentation
+package org.example.presentation.features
 
 import org.example.logic.model.FoodChangeModeResults
 import org.example.logic.usecases.GetSeaFoodByProteinRankUseCase

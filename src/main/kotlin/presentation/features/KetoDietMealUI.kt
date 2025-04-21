@@ -1,4 +1,4 @@
-package presentation;
+package org.example.presentation.features
 
 import org.example.logic.usecases.GetMealForKetoDietUseCase
 
@@ -32,4 +32,3 @@ class KetoDietMealUI(private val getMealForKetoDietUseCase: GetMealForKetoDietUs
         }
     }
 }
-

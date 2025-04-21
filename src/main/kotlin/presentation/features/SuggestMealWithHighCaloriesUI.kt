@@ -1,4 +1,4 @@
-package org.example.presentation
+package org.example.presentation.features
 import model.Meal
 import org.example.logic.usecases.GetMealsForSoThinProblemUseCase
 
