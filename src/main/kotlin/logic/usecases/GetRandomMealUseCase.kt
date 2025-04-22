@@ -4,7 +4,7 @@ import model.Meal
 import org.example.logic.repository.MealsRepository
 
 
-class GetGuessGameUseCase(
+class GetRandomMealUseCase(
     private val mealsRepository: MealsRepository
 ) {
 
