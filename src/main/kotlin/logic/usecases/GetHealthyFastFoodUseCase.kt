@@ -12,14 +12,7 @@ class GetHealthyFastFoodUseCase(
         return mealsRepository.getAllMeals().fold(
             onSuccess = { allMeals ->
                 Result.success(
-                    allMeals.filter { meal ->
-                        meal.minutes != null && meal.minutes <= 15
-                    }
-                        .sortedWith(
-                            compareBy<Meal> { it.nutrition?.totalFat }
-                                .thenBy { it.nutrition?.saturatedFat }
-                                .thenBy { it.nutrition?.carbohydrates }
-                        )
+                    getFilteredMeals(allMeals)
                 )
             },
             onFailure = { error ->
@@ -28,6 +21,17 @@ class GetHealthyFastFoodUseCase(
 
         )
 
+    }
+
+    fun getFilteredMeals(allMeals: List<Meal>): List<Meal >{
+        return allMeals.filter { meal ->
+            meal.minutes != null && meal.minutes <= 15
+        }
+            .sortedWith(
+                compareBy<Meal> { it.nutrition?.totalFat }
+                    .thenBy { it.nutrition?.saturatedFat }
+                    .thenBy { it.nutrition?.carbohydrates }
+            )
     }
 }
 
