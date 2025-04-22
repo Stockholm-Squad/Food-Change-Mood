@@ -1,23 +1,26 @@
 package org.example.logic.usecases
 
 import model.Meal
-import org.example.logic.model.Results
 import org.example.logic.repository.MealsRepository
 
 class GetDessertsWithNoEggsUseCase(private val mealRepository: MealsRepository) {
 
 
-    fun getDessertsWithNNoEggs(): Results<List<Meal>> {
+    fun getDessertsWithNNoEggs(): Result<List<Meal>> {
 
-        return when (val result = mealRepository.getAllMeals()) {
-            is Results.Success -> result.model.filter {
-                !it.ingredients.toString().contains("egg") && it.tags.toString().contains("dessert")
-            }.let { Results.Success(it) }
+        return mealRepository.getAllMeals().fold(
+            onSuccess = { allMeals -> Result.success(returnTheFilteredDesserts(allMeals)) },
+            onFailure = { error -> Result.failure(error) }
+        )
 
-            is Results.Fail -> Results.Fail(result.exception)
-        }
     }
 
+    private fun returnTheFilteredDesserts(model: List<Meal>): List<Meal> {
+        return model.filter {
+            !it.ingredients.toString().contains("egg", ignoreCase = true) && it.tags.toString()
+                .contains("dessert", ignoreCase = true)
+        }
 
+    }
 }
 
