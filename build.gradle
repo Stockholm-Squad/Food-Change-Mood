@@ -12,6 +12,9 @@ repositories {
 dependencies {
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
     implementation("io.insert-koin:koin-core:4.0.2")
+
+    testImplementation("io.mockk:mockk:1.14.0")
+    testImplementation ("com.google.truth:truth:1.4.4")
 }
 
 test {
