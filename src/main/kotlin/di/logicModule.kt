@@ -8,8 +8,8 @@ val logicModule = module {
 
     single { GetHealthyFastFoodUseCase(get()) }
     single { GetEasyFoodSuggestionsUseCase(get()) }
-    single { GetDessertsWithNoEggs(get()) }
-    single { GetCountryFoodUseCase(get()) }
+    single { GetDessertsWithNoEggsUseCase(get()) }
+    single { GetCountryMealsUseCase(get()) }
     single { GetPotatoMealsUseCase(get()) }
     single { GetMealsForGymHelperUseCase(get()) }
     single { GetIngredientGameUseCase(get()) }
