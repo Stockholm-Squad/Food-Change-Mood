@@ -1,25 +1,32 @@
 package org.example.presentation.features
 
-import org.example.logic.usecases.GetDessertsWithNoEggs
+import model.Meal
+import org.example.logic.model.Results
+import org.example.logic.usecases.GetDessertsWithNoEggsUseCase
 
-class SuggestSweetNoEggsUI(private val getSweetWithNoEggs: GetDessertsWithNoEggs) {
+class SuggestSweetNoEggsUI(private val getSweetWithNoEggs: GetDessertsWithNoEggsUseCase) {
 
     fun showSweetsNoEggs() {
         println("🍬 Craving dessert? Here’s something sweet with zero eggs!")
-        val dessertsList = getSweetWithNoEggs.getDessertsWithNoEggs().toMutableList()
+        when (val result = getSweetWithNoEggs.getDessertsWithNNoEggs()) {
+            is Results.Fail -> println("Couldn't Find Desserts you grave sorry")
+            is Results.Success -> showResultsRandomly(result.model.toMutableList())
 
-        while (dessertsList.isNotEmpty()) {
-            val index = (0..dessertsList.size).random()
-            println("Dessert: ${dessertsList[index].name}\nDescription: ${dessertsList[index].description}\n")
+
+        }
+    }
+
+    private fun showResultsRandomly(model: MutableList<Meal>) {
+        while (model.isNotEmpty()) {
+            val index = (0..model.size).random()
+            println("Dessert: ${model[index].name}\nDescription: ${model[index].description}\n")
             println("Do you like this dessert?.   (y/n)")
             val choice = readlnOrNull()
             if (choice == "y") {
-                println("\nMeal Name: ${dessertsList[index].name}\nMeal Description: ${dessertsList[index].description}\nMeal Ingredients: ${dessertsList[index].ingredients}\nMeal preparation steps: ${dessertsList[index].steps}\n")
+                println("\nMeal Name: ${model[index].name}\nMeal Description: ${model[index].description}\nMeal Ingredients: ${model[index].ingredients}\nMeal preparation steps: ${model[index].steps}\n")
                 return
-
             }
-
-            dessertsList.removeAt(2)
+            model.removeAt(2)
         }
     }
 }

@@ -23,12 +23,11 @@ import org.example.presentation.features.SuggestMealForSoThinPeopleUI
 import org.example.presentation.features.SuggestSweetNoEggsUI
 import org.example.utils.DateValidator
 import org.example.utils.MenuOption
-import presentation.*
 
 class FoodConsoleUI(
     private val getMealForKetoDietUseCase: GetMealForKetoDietUseCase,
     private val getEasyFoodSuggestionsUseCase: GetEasyFoodSuggestionsUseCase,
-    private val sweetNoEggsUseCase: GetDessertsWithNoEggs,
+    private val sweetNoEggsUseCase: GetDessertsWithNoEggsUseCase,
     private val getCountryFoodUseCase: GetCountryFoodUseCase,
     private val getPotatoMealsUseCase: GetPotatoMealsUseCase,
     private val getMealsForGymHelperUseCase: GetMealsForGymHelperUseCase,
