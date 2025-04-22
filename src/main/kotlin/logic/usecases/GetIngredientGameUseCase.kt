@@ -9,7 +9,18 @@ class GetIngredientGameUseCase(
 ) {
     private lateinit var currentQuestion: IngredientQuestionModel
 
-    fun startIngredientGame(): IngredientQuestionModel {
+    fun startIngredientGame(): IngredientQuestionModel =
+        try {
+            generateGameQuestion()
+        }catch (ex:Exception){
+            currentQuestion
+        }
+
+    fun submitAnswer(selectedIngredient: String): Boolean {
+        return selectedIngredient == currentQuestion.correctIngredient
+    }
+
+    private fun generateGameQuestion() : IngredientQuestionModel{
         val meal = getRandomValidMeal()
         val correctIngredient = meal.ingredients!!.random()
         currentQuestion = IngredientQuestionModel(
@@ -19,11 +30,6 @@ class GetIngredientGameUseCase(
         )
         return currentQuestion
     }
-
-    fun submitAnswer(selectedIngredient: String): Boolean {
-        return selectedIngredient == currentQuestion.correctIngredient
-    }
-
 
     private fun getRandomValidMeal(): Meal =
         repository.getAllMeals().fold(
@@ -37,9 +43,7 @@ class GetIngredientGameUseCase(
                 throw it
             }
         )
-
-
-
+    
     private fun generateOptions(correctIngredient: String): List<String> =
         repository.getAllMeals().fold(
             onSuccess = {meals ->

@@ -20,7 +20,7 @@ class GetMealForKetoDietUseCase(private val mealRepository: MealsRepository) {
                     ?.also { suggestedMeals.add(it.id) }
             },
             onFailure = {
-                throw it
+                null
             }
         )
 
