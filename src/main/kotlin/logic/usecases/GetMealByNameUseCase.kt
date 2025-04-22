@@ -1,30 +1,34 @@
 package org.example.logic.usecases
 
 import model.Meal
-import org.example.logic.model.Results
 import org.example.logic.repository.MealsRepository
 import org.example.utils.Constants
-
 
 class GetMealByNameUseCase(
     private val mealsRepository: MealsRepository,
     private val searchingByKmpUseCase: SearchingByKmpUseCase
 ) {
 
-    fun getMealByName(query: String?): Results<List<Meal>> {
+    fun getMealByName(query: String?): Result<List<Meal>> {
         if (query.isNullOrEmpty()) {
-            return Results.Fail(IllegalArgumentException(Constants.SEARCH_QUERY_CAN_NOT_BE_EMPTY))
+            return Result.failure(IllegalArgumentException(Constants.SEARCH_QUERY_CAN_NOT_BE_EMPTY))
         }
 
-        return when (val results = mealsRepository.getAllMeals()) {
-            is Results.Success -> results.model
-                .filter { meal -> searchingByKmpUseCase.searchByKmp(meal.name, query) }
-                .takeIf { it.isNotEmpty() }
-                ?.let { Results.Success(it) }
-                ?: Results.Fail(Throwable(Constants.NO_MEALS_FOUND_MATCHING))
+        return mealsRepository.getAllMeals().fold(
+            onSuccess = { allMeals ->
+                val filteredMeals = allMeals.filter {
+                    searchingByKmpUseCase.searchByKmp(it.name, query)
+                }
 
-            is Results.Fail -> Results.Fail(results.exception)
-        }
+                if (filteredMeals.isNotEmpty()) {
+                    Result.success(filteredMeals)
+                } else {
+                    Result.failure(NoSuchElementException("${Constants.NO_MEALS_FOUND_MATCHING} '$query'"))
+                }
+            },
+            onFailure = { error ->
+                Result.failure(error)
+            }
+        )
     }
 }
-
