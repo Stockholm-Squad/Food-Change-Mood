@@ -3,7 +3,6 @@ package data
 import model.Meal
 import model.Nutrition
 import org.example.data.utils.CsvLineFormatter
-import org.example.logic.model.Results
 import org.example.utils.MealColumnIndex
 import org.example.utils.NutritionIndex
 import org.example.utils.getDateFromString
@@ -12,7 +11,7 @@ import java.util.Date
 class MealCsvParser(
     private val csvLineFormatter: CsvLineFormatter
 ) {
-    fun parseLine(row: String): Results<Meal> {
+    fun parseLine(row: String): Result<Meal> {
         return try {
             val mealRow = csvLineFormatter.formatMealLine(row)
             validateMealRow(mealRow = mealRow)
@@ -30,17 +29,17 @@ class MealCsvParser(
                 ingredients = parseListOfString(extractStringColumn(mealRow, MealColumnIndex.INGREDIENTS)),
                 numberOfIngredients = extractIntColumn(mealRow, MealColumnIndex.N_INGREDIENTS, defaultValue = 0)
             )
-            Results.Success(meal)
+            Result.success(meal)
         } catch (e: Exception) {
-            Results.Fail(e)
+            Result.failure(e)
         }
     }
 
-    private fun validateMealRow(mealRow: List<String>): Results<Unit> {
+    private fun validateMealRow(mealRow: List<String>): Result<Unit> {
         if (mealRow.size < MealColumnIndex.entries.size) {
-            return Results.Fail(Throwable("Insufficient data in row: $mealRow"))
+            return Result.failure(Throwable("Insufficient data in row: $mealRow"))
         }
-        return Results.Success(Unit)
+        return Result.success(Unit)
     }
 
     private fun extractStringColumn(
@@ -63,19 +62,19 @@ class MealCsvParser(
             }
     }
 
-    //TODO we need to handle the Results more not just return null
+    //TODO we need to handle the Result more not just return null
     private fun extractDateColumn(
         mealRow: List<String>,
         index: MealColumnIndex
     ): Date? {
         return safeAccessColumn(mealRow, index.index, "Date") { dateField ->
-            when (val date = getDateFromString(dateField)) {
-                is Results.Success -> date.model
-                is Results.Fail -> {
-                    println("Invalid date format at index ${index.index}: $dateField" + date.exception)
+            getDateFromString(dateField).fold(
+                onSuccess = { date -> date },
+                onFailure = { exception ->
+                    println("Invalid date format at index ${index.index}: $dateField" + exception)
                     null
                 }
-            }
+            )
         }
     }
 

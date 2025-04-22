@@ -1,21 +1,20 @@
 package org.example.logic.usecases
 
 import model.Meal
-import org.example.logic.model.Results
 import org.example.logic.repository.MealsRepository
 
 class GetItalianMealsForLargeGroupUseCase(
     private val mealsRepository: MealsRepository
 ) {
 
-    fun getMeals(): Results<List<Meal>> {
-        return when (val allMeals = mealsRepository.getAllMeals()) {
-            is Results.Success -> Results.Success(allMeals.model.filter(::isItalianMealsForLargeGroup)
-                .sortedBy { it.id })
-
-            is Results.Fail -> Results.Fail(allMeals.exception)
-
-        }
+    fun getMeals(): Result<List<Meal>> {
+        return mealsRepository.getAllMeals().fold(
+            onSuccess = { meals ->
+                Result.success(meals.filter(::isItalianMealsForLargeGroup)
+                    .sortedBy { it.id })
+            },
+            onFailure = { exception -> Result.failure(exception) }
+        )
     }
 
     private fun isItalianMealsForLargeGroup(meal: Meal): Boolean {

@@ -1,7 +1,6 @@
 package org.example.presentation.features
 
 import model.Meal
-import org.example.logic.model.Results
 import org.example.logic.usecases.GetMealsByDateUseCase
 import org.example.utils.DateValidator
 import org.example.utils.viewMealInListDetails
@@ -28,32 +27,34 @@ class SearchByAddDateUI(
     }
 
     private fun searchFood(date: String) {
-        val filteredList = when (val mealsResult = getMealsByDateUseCase.getMealsByDate(date)) {
-            is Results.Fail -> {
-                println(mealsResult.exception)
+        getMealsByDateUseCase.getMealsByDate(date).fold(
+            onSuccess = { meals -> meals },
+            onFailure = { exception ->
+                println(exception)
                 emptyList()
             }
-            is Results.Success -> mealsResult.model
-        }
+        ).also {
+            it
+            printMealsIdName(it)
+        }.also {
+            while (true) {
+                println()
+                println("-1 -> search again or back")
+                println("meal id -> view details")
+                val input = readlnOrNull()
+                val mealId = input?.toIntOrNull()
 
-        printMealsIdName(filteredList)
-
-        while (true) {
-            println()
-            println("-1 -> search again or back")
-            println("meal id -> view details")
-            val input = readlnOrNull()
-            val mealId = input?.toIntOrNull()
-
-            if (mealId == null) {
-                println("Enter a valid ID or -1")
-                continue
-            } else if (mealId == -1) {
-                break
-            } else {
-                filteredList.viewMealInListDetails(mealId)
+                if (mealId == null) {
+                    println("Enter a valid ID or -1")
+                    continue
+                } else if (mealId == -1) {
+                    break
+                } else {
+                    it.viewMealInListDetails(mealId)
+                }
             }
         }
+
     }
 
     private fun printMealsIdName(mealsList: List<Meal>) {
