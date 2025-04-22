@@ -46,18 +46,23 @@ class GetIngredientGameUseCase(
     
     private fun generateOptions(correctIngredient: String): List<String> =
         repository.getAllMeals().fold(
-            onSuccess = {meals ->
-                (meals.asSequence()
-                    .flatMap { it.ingredients.orEmpty().asSequence() }
-                    .filter { it != correctIngredient }
-                    .distinct()
-                    .shuffled()
-                    .take(2) + correctIngredient)
-                    .shuffled().toList()
+            onSuccess = { meals ->
+                getGeneratedOptions(meals, correctIngredient)
             },
             onFailure = {
                 throw it
             }
         )
+
+    private fun getGeneratedOptions(
+        meals: List<Meal>,
+        correctIngredient: String
+    ) = (meals.asSequence()
+        .flatMap { it.ingredients.orEmpty().asSequence() }
+        .filter { it != correctIngredient }
+        .distinct()
+        .shuffled()
+        .take(2) + correctIngredient)
+        .shuffled().toList()
 
 }
