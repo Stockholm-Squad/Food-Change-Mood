@@ -9,8 +9,7 @@ class GuessGameUI(
     private val getRandomMealUseCase: GetRandomMealUseCase
 ) {
     fun playGuessGame() {
-        val mealResult = getRandomMealUseCase.getRandomMeal()
-        mealResult.fold(
+        getRandomMealUseCase.getRandomMeal().fold(
             onSuccess = { meal ->
                 val correctTime = meal.minutes
                 if (correctTime == null) {
@@ -32,7 +31,8 @@ class GuessGameUI(
 
                     val result = getGuessPreparationTimeUseCase.guessGame(
                         userGuess = userGuess,
-                        attempts = attempts
+                        attempts = attempts,
+                        meal = meal
                     )
 
                     when (result.getOrNull()) {
@@ -57,6 +57,7 @@ class GuessGameUI(
             }
         )
     }
+
 
     companion object {
         private const val MAX_ATTEMPTS = 3
