@@ -50,38 +50,47 @@ class GetMealsForGymHelperUseCase(
         gymHelperModel: GymHelperModel
     ): List<Meal>? {
         return allMeals.filter {
-            it.nutrition?.isMealApproximatelyMatchesCaloriesAndProteins(
-                gymHelperModel
-            ) ?: false
+            it.nutrition?.let { nutrition ->
+                isMealApproximatelyMatchesCaloriesAndProteins(
+                    nutrition, gymHelperModel
+                )
+            } ?: false
         }
             .takeIf { it.isNotEmpty() }
             ?.sortedBy {
-                it.nutrition
-                    ?.isMealApproximatelyMatchesCaloriesAndProteins(
-                        gymHelperModel
+                it.nutrition?.let { nutrition ->
+                    isMealApproximatelyMatchesCaloriesAndProteins(
+                        nutrition, gymHelperModel
                     )
+                }
             }
     }
 
     private fun handleGetAllMealsFailure(exception: Throwable) =
         Result.failure<List<Meal>>(Throwable(Constants.NO_MEALS_FOR_GYM_HELPER + "\n" + exception.message))
 
-    private fun Nutrition.isMealApproximatelyMatchesCaloriesAndProteins(gymHelperModel: GymHelperModel): Boolean {
-        return this.isMealMatchesCalories(
+    private fun isMealApproximatelyMatchesCaloriesAndProteins(
+        nutrition: Nutrition,
+        gymHelperModel: GymHelperModel
+    ): Boolean {
+        return isMealMatchesCalories(
+            nutrition,
             desiredCalories = gymHelperModel.desiredCalories,
             approximateAmount = gymHelperModel.approximateAmount
         ) &&
-                this.isMealMatchesProteins(
+                isMealMatchesProteins(
+                    nutrition,
                     desiredProteins = gymHelperModel.desiredProteins,
                     approximateAmount = gymHelperModel.approximateAmount
                 )
     }
 
-    private fun Nutrition.isMealMatchesCalories(
+    private fun isMealMatchesCalories(
+        nutrition: Nutrition,
         desiredCalories: Float,
         approximateAmount: Float
     ): Boolean {
-        return this.calories?.let {
+        return nutrition.calories?.let {
             isAmountApproximatelyMatches(
                 desiredAmount = desiredCalories,
                 amount = it,
@@ -90,11 +99,12 @@ class GetMealsForGymHelperUseCase(
         } ?: false
     }
 
-    private fun Nutrition.isMealMatchesProteins(
+    private fun isMealMatchesProteins(
+        nutrition: Nutrition,
         desiredProteins: Float,
         approximateAmount: Float
     ): Boolean {
-        return this.protein?.let {
+        return nutrition.protein?.let {
             isAmountApproximatelyMatches(
                 desiredAmount = desiredProteins,
                 amount = it,
