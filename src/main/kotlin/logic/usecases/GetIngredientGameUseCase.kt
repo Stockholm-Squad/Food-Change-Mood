@@ -1,26 +1,18 @@
 package org.example.logic.usecases
 
 import model.Meal
+import org.example.logic.model.FoodChangeModeResults
 import org.example.logic.repository.MealsRepository
 
 class GetIngredientGameUseCase(
     private val repository: MealsRepository
 ) {
-
     data class Question(
         val mealName: String,
         val options: List<String>,
         val correctIngredient: String
     )
 
-    data class GameState(
-        var score: Int = 0,
-        var correctAnswers: Int = 0,
-        var isGameOver: Boolean = false
-    )
-
-
-    private val gameState = GameState()
     private lateinit var currentQuestion: Question
 
     fun startIngredientGame(): Question {
@@ -34,38 +26,40 @@ class GetIngredientGameUseCase(
         return currentQuestion
     }
 
-    fun submitAnswer(selectedIngredient: String): GameState {
-        return if (isGameOver()) gameState
-        else updateGameState(selectedIngredient)
+    fun submitAnswer(selectedIngredient: String): Boolean {
+        return selectedIngredient == currentQuestion.correctIngredient
     }
-
-    private fun isGameOver(): Boolean {
-        return gameState.isGameOver
-    }
-
-    private fun updateGameState(selectedIngredient: String): GameState =
-        gameState.apply {
-            val isCorrect = selectedIngredient == currentQuestion.correctIngredient
-            score += if (isCorrect) 1000 else 0
-            correctAnswers += if (isCorrect) 1 else 0
-            isGameOver = !isCorrect || correctAnswers >= 15
-        }
 
 
     private fun getRandomValidMeal(): Meal =
-        repository.getAllMeals()
-            .filter { !it.ingredients.isNullOrEmpty() && !it.name.isNullOrEmpty() }
-            .takeIf { it.isNotEmpty() }
-            ?.random()
-            ?: throw IllegalStateException("No valid meals available")
+        when (val result = repository.getAllMeals()){
+            is FoodChangeModeResults.Success -> {
+                result.model.filter { !it.ingredients.isNullOrEmpty() && !it.name.isNullOrEmpty() }
+                .takeIf { it.isNotEmpty() }
+                ?.random()
+                ?: throw IllegalStateException("No valid meals available") // to review
+            }
+            is FoodChangeModeResults.Fail -> {
+                throw result.exception
+            }
+        }
+
+
 
     private fun generateOptions(correctIngredient: String): List<String> =
-        (repository.getAllMeals()
-            .asSequence()
-            .flatMap { it.ingredients.orEmpty().asSequence() }
-            .filter { it != correctIngredient }
-            .distinct()
-            .shuffled()
-            .take(2) + correctIngredient)
-            .shuffled().toList()
+        when(val result = repository.getAllMeals()){
+            is FoodChangeModeResults.Success -> {
+                (result.model.asSequence()
+                    .flatMap { it.ingredients.orEmpty().asSequence() }
+                    .filter { it != correctIngredient }
+                    .distinct()
+                    .shuffled()
+                    .take(2) + correctIngredient)
+                    .shuffled().toList()
+            }
+            is FoodChangeModeResults.Fail -> {
+                throw result.exception
+            }
+        }
+
 }
