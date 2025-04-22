@@ -1,14 +1,13 @@
 package data
 
 import org.example.data.utils.CsvLineHandler
-import org.example.logic.model.Results
 import java.io.File
 
 class MealCsvReader(
     private val csvFile: File,
     private val csvLineHandler: CsvLineHandler
 ) {
-    fun readLinesFromFile(): Results<List<String>> {
+    fun readLinesFromFile(): Result<List<String>> {
         return try {
             val lines = mutableListOf<String>()
             csvFile.bufferedReader().use { csvFileReader ->
@@ -20,9 +19,9 @@ class MealCsvReader(
                     }
                 }
             }
-            Results.Success(lines)
+            Result.success(lines)
         } catch (e: Exception) {
-            Results.Fail(e)
+            Result.failure(e)
         }
 
     }
