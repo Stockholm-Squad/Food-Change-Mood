@@ -5,7 +5,10 @@ import org.example.logic.usecases.GetMealsByDateUseCase
 import org.example.utils.DateValidator
 import org.example.utils.viewMealInListDetails
 
-class SearchByAddDateUI(private val getMealsByDateUseCase: GetMealsByDateUseCase, private val dateValidator: DateValidator) {
+class SearchByAddDateUI(
+    private val getMealsByDateUseCase: GetMealsByDateUseCase,
+    private val dateValidator: DateValidator
+) {
 
     fun searchMealsByDate() {
         while (true) {
@@ -24,9 +27,26 @@ class SearchByAddDateUI(private val getMealsByDateUseCase: GetMealsByDateUseCase
     }
 
     private fun searchFood(date: String) {
-        val filteredList = getMealsByDateUseCase.getMealsByDate(date)
+        getMealsByDateUseCase.getMealsByDate(date).fold(
+            onSuccess = { meals -> meals },
+            onFailure = { exception ->
+                println(exception)
+                emptyList()
+            }
+        ).also {
+            handleUserInteraction(it)
+        }
+    }
 
-        printMealsIdName(filteredList)
+
+    private fun printMealsIdName(mealsList: List<Meal>) {
+        mealsList.forEach { meal ->
+            println("${meal.id} -> ${meal.name}")
+        }
+    }
+
+    private fun handleUserInteraction(meals: List<Meal>) {
+        printMealsIdName(meals)
 
         while (true) {
             println()
@@ -35,22 +55,11 @@ class SearchByAddDateUI(private val getMealsByDateUseCase: GetMealsByDateUseCase
             val input = readlnOrNull()
             val mealId = input?.toIntOrNull()
 
-            if (mealId == null) {
-                println("Enter a valid ID or -1")
-                continue
-            } else if (mealId == -1) {
-                break
-            } else {
-                filteredList.viewMealInListDetails(mealId)
+            when {
+                mealId == null -> println("Enter a valid ID or -1")
+                mealId == -1 -> break
+                else -> meals.viewMealInListDetails(mealId)
             }
         }
     }
-
-    private fun printMealsIdName(mealsList: List<Meal>) {
-        mealsList.forEach { meal ->
-            println("${meal.id} -> ${meal.name}")
-        }
-    }
-
-
 }
