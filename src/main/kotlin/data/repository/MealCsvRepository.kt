@@ -2,7 +2,6 @@ package org.example.data.repository
 
 import model.Meal
 import org.example.data.dataSource.MealDataSource
-import org.example.logic.model.Results
 import org.example.logic.repository.MealsRepository
 
 
@@ -11,14 +10,16 @@ class MealCsvRepository(
 ) : MealsRepository {
 
 
-    override fun getAllMeals(): Results<List<Meal>> {
+    override fun getAllMeals(): Result<List<Meal>> {
         return allMeals
-            .takeIf { it.isNotEmpty() }?.let { Results.Success(it) }
+            .takeIf { it.isNotEmpty() }?.let { Result.success(it) }
             ?: handleFailure(Throwable("Error while loading data")).apply {
-                when (val result = mealDatasource.getAllMeals()) {
-                    is Results.Success -> handleSuccess(result.model)
-                    is Results.Fail -> handleFailure(result.exception)
-                }
+                mealDatasource.getAllMeals().fold(
+                    onSuccess = { meals ->
+                        handleSuccess(meals)
+                    },
+                    onFailure = { exception -> handleFailure(exception) }
+                )
             }
     }
 
@@ -26,13 +27,13 @@ class MealCsvRepository(
         private var allMeals: List<Meal> = emptyList()
     }
 
-    private fun handleSuccess(meals: List<Meal>): Results<List<Meal>> {
+    private fun handleSuccess(meals: List<Meal>): Result<List<Meal>> {
         allMeals = meals
-        return Results.Success(allMeals)
+        return Result.success(allMeals)
 
     }
 
-    private fun handleFailure(throwable: Throwable): Results<List<Meal>> {
-        return Results.Fail(throwable)
+    private fun handleFailure(throwable: Throwable): Result<List<Meal>> {
+        return Result.failure(throwable)
     }
 }

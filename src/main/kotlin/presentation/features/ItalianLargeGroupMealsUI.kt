@@ -1,17 +1,33 @@
 package org.example.presentation.features
 
-import org.example.logic.usecases.GetMealsForLargeGroupUseCase
+import model.Meal
+import org.example.logic.usecases.GetItalianMealsForLargeGroupUseCase
 import org.example.utils.viewMealInListDetails
 
-class ItalianLargeGroupMealsUI(private val getMealsForLargeGroupUseCase: GetMealsForLargeGroupUseCase) {
+class ItalianLargeGroupMealsUI(private val getItalianMealsForLargeGroupUseCase: GetItalianMealsForLargeGroupUseCase) {
 
     fun italianLargeGroupMealsUI() {
         println("🍝 Planning a big Italian feast? Here's a list of meals perfect for large groups:")
         println("Loading...")
-        val filteredList = getMealsForLargeGroupUseCase.getItalianMealsForLargeGroup()
-        filteredList.forEach { meal ->
+        getItalianMealsForLargeGroupUseCase.getMeals().fold(
+            onSuccess = { meals -> meals },
+            onFailure = { exception ->
+                println("error: " + exception)
+                emptyList()
+            }
+        ).also {
+            displayMealsAndHandleInteraction(it)
+        }
+    }
+
+    private fun printMealsIdName(mealsList: List<Meal>) {
+        mealsList.forEach { meal ->
             println("${meal.id} -> ${meal.name}")
         }
+    }
+
+    private fun displayMealsAndHandleInteraction(meals: List<Meal>) {
+        printMealsIdName(meals)
 
         while (true) {
             println()
@@ -20,13 +36,10 @@ class ItalianLargeGroupMealsUI(private val getMealsForLargeGroupUseCase: GetMeal
             val input = readlnOrNull()
             val mealId = input?.toIntOrNull()
 
-            if (mealId == null) {
-                println("Enter a valid ID or -1")
-                continue
-            } else if (mealId == -1) {
-                break
-            } else {
-                filteredList.viewMealInListDetails(mealId)
+            when {
+                mealId == null -> println("Enter a valid ID or -1")
+                mealId == -1 -> break
+                else -> meals.viewMealInListDetails(mealId)
             }
         }
     }
