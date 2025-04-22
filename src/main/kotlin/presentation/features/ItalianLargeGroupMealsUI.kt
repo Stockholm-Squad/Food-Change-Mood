@@ -1,5 +1,6 @@
 package org.example.presentation.features
 
+import org.example.logic.model.Results
 import org.example.logic.usecases.GetMealsForLargeGroupUseCase
 import org.example.utils.viewMealInListDetails
 
@@ -8,7 +9,15 @@ class ItalianLargeGroupMealsUI(private val getMealsForLargeGroupUseCase: GetMeal
     fun italianLargeGroupMealsUI() {
         println("🍝 Planning a big Italian feast? Here's a list of meals perfect for large groups:")
         println("Loading...")
-        val filteredList = getMealsForLargeGroupUseCase.getItalianMealsForLargeGroup()
+
+        val filteredList = when (val resultList = getMealsForLargeGroupUseCase.getItalianMealsForLargeGroup()) {
+            is Results.Success -> resultList.model
+            is Results.Fail -> {
+                println("error: " + resultList.exception)
+                emptyList()
+            }
+        }
+
         filteredList.forEach { meal ->
             println("${meal.id} -> ${meal.name}")
         }

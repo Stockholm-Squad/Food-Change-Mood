@@ -38,7 +38,7 @@ class MealCsvParser(
 
     private fun validateMealRow(mealRow: List<String>): Results<Unit> {
         if (mealRow.size < MealColumnIndex.entries.size) {
-            return Results.Fail( Throwable("Insufficient data in row: $mealRow"))
+            return Results.Fail(Throwable("Insufficient data in row: $mealRow"))
         }
         return Results.Success(Unit)
     }
@@ -63,15 +63,18 @@ class MealCsvParser(
             }
     }
 
+    //TODO we need to handle the Results more not just return null
     private fun extractDateColumn(
         mealRow: List<String>,
         index: MealColumnIndex
     ): Date? {
         return safeAccessColumn(mealRow, index.index, "Date") { dateField ->
-            try {
-                getDateFromString(dateField)
-            } catch (e: Exception) {
-                throw RuntimeException("Invalid date format at index ${index.index}: $dateField", e)
+            when (val date = getDateFromString(dateField)) {
+                is Results.Success -> date.model
+                is Results.Fail -> {
+                    println("Invalid date format at index ${index.index}: $dateField" + date.exception)
+                    null
+                }
             }
         }
     }

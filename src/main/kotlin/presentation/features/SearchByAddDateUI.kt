@@ -1,11 +1,15 @@
 package org.example.presentation.features
 
 import model.Meal
+import org.example.logic.model.Results
 import org.example.logic.usecases.GetMealsByDateUseCase
 import org.example.utils.DateValidator
 import org.example.utils.viewMealInListDetails
 
-class SearchByAddDateUI(private val getMealsByDateUseCase: GetMealsByDateUseCase, private val dateValidator: DateValidator) {
+class SearchByAddDateUI(
+    private val getMealsByDateUseCase: GetMealsByDateUseCase,
+    private val dateValidator: DateValidator
+) {
 
     fun searchMealsByDate() {
         while (true) {
@@ -24,7 +28,13 @@ class SearchByAddDateUI(private val getMealsByDateUseCase: GetMealsByDateUseCase
     }
 
     private fun searchFood(date: String) {
-        val filteredList = getMealsByDateUseCase.getMealsByDate(date)
+        val filteredList = when (val mealsResult = getMealsByDateUseCase.getMealsByDate(date)) {
+            is Results.Fail -> {
+                println(mealsResult.exception)
+                emptyList()
+            }
+            is Results.Success -> mealsResult.model
+        }
 
         printMealsIdName(filteredList)
 
