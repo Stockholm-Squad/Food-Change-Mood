@@ -32,7 +32,7 @@ class GuessGameUI(
                     val result = getGuessPreparationTimeUseCase.guessGame(
                         userGuess = userGuess,
                         attempts = attempts,
-                        meal = meal
+                        preparationTime = correctTime
                     )
 
                     when (result.getOrNull()) {

@@ -7,11 +7,8 @@ class GetGuessPreparationTimeUseCase {
     fun guessGame(
         userGuess: Int,
         attempts: Int,
-        meal: Meal
+        preparationTime:Int
     ): Result<GuessPreparationTimeState> {
-        val preparationTime = meal.minutes
-            ?: return Result.failure(IllegalStateException("Meal has no preparation time"))
-
         return when {
             userGuess == preparationTime -> Result.success(GuessPreparationTimeState.CORRECT)
             attempts >= MAX_ATTEMPT -> Result.success(GuessPreparationTimeState.FAILED)
