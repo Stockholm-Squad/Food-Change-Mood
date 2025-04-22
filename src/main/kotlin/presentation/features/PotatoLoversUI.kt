@@ -1,6 +1,6 @@
 package org.example.presentation.features
 
-import org.example.logic.model.FoodChangeModeResults
+import org.example.logic.model.Results
 import org.example.logic.usecases.GetPotatoMealsUseCase
 
 class PotatoLoversUI(private val getPotatoMealsUseCase: GetPotatoMealsUseCase) {
@@ -12,7 +12,7 @@ class PotatoLoversUI(private val getPotatoMealsUseCase: GetPotatoMealsUseCase) {
 
     fun showRandomPotatoMeals(count: Int) {
         when (val result = getPotatoMealsUseCase.getRandomPotatoMeals(count)) {
-            is FoodChangeModeResults.Success -> {
+            is Results.Success -> {
                 if (result.model.isNotEmpty()) {
                     result.model.forEachIndexed { index, meal ->
                         println("🍽️ Meal #${index + 1}: ${meal.name}")
@@ -23,7 +23,7 @@ class PotatoLoversUI(private val getPotatoMealsUseCase: GetPotatoMealsUseCase) {
                     println("No potato meals found.")
                 }
             }
-            is FoodChangeModeResults.Fail -> {
+            is Results.Fail -> {
                 println("Failed to fetch potato meals: ${result.exception.message}")
             }
         }
