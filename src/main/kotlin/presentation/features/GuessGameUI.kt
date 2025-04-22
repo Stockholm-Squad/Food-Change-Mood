@@ -18,8 +18,7 @@ class GuessGameUI(
                 }
 
                 println("🎮 Guess the preparation time of: ${meal.name}")
-                var attempts = 0
-
+                var attempts = MAX_ATTEMPTS
                 while (attempts < MAX_ATTEMPTS) {
                     print("Enter your guess: ")
                     val userGuess = readLine()?.toIntOrNull()
@@ -42,14 +41,15 @@ class GuessGameUI(
                         }
                         GuessPreparationTimeState.TOO_LOW -> println("⬇️ Too low.")
                         GuessPreparationTimeState.TOO_HIGH -> println("⬆️ Too high.")
-                        GuessPreparationTimeState.FAILED -> {
-                            println("❌ You've used all attempts. The correct time was $correctTime minutes.")
-                            return
-                        }
-                        else -> println("⚠️ Unknown result.")
+                        else -> println("❗ Unexpected state.")
                     }
 
                     attempts++
+
+                    if (attempts == MAX_ATTEMPTS) {
+                        println("❌ You've used all attempts. The correct time was $correctTime minutes.")
+                        return
+                    }
                 }
             },
             onFailure = { error ->
@@ -57,6 +57,7 @@ class GuessGameUI(
             }
         )
     }
+
 
 
     companion object {

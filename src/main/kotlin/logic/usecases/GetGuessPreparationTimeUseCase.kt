@@ -11,9 +11,9 @@ class GetGuessPreparationTimeUseCase {
     ): Result<GuessPreparationTimeState> {
         return when {
             userGuess == preparationTime -> Result.success(GuessPreparationTimeState.CORRECT)
-            attempts >= MAX_ATTEMPT -> Result.success(GuessPreparationTimeState.FAILED)
-            userGuess < preparationTime -> Result.success(GuessPreparationTimeState.TOO_LOW)
-            else -> Result.success(GuessPreparationTimeState.TOO_HIGH)
+            userGuess>preparationTime -> Result.success(GuessPreparationTimeState.TOO_HIGH)
+           else -> Result.success(GuessPreparationTimeState.TOO_LOW)
+
         }
     }
 
