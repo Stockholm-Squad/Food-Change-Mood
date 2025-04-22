@@ -2,22 +2,17 @@ package org.example.logic.usecases
 
 import model.Meal
 import org.example.logic.repository.MealsRepository
+import org.example.logic.usecases.model.IngredientQuestionModel
 
 class GetIngredientGameUseCase(
     private val repository: MealsRepository
 ) {
-    data class Question(
-        val mealName: String,
-        val options: List<String>,
-        val correctIngredient: String
-    )
+    private lateinit var currentQuestion: IngredientQuestionModel
 
-    private lateinit var currentQuestion: Question
-
-    fun startIngredientGame(): Question {
+    fun startIngredientGame(): IngredientQuestionModel {
         val meal = getRandomValidMeal()
         val correctIngredient = meal.ingredients!!.random()
-        currentQuestion = Question(
+        currentQuestion = IngredientQuestionModel(
             mealName = meal.name.toString(),
             options = generateOptions(correctIngredient),
             correctIngredient = correctIngredient

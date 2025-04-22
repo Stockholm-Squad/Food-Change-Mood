@@ -1,6 +1,7 @@
 package org.example.presentation.features
 
 import org.example.logic.usecases.GetIngredientGameUseCase
+import org.example.logic.usecases.model.IngredientQuestionModel
 
 class IngredientGameUI(private val game: GetIngredientGameUseCase) {
     companion object {
@@ -39,7 +40,7 @@ class IngredientGameUI(private val game: GetIngredientGameUseCase) {
         }
     }
 
-    private fun displayQuestion(question: GetIngredientGameUseCase.Question) {
+    private fun displayQuestion(question: IngredientQuestionModel) {
         println("\nMeal: ${question.mealName}")
         println("Choose the correct ingredient:")
 
