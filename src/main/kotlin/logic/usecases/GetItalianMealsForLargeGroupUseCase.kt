@@ -10,11 +10,15 @@ class GetItalianMealsForLargeGroupUseCase(
     fun getMeals(): Result<List<Meal>> {
         return mealsRepository.getAllMeals().fold(
             onSuccess = { meals ->
-                Result.success(meals.filter(::isItalianMealsForLargeGroup)
-                    .sortedBy { it.id })
+                Result.success(filterItalianMealsForLargeGroup(meals))
             },
             onFailure = { exception -> Result.failure(exception) }
         )
+    }
+
+    private fun filterItalianMealsForLargeGroup(meals: List<Meal>): List<Meal> {
+        return meals.filter(::isItalianMealsForLargeGroup)
+            .sortedBy { it.id }
     }
 
     private fun isItalianMealsForLargeGroup(meal: Meal): Boolean {

@@ -11,10 +11,7 @@ class GetMealsByDateUseCase(
     fun getMealsByDate(date: String): Result<List<Meal>> {
         return mealsRepository.getAllMeals().fold(
             onSuccess = { allMeals ->
-                Result.success(allMeals
-                    .filter { meal ->
-                        isMealWithDate(meal = meal, date = date)
-                    }.sortedBy { it.id })
+                Result.success(filterMealsByDate(allMeals, date))
             },
             onFailure = { exception ->
                 Result.failure(exception)
@@ -22,10 +19,17 @@ class GetMealsByDateUseCase(
         )
     }
 
+    private fun filterMealsByDate(meals: List<Meal>, date: String): List<Meal> {
+        return meals
+            .filter { meal ->
+                isMealWithDate(meal = meal, date = date)
+            }.sortedBy { it.id }
+    }
+
     private fun isMealWithDate(meal: Meal, date: String): Boolean {
         val utilDate = getDateFromString(date).fold(
             onSuccess = { dateResult -> dateResult },
-            onFailure = {exception ->
+            onFailure = { exception ->
                 println(exception)
                 false
             }

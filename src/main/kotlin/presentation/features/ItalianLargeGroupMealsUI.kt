@@ -9,17 +9,16 @@ class ItalianLargeGroupMealsUI(private val getItalianMealsForLargeGroupUseCase: 
         println("🍝 Planning a big Italian feast? Here's a list of meals perfect for large groups:")
         println("Loading...")
         getItalianMealsForLargeGroupUseCase.getMeals().fold(
-            onSuccess = { meals ->
-                meals.forEach { meal ->
-                    println("${meal.id} -> ${meal.name}")
-                }
-                meals
-            },
+            onSuccess = { meals -> meals },
             onFailure = { exception ->
                 println("error: " + exception)
                 emptyList()
             }
-        ).also { meals ->
+        ).also {
+            it.forEach { meal ->
+                println("${meal.id} -> ${meal.name}")
+            }
+        }.also { meals ->
             while (true) {
                 println()
                 println("-1 -> back")

@@ -34,7 +34,6 @@ class SearchByAddDateUI(
                 emptyList()
             }
         ).also {
-            it
             printMealsIdName(it)
         }.also {
             while (true) {

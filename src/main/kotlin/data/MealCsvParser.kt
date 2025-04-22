@@ -62,7 +62,6 @@ class MealCsvParser(
             }
     }
 
-    //TODO we need to handle the Result more not just return null
     private fun extractDateColumn(
         mealRow: List<String>,
         index: MealColumnIndex
@@ -70,6 +69,7 @@ class MealCsvParser(
         return safeAccessColumn(mealRow, index.index, "Date") { dateField ->
             getDateFromString(dateField).fold(
                 onSuccess = { date -> date },
+                //TODO we need to handle the Result more not just return null
                 onFailure = { exception ->
                     println("Invalid date format at index ${index.index}: $dateField" + exception)
                     null
