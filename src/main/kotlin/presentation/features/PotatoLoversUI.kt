@@ -10,17 +10,13 @@ class PotatoLoversUI(private val getPotatoMealsUseCase: GetPotatoMealsUseCase) {
     }
 
     fun showRandomPotatoMeals(count: Int) {
-        val result = getPotatoMealsUseCase.getRandomPotatoMeals(count)
-
-        result
+        getPotatoMealsUseCase.getRandomPotatoMeals(count)
             .onSuccess { meals ->
-                if (meals.isNotEmpty()) {
-                    meals.forEachIndexed { index, meal ->
+                meals.takeIf { it.isNotEmpty() }
+                    ?.forEachIndexed { index, meal ->
                         println("🍽️ Meal #${index + 1}: ${meal.name}")
                     }
-                } else {
-                    println("No potato meals found.")
-                }
+                    ?: run { println("No potato meals found.") }
                 askForMoreMeals()
             }
             .onFailure { exception ->
@@ -33,10 +29,9 @@ class PotatoLoversUI(private val getPotatoMealsUseCase: GetPotatoMealsUseCase) {
             "------------------------------------------------\n" +
                     "Would you like to see more potato meals? (y or n)"
         )
-        if (readlnOrNull()?.trim()?.lowercase() == "y") {
-            showRandomPotatoMeals(10)
-        } else {
-            println("Okay! Enjoy your potato meals! 🥔😋")
-        }
+        readlnOrNull()?.trim()?.lowercase()
+            .takeIf { it == "y" }
+            ?.let { showRandomPotatoMeals(10) }
+            ?: println("Okay! Enjoy your potato meals! 🥔😋")
     }
 }

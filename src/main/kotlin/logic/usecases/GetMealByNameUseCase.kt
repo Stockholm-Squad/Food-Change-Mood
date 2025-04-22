@@ -10,25 +10,20 @@ class GetMealByNameUseCase(
 ) {
 
     fun getMealByName(query: String?): Result<List<Meal>> {
-        if (query.isNullOrEmpty()) {
-            return Result.failure(IllegalArgumentException(Constants.SEARCH_QUERY_CAN_NOT_BE_EMPTY))
+        query?.takeIf { it.isNotBlank() }
+            ?: return Result.failure(Throwable(Constants.SEARCH_QUERY_CAN_NOT_BE_EMPTY))
+
+        mealsRepository.getAllMeals().onSuccess { meals ->
+            return Result.success(
+                meals
+                    .filter { searchingByKmpUseCase.searchByKmp(it.name, query) }
+                    .takeIf { it.isNotEmpty() }
+                    ?: return Result.failure(Throwable(Constants.NO_MEALS_FOUND_MATCHING))
+            )
+        }.onFailure { error ->
+            return Result.failure(Throwable("${Constants.ERROR_FETCHING_MEALS} ${error.message}"))
         }
 
-        return mealsRepository.getAllMeals().fold(
-            onSuccess = { allMeals ->
-                val filteredMeals = allMeals.filter {
-                    searchingByKmpUseCase.searchByKmp(it.name, query)
-                }
-
-                if (filteredMeals.isNotEmpty()) {
-                    Result.success(filteredMeals)
-                } else {
-                    Result.failure(NoSuchElementException("${Constants.NO_MEALS_FOUND_MATCHING} '$query'"))
-                }
-            },
-            onFailure = { error ->
-                Result.failure(error)
-            }
-        )
+        return Result.failure(Throwable("${Constants.UNEXPECTED_ERROR} ${this::class.simpleName}"))
     }
 }

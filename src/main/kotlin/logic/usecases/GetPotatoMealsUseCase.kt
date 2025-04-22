@@ -9,22 +9,18 @@ class GetPotatoMealsUseCase(private val mealsRepository: MealsRepository) {
     fun getRandomPotatoMeals(count: Int): Result<List<Meal>> {
         return mealsRepository.getAllMeals().fold(
             onSuccess = { allMeals ->
-                val potatoMeals = allMeals
-                    .filter { meal ->
-                        meal.ingredients?.any { it.equals(Constants.POTATO, ignoreCase = true) } == true
-                    }
+                allMeals
+                    .filter { meal -> meal.ingredients?.any { it.equals(Constants.POTATO, ignoreCase = true) } == true }
                     .shuffled()
                     .take(count)
-
-                if (potatoMeals.isNotEmpty()) {
-                    Result.success(potatoMeals)
-                } else {
-                    Result.failure(NoSuchElementException(Constants.NO_MEALS_FOR_POTATO))
-                }
+                    .takeIf { it.isNotEmpty() }
+                    ?.let { Result.success(it) }
+                    ?: Result.failure(Throwable(Constants.NO_MEALS_FOR_POTATO))
             },
             onFailure = { error ->
-                Result.failure(error)
+                Result.failure(Throwable("${Constants.UNEXPECTED_ERROR} ${this::class.simpleName}"))
             }
+
         )
     }
 }
