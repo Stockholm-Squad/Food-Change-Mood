@@ -7,27 +7,24 @@ import org.example.logic.repository.MealsRepository
 class GetMealForKetoDietUseCase(private val mealRepository: MealsRepository) {
 
     private val suggestedMeals = mutableSetOf<Int>()
-
     fun getKetoMeal(): Meal? =
         mealRepository.getAllMeals().fold(
             onSuccess = { meals ->
                 meals.asSequence()
-                .filter { meal ->
-                    meal.nutrition?.let { nutrition ->
-                        isValidNutrition(nutrition)
-                    } == true
-                }
-                .filterNot { suggestedMeals.contains(it.id) }
-                .shuffled()
-                .firstOrNull()
-                ?.also { suggestedMeals.add(it.id) }
+                    .filter { meal ->
+                        meal.nutrition?.let { isValidNutritionForKetoMeal(it) } == true
+                    }
+                    .filterNot { suggestedMeals.contains(it.id) }
+                    .shuffled()
+                    .firstOrNull()
+                    ?.also { suggestedMeals.add(it.id) }
             },
             onFailure = {
                 throw it
             }
         )
 
-    private fun isValidNutrition(nutrition: Nutrition): Boolean =
+    private fun isValidNutritionForKetoMeal(nutrition: Nutrition): Boolean =
         if (nutrition.carbohydrates != null && nutrition.totalFat != null && nutrition.protein != null) {
             nutrition.carbohydrates < 10 &&
                     nutrition.totalFat > 15 &&
