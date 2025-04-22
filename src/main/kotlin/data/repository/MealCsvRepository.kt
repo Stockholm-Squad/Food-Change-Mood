@@ -2,30 +2,38 @@ package org.example.data.repository
 
 import model.Meal
 import org.example.data.dataSource.MealDataSource
-import org.example.logic.model.FoodChangeModeResults
 import org.example.logic.repository.MealsRepository
 
 
 class MealCsvRepository(
-    private val mealDatasource: MealDataSource?
+    private val mealDatasource: MealDataSource
 ) : MealsRepository {
 
 
-    override fun getAllMeals(): FoodChangeModeResults<List<Meal>> {
+    override fun getAllMeals(): Result<List<Meal>> {
         return allMeals
-            .takeIf { it.isNotEmpty() }
-            ?.let { FoodChangeModeResults.Success(it) }
-            ?: runCatching {
-                mealDatasource?.getAllMeals() ?: emptyList()
-            }.onSuccess {
-                allMeals = it
-            }.fold(
-                onSuccess = { FoodChangeModeResults.Success(it) },
-                onFailure = { FoodChangeModeResults.Fail(it) }
-            )
+            .takeIf { it.isNotEmpty() }?.let { Result.success(it) }
+            ?: handleFailure(Throwable("Error while loading data")).apply {
+                mealDatasource.getAllMeals().fold(
+                    onSuccess = { meals ->
+                        handleSuccess(meals)
+                    },
+                    onFailure = { exception -> handleFailure(exception) }
+                )
+            }
     }
 
     companion object {
         private var allMeals: List<Meal> = emptyList()
+    }
+
+    private fun handleSuccess(meals: List<Meal>): Result<List<Meal>> {
+        allMeals = meals
+        return Result.success(allMeals)
+
+    }
+
+    private fun handleFailure(throwable: Throwable): Result<List<Meal>> {
+        return Result.failure(throwable)
     }
 }

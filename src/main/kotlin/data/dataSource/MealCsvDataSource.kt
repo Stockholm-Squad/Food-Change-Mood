@@ -8,22 +8,29 @@ class MealCsvDataSource(
     private val mealCsvReader: MealCsvReader,
     private val mealCsvParser: MealCsvParser
 ) : MealDataSource {
-    override fun getAllMeals(): List<Meal> {
-        return try {
-            mealCsvReader.readLinesFromFile()
-                .mapNotNull { line ->
+    override fun getAllMeals(): Result<List<Meal>> {
+        return mealCsvReader.readLinesFromFile().fold(
+            onSuccess = { readResult ->
+                val meals = readResult.mapNotNull { line ->
                     parseLine(line)
                 }
-        } catch (e: Exception) {
-            //TODO throw exception here and delete returning of empty list
-            println("Critical error reading CSV: ${e.message}")
-            emptyList()
-        }
+                Result.success(meals)
+            },
+            onFailure = { exception ->  Result.failure(exception) }
+        )
     }
 
     private fun parseLine(line: String) = try {
-        mealCsvParser.parseLine(line)
+        mealCsvParser.parseLine(line).fold(
+            onSuccess = {result -> result},
+            onFailure = {
+                exception ->
+                exception.printStackTrace()
+                null
+            }
+        )
     } catch (e: Exception) {
+        e.printStackTrace()
         null
     }
 }
