@@ -4,11 +4,11 @@ import model.Meal
 import org.example.logic.model.Results
 import org.example.logic.repository.MealsRepository
 
-class GetMealsForLargeGroupUseCase(
+class GetItalianMealsForLargeGroupUseCase(
     private val mealsRepository: MealsRepository
 ) {
-
-    fun getItalianMealsForLargeGroup(): Results<List<Meal>> {
+    
+    fun getMeals(): Results<List<Meal>> {
         return when (val allMeals = mealsRepository.getAllMeals()) {
             is Results.Success -> Results.Success(allMeals.model.filter(::isItalianMealsForLargeGroup)
                 .sortedBy { it.id })

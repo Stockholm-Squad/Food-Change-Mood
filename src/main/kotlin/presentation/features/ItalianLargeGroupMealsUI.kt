@@ -1,16 +1,16 @@
 package org.example.presentation.features
 
 import org.example.logic.model.Results
-import org.example.logic.usecases.GetMealsForLargeGroupUseCase
+import org.example.logic.usecases.GetItalianMealsForLargeGroupUseCase
 import org.example.utils.viewMealInListDetails
 
-class ItalianLargeGroupMealsUI(private val getMealsForLargeGroupUseCase: GetMealsForLargeGroupUseCase) {
+class ItalianLargeGroupMealsUI(private val getItalianMealsForLargeGroupUseCase: GetItalianMealsForLargeGroupUseCase) {
 
     fun italianLargeGroupMealsUI() {
         println("🍝 Planning a big Italian feast? Here's a list of meals perfect for large groups:")
         println("Loading...")
 
-        val filteredList = when (val resultList = getMealsForLargeGroupUseCase.getItalianMealsForLargeGroup()) {
+        val filteredList = when (val resultList = getItalianMealsForLargeGroupUseCase.getMeals()) {
             is Results.Success -> resultList.model
             is Results.Fail -> {
                 println("error: " + resultList.exception)

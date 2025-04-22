@@ -23,7 +23,6 @@ import org.example.presentation.features.SuggestMealForSoThinPeopleUI
 import org.example.presentation.features.SuggestSweetNoEggsUI
 import org.example.utils.DateValidator
 import org.example.utils.MenuOption
-import presentation.*
 
 class FoodConsoleUI(
     private val getMealForKetoDietUseCase: GetMealForKetoDietUseCase,
@@ -36,7 +35,7 @@ class FoodConsoleUI(
     private val getHealthFastFoodUseCase: GetHealthyFastFoodUseCase,
     private val getSeaFoodByProteinRankUseCase: GetSeaFoodByProteinRankUseCase,
     private val getMealsByDateUseCase: GetMealsByDateUseCase,
-    private val getMealsForLargeGroupUseCase: GetMealsForLargeGroupUseCase,
+    private val getItalianMealsForLargeGroupUseCase: GetItalianMealsForLargeGroupUseCase,
     private val getMealByNameUseCase: GetMealByNameUseCase,
     private val soThinProblem: GetMealsForSoThinProblemUseCase,
     private val getIraqiMealsUseCase: GetIraqiMealsUseCase,
@@ -57,7 +56,7 @@ class FoodConsoleUI(
     private val potatoLovers = PotatoLoversUI(getPotatoMealsUseCase)
     private val highCalorieMeal = SuggestMealForSoThinPeopleUI(soThinProblem)
     private val seafoodRanking = ProteinSeafoodRankingUI(getSeaFoodByProteinRankUseCase)
-    private val italianForGroups = ItalianLargeGroupMealsUI(getMealsForLargeGroupUseCase)
+    private val italianForGroups = ItalianLargeGroupMealsUI(getItalianMealsForLargeGroupUseCase)
 
     fun start() {
         welcomeUser()
