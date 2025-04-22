@@ -1,7 +1,6 @@
 package org.example.logic.usecases
 
 import model.Meal
-import org.example.logic.model.FoodChangeModeResults
 import org.example.logic.repository.MealsRepository
 
 class GetIngredientGameUseCase(
@@ -32,34 +31,34 @@ class GetIngredientGameUseCase(
 
 
     private fun getRandomValidMeal(): Meal =
-        when (val result = repository.getAllMeals()){
-            is FoodChangeModeResults.Success -> {
-                result.model.filter { !it.ingredients.isNullOrEmpty() && !it.name.isNullOrEmpty() }
+        repository.getAllMeals().fold(
+            onSuccess = {meals ->
+                meals.filter { !it.ingredients.isNullOrEmpty() && !it.name.isNullOrEmpty() }
                 .takeIf { it.isNotEmpty() }
                 ?.random()
                 ?: throw IllegalStateException("No valid meals available") // to review
+            },
+            onFailure = {
+                throw it
             }
-            is FoodChangeModeResults.Fail -> {
-                throw result.exception
-            }
-        }
+        )
 
 
 
     private fun generateOptions(correctIngredient: String): List<String> =
-        when(val result = repository.getAllMeals()){
-            is FoodChangeModeResults.Success -> {
-                (result.model.asSequence()
+        repository.getAllMeals().fold(
+            onSuccess = {meals ->
+                (meals.asSequence()
                     .flatMap { it.ingredients.orEmpty().asSequence() }
                     .filter { it != correctIngredient }
                     .distinct()
                     .shuffled()
                     .take(2) + correctIngredient)
                     .shuffled().toList()
+            },
+            onFailure = {
+                throw it
             }
-            is FoodChangeModeResults.Fail -> {
-                throw result.exception
-            }
-        }
+        )
 
 }
