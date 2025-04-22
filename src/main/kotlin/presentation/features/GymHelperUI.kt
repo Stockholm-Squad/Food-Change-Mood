@@ -1,7 +1,6 @@
 package org.example.presentation.features
 
 import model.Meal
-import org.example.logic.model.Results
 import org.example.logic.usecases.GetMealsForGymHelperUseCase
 import org.example.utils.Constants
 
@@ -15,13 +14,14 @@ class GymHelperUI(
                 getMealsForGymHelperUseCase?.getGymHelperMeals(
                     desiredCalories = desiredCalories,
                     desiredProteins = desiredProteins
-                ).apply {
-                    when (this) {
-                        is Results.Fail -> this@GymHelperUI.handleFailure(this.exception)
-                        is Results.Success<List<Meal>> -> this@GymHelperUI.handleSuccess(this.model)
-                        null -> handleUnExpectedError()
+                )?.fold(
+                    onSuccess = { gymHelperMeals ->
+                        this@GymHelperUI.handleSuccess(gymHelperMeals)
+                    },
+                    onFailure = { exception ->
+                        this@GymHelperUI.handleFailure(exception)
                     }
-                }
+                ) ?: handleUnExpectedError()
             } ?: showInvalidInput()
         } ?: showInvalidInput()
     }
