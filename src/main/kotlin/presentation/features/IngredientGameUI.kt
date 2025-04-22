@@ -1,8 +1,14 @@
-package org.example.presentation
+package org.example.presentation.features
 
 import org.example.logic.usecases.GetIngredientGameUseCase
+import org.example.logic.usecases.model.IngredientQuestionModel
 
 class IngredientGameUI(private val game: GetIngredientGameUseCase) {
+    companion object {
+        private var SCORE = 0
+        private const val POINTS_PER_QUESTION = 1000
+        private const val WINNING_SCORE = 15000
+    }
 
     fun start() {
         println("🧠 Ingredient Game is starting! Let's see how well you know your meals!")
@@ -15,21 +21,26 @@ class IngredientGameUI(private val game: GetIngredientGameUseCase) {
             displayQuestion(question)
 
             val userChoice = getUserChoice(question.options.size)
-
             val selectedIngredient = question.options[userChoice - 1]
-            val gameState = game.submitAnswer(selectedIngredient)
+            val isCorrect = game.submitAnswer(selectedIngredient)
 
-            if (gameState.isGameOver) {
-                println("\n🏁 Game Over! Final Score: ${gameState.score}")
-                break
-            } else {
-                println("✅ Correct! Your current score: ${gameState.score}")
+            if (isCorrect) {
+                SCORE += POINTS_PER_QUESTION
+                println("✅ Correct! Your current score: $SCORE")
                 println("--------------------------------------------------")
+
+                if (SCORE >= WINNING_SCORE) {
+                    println("\n🏁 Congratulations! You reached the winning score: $SCORE")
+                    break
+                }
+            } else {
+                println("🏁 Game Over! Final Score: $SCORE")
+                break
             }
         }
     }
 
-    private fun displayQuestion(question: GetIngredientGameUseCase.Question) {
+    private fun displayQuestion(question: IngredientQuestionModel) {
         println("\nMeal: ${question.mealName}")
         println("Choose the correct ingredient:")
 
@@ -51,4 +62,3 @@ class IngredientGameUI(private val game: GetIngredientGameUseCase) {
         }
     }
 }
-

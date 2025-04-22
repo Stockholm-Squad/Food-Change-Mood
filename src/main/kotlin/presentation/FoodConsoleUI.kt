@@ -1,48 +1,40 @@
 package org.example.presentation
 
-import org.example.logic.usecases.GetMealsForGymHelperUseCase
-import org.example.logic.usecases.GetIngredientGameUseCase
-import org.example.logic.usecases.GetHealthyFastFoodUseCase
-import org.example.logic.usecases.GetIraqiMealsUseCase
-import org.example.logic.usecases.GetEasyFoodSuggestionsUseCase
-import org.example.logic.usecases.*
-import org.example.utils.DateValidator
+import org.example.presentation.features.ExploreCountryFoodUI
+import org.example.presentation.features.GetHealthyFastFoodMealsUI
+import org.example.presentation.features.GetIraqiMealsUI
+import org.example.presentation.features.GuessGameUI
+import org.example.presentation.features.GymHelperUI
+import org.example.presentation.features.IngredientGameUI
+import org.example.presentation.features.ItalianLargeGroupMealsUI
+import org.example.presentation.features.KetoDietMealUI
+import org.example.presentation.features.PotatoLoversUI
+import org.example.presentation.features.ProteinSeafoodRankingUI
+import org.example.presentation.features.SearchByAddDateUI
+import org.example.presentation.features.SearchMealByNameUI
+import org.example.presentation.features.SuggestEasyMealsUI
+import org.example.presentation.features.SuggestMealForSoThinPeopleUI
+import org.example.presentation.features.SuggestSweetNoEggsUI
 import org.example.utils.MenuOption
-import presentation.*
+
 
 class FoodConsoleUI(
-    private val getMealForKetoDietUseCase: GetMealForKetoDietUseCase,
-    private val getEasyFoodSuggestionsUseCase: GetEasyFoodSuggestionsUseCase,
-    private val sweetNoEggsUseCase: GetDessertsWithNoEggs,
-    private val getCountryFoodUseCase: GetCountryFoodUseCase,
-    private val getPotatoMealsUseCase: GetPotatoMealsUseCase,
-    private val getMealsForGymHelperUseCase: GetMealsForGymHelperUseCase,
-    private val getIngredientGameUseCase: GetIngredientGameUseCase,
-    private val getHealthFastFoodUseCase: GetHealthyFastFoodUseCase,
-    private val getSeaFoodByProteinRankUseCase: GetSeaFoodByProteinRankUseCase,
-    private val getMealsByDateUseCase: GetMealsByDateUseCase,
-    private val getMealsForLargeGroupUseCase: GetMealsForLargeGroupUseCase,
-    private val getMealByNameUseCase: GetMealByNameUseCase,
-    private val soThinProblem: GetMealsForSoThinProblemUseCase,
-    private val getIraqiMealsUseCase: GetIraqiMealsUseCase,
-    private val getGuessGameUseCase: GetGuessGameUseCase,
-    private val dateValidator: DateValidator
+    private val healthyFastFoodMealsUI: GetHealthyFastFoodMealsUI,
+    private val exploreCountryFoodUI: ExploreCountryFoodUI,
+    private val getIraqiMealsUI: GetIraqiMealsUI,
+    private val guessGameUI: GuessGameUI,
+    private val gymHelperUI: GymHelperUI,
+    private val ingredientGameUI: IngredientGameUI,
+    private val italianLargeGroupMealsUI: ItalianLargeGroupMealsUI,
+    private val ketoDietMealUI: KetoDietMealUI,
+    private val potatoLoversUI: PotatoLoversUI,
+    private val proteinSeafoodRankingUI: ProteinSeafoodRankingUI,
+    private val searchByAddDateUI: SearchByAddDateUI,
+    private val searchMealByNameUI: SearchMealByNameUI,
+    private val suggestEasyMealsUI: SuggestEasyMealsUI,
+    private val suggestMealForSoThinPeopleUI: SuggestMealForSoThinPeopleUI,
+    private val suggestSweetNoEggsUI: SuggestSweetNoEggsUI
 ) {
-    private val healthyFastFood = GetHealthyFastFoodMealsUI(getHealthFastFoodUseCase)
-    private val searchByName = SearchMealByNameUI(getMealByNameUseCase)
-    private val iraqiMeals = GetIraqiMealsUI(getIraqiMealsUseCase)
-    private val easyMeals = SuggestEasyMealsUI(getEasyFoodSuggestionsUseCase)
-    private val guessGame = GuessGameUI(getGuessGameUseCase)
-    private val sweetNoEggs = SuggestSweetNoEggsUI(sweetNoEggsUseCase)
-    private val ketoMeals = KetoDietMealUI(getMealForKetoDietUseCase)
-    private val searchByDate = SearchByAddDateUI(getMealsByDateUseCase, dateValidator)
-    private val gymHelper = GymHelperUI(getMealsForGymHelperUseCase)
-    private val countryFood = ExploreCountryFoodUI(getCountryFoodUseCase)
-    private val ingredientGame = IngredientGameUI(getIngredientGameUseCase)
-    private val potatoLovers = PotatoLoversUI(getPotatoMealsUseCase)
-    private val highCalorieMeal = SuggestMealForSoThinPeopleUI(soThinProblem)
-    private val seafoodRanking = ProteinSeafoodRankingUI(getSeaFoodByProteinRankUseCase)
-    private val italianForGroups = ItalianLargeGroupMealsUI(getMealsForLargeGroupUseCase)
 
     fun start() {
         welcomeUser()
@@ -56,21 +48,21 @@ class FoodConsoleUI(
 
     private fun handleEnteredMenuOption(option: Int?): Boolean {
         when (getEnteredOption(option)) {
-            MenuOption.HEALTHY_FAST_FOOD -> healthyFastFood.showHealthyFastFoodMeals()
-            MenuOption.SEARCH_BY_NAME -> searchByName.handleSearchByName()
-            MenuOption.IRAQI_MEALS -> iraqiMeals.getIraqiMeals()
-            MenuOption.EASY_MEALS -> easyMeals.showEasySuggestions()
-            MenuOption.GUESS_GAME -> guessGame.playGuessGame()
-            MenuOption.SWEETS_NO_EGGS -> sweetNoEggs.showSweetsNoEggs()
-            MenuOption.KETO_MEALS -> ketoMeals.showKetoMeal()
-            MenuOption.SEARCH_BY_DATE -> searchByDate.searchMealsByDate()
-            MenuOption.GYM_HELPER -> gymHelper.useGymHelper()
-            MenuOption.COUNTRY_FOOD -> countryFood.exploreCountryFoodCulture()
-            MenuOption.INGREDIENT_GAME -> ingredientGame.start()
-            MenuOption.POTATO_LOVERS -> potatoLovers.showPotatoLoversUI()
-            MenuOption.HIGH_CALORIE_MEAL -> highCalorieMeal.getMaleWithHighCalorie()
-            MenuOption.SEAFOOD_RANKING -> seafoodRanking.proteinSeafoodRanking()
-            MenuOption.ITALIAN_GROUP_MEALS -> italianForGroups.italianLargeGroupMealsUI()
+            MenuOption.HEALTHY_FAST_FOOD -> healthyFastFoodMealsUI.showHealthyFastFoodMeals()
+            MenuOption.SEARCH_BY_NAME -> searchMealByNameUI.handleSearchByName()
+            MenuOption.IRAQI_MEALS -> getIraqiMealsUI.getIraqiMeals()
+            MenuOption.EASY_MEALS -> suggestEasyMealsUI.showEasySuggestions()
+            MenuOption.GUESS_GAME -> guessGameUI.playGuessGame()
+            MenuOption.SWEETS_NO_EGGS -> suggestSweetNoEggsUI.showSweetsNoEggs()
+            MenuOption.KETO_MEALS -> ketoDietMealUI.showKetoMeal()
+            MenuOption.SEARCH_BY_DATE -> searchByAddDateUI.searchMealsByDate()
+            MenuOption.GYM_HELPER -> gymHelperUI.useGymHelper()
+            MenuOption.COUNTRY_FOOD -> exploreCountryFoodUI.exploreCountryFoodCulture()
+            MenuOption.INGREDIENT_GAME -> ingredientGameUI.start()
+            MenuOption.POTATO_LOVERS -> potatoLoversUI.showPotatoLoversUI()
+            MenuOption.HIGH_CALORIE_MEAL -> suggestMealForSoThinPeopleUI.getMaleWithHighCalorie()
+            MenuOption.SEAFOOD_RANKING -> proteinSeafoodRankingUI.proteinSeafoodRanking()
+            MenuOption.ITALIAN_GROUP_MEALS -> italianLargeGroupMealsUI.italianLargeGroupMealsUI()
             MenuOption.EXIT -> {
                 exit()
                 return true

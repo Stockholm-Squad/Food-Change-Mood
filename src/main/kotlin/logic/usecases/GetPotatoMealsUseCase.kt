@@ -2,25 +2,25 @@ package org.example.logic.usecases
 
 import model.Meal
 import org.example.logic.repository.MealsRepository
-
+import org.example.utils.Constants
 
 class GetPotatoMealsUseCase(private val mealsRepository: MealsRepository) {
 
-    /**
-     * A use case to retrieve a specified number of random meals containing "potato" as an ingredient.
-     *
-     * @param count The number of random meals to retrieve.
-     * @return A list of random meals containing "potato".
-     */
-
-    fun getRandomPotatoMeals(count: Int): List<Meal> {
-        return mealsRepository.getAllMeals()
-            .filter { meal ->
-                meal.ingredients?.any { ingredient ->
-                    ingredient.equals("potato", ignoreCase = true)
-                } ?: false
+    fun getRandomPotatoMeals(count: Int): Result<List<Meal>> {
+        return mealsRepository.getAllMeals().fold(
+            onSuccess = { allMeals ->
+                allMeals
+                    .filter { meal -> meal.ingredients?.any { it.equals(Constants.POTATO, ignoreCase = true) } == true }
+                    .shuffled()
+                    .take(count)
+                    .takeIf { it.isNotEmpty() }
+                    ?.let { Result.success(it) }
+                    ?: Result.failure(Throwable(Constants.NO_MEALS_FOR_POTATO))
+            },
+            onFailure = { error ->
+                Result.failure(Throwable("${Constants.UNEXPECTED_ERROR} ${this::class.simpleName}"))
             }
-            .shuffled()
-            .take(count)
+
+        )
     }
 }

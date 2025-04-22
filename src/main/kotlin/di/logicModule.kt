@@ -2,20 +2,19 @@ package org.example.di
 
 import org.example.logic.usecases.SearchingByKmpUseCase
 import org.example.logic.usecases.*
-import org.example.utils.DateValidator
 import org.koin.dsl.module
 
 val logicModule = module {
 
     single { GetHealthyFastFoodUseCase(get()) }
     single { GetEasyFoodSuggestionsUseCase(get()) }
-    single { GetDessertsWithNoEggs(get()) }
-    single { GetCountryFoodUseCase(get()) }
+    single { GetDessertsWithNoEggsUseCase(get()) }
+    single { GetCountryMealsUseCase(get()) }
     single { GetPotatoMealsUseCase(get()) }
     single { GetMealsForGymHelperUseCase(get()) }
     single { GetIngredientGameUseCase(get()) }
     single { GetMealsByDateUseCase(get()) }
-    single { GetMealsForLargeGroupUseCase(get()) }
+    single { GetItalianMealsForLargeGroupUseCase(get()) }
     single { GetMealsForSoThinProblemUseCase(get()) }
 
     single<SearchingByKmpUseCase> { SearchingByKmpUseCase() }
@@ -24,7 +23,7 @@ val logicModule = module {
 
     single { GetSeaFoodByProteinRankUseCase(get()) }
     single { GetMealForKetoDietUseCase(get()) }
-
-    single { GetGuessGameUseCase(get()) }
+    single { GetGuessPreparationTimeUseCase() }
+    single { GetRandomMealUseCase(get()) }
 
 }
