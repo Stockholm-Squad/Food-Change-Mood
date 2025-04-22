@@ -34,27 +34,10 @@ class SearchByAddDateUI(
                 emptyList()
             }
         ).also {
-            printMealsIdName(it)
-        }.also {
-            while (true) {
-                println()
-                println("-1 -> search again or back")
-                println("meal id -> view details")
-                val input = readlnOrNull()
-                val mealId = input?.toIntOrNull()
-
-                if (mealId == null) {
-                    println("Enter a valid ID or -1")
-                    continue
-                } else if (mealId == -1) {
-                    break
-                } else {
-                    it.viewMealInListDetails(mealId)
-                }
-            }
+            handleUserInteraction(it)
         }
-
     }
+
 
     private fun printMealsIdName(mealsList: List<Meal>) {
         mealsList.forEach { meal ->
@@ -62,5 +45,21 @@ class SearchByAddDateUI(
         }
     }
 
+    private fun handleUserInteraction(meals: List<Meal>) {
+        printMealsIdName(meals)
 
+        while (true) {
+            println()
+            println("-1 -> search again or back")
+            println("meal id -> view details")
+            val input = readlnOrNull()
+            val mealId = input?.toIntOrNull()
+
+            when {
+                mealId == null -> println("Enter a valid ID or -1")
+                mealId == -1 -> break
+                else -> meals.viewMealInListDetails(mealId)
+            }
+        }
+    }
 }
