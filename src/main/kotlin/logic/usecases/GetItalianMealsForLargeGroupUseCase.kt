@@ -7,7 +7,7 @@ import org.example.logic.repository.MealsRepository
 class GetItalianMealsForLargeGroupUseCase(
     private val mealsRepository: MealsRepository
 ) {
-    
+
     fun getMeals(): Results<List<Meal>> {
         return when (val allMeals = mealsRepository.getAllMeals()) {
             is Results.Success -> Results.Success(allMeals.model.filter(::isItalianMealsForLargeGroup)
