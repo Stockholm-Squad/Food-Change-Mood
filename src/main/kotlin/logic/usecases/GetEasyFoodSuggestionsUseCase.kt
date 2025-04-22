@@ -7,22 +7,38 @@ class GetEasyFoodSuggestionsUseCase(
     private val mealRepository: MealsRepository
 ) {
 
-    fun getEasyFood(): List<Meal> {
+    fun getEasyFood(): Result<List<Meal>> {
         return mealRepository.getAllMeals()
-            .filter { it.isEasyMeal() }
-            .shuffled()
-            .take(10)
-            .ifEmpty { throw NoSuchElementException("No easy meals found.") }
+            .fold(
+                onSuccess = ::getSuccessResult,
+                onFailure = ::getFailureResult
+            )
+
     }
 
-    // Extension function for Meal class to test isEasyMeal
-    fun Meal.isEasyMeal(
+    private fun getSuccessResult(allMeals: List<Meal>): Result<List<Meal>> {
+        return allMeals.filter {
+            isEasyMeal(it)
+        }.shuffled()
+            .take(10)
+            .takeIf { it.isNotEmpty() }
+            ?.let { Result.success(it) }
+            ?: getFailureResult(NoSuchElementException("No easy meals found."))
+
+    }
+
+    private fun getFailureResult(throwable: Throwable): Result<List<Meal>> {
+        return Result.failure(throwable)
+    }
+
+    private fun isEasyMeal(
+        meal: Meal,
         maxPrepTime: Int = 30,
         maxIngredients: Int = 5,
         maxSteps: Int = 6
     ): Boolean {
-        return (minutes ?: 0) <= maxPrepTime &&
-                (numberOfIngredients ?: 0) <= maxIngredients &&
-                (numberOfSteps ?: 0) <= maxSteps
+        return (meal.minutes ?: 0) <= maxPrepTime &&
+                (meal.numberOfIngredients ?: 0) <= maxIngredients &&
+                (meal.numberOfSteps ?: 0) <= maxSteps
     }
 }
