@@ -9,18 +9,25 @@ class GetDessertsWithNoEggsUseCase(private val mealRepository: MealsRepository) 
     fun getDessertsWithNNoEggs(): Result<List<Meal>> {
 
         return mealRepository.getAllMeals().fold(
-            onSuccess = { allMeals -> Result.success(returnTheFilteredDesserts(allMeals)) },
+            onSuccess = { allMeals -> returnTheFilteredDesserts(allMeals) },
             onFailure = { error -> Result.failure(error) }
         )
 
     }
 
-    private fun returnTheFilteredDesserts(model: List<Meal>): List<Meal> {
-        return model.filter {
-            !it.ingredients.toString().contains("egg", ignoreCase = true) && it.tags.toString()
-                .contains("dessert", ignoreCase = true)
+    private fun returnTheFilteredDesserts(model: List<Meal>): Result<List<Meal>> {
+        return runCatching {
+            model.filter { meal ->
+                filterForNoEggsAndDesserts(meal.tags, meal.ingredients)
+            }.takeIf { it.isNotEmpty() }
+                ?: throw NoSuchElementException("No dessert meals without eggs found")
         }
 
+    }
+
+    private fun filterForNoEggsAndDesserts(tags: List<String>?, ingredients: List<String>?): Boolean {
+        return !ingredients.toString().contains("egg", ignoreCase = true) &&
+                tags.toString().contains("dessert", ignoreCase = true)
     }
 }
 
