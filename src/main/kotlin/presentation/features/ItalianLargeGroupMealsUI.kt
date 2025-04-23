@@ -33,12 +33,11 @@ class ItalianLargeGroupMealsUI(private val getItalianMealsForLargeGroupUseCase: 
             println()
             println("-1 -> back")
             println("meal id -> view details")
-            val input = readlnOrNull()
-            val mealId = input?.toIntOrNull()
+            val input: String = readln()
 
-            when {
-                mealId == null -> println("Enter a valid ID or -1")
-                mealId == -1 -> break
+            when (val mealId: Int? = input.toIntOrNull()) {
+                null -> println("Enter a valid ID or -1")
+                -1 -> break
                 else -> meals.viewMealInListDetails(mealId)
             }
         }
