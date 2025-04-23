@@ -7,7 +7,9 @@ import logic.usecases.utils.MealCreationHandler
 import org.example.input_output.input.InputReader
 import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetMealsForGymHelperUseCase
+import org.example.model.FoodChangeMoodExceptions
 import org.example.presentation.features.GymHelperUI
+import org.example.utils.Constants
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -46,10 +48,61 @@ class GymHelperUITest {
                 mealCreationHandler.getGymHelperMeal("meal3", 10F, 45F),
             )
         )
+
         //When
         gymHelperUI.useGymHelper()
-        //Then
 
+        //Then
         verify { printer.printLine(mealCreationHandler.getGymHelperMeal("meal2", 9F, 45F).toString()) }
     }
+
+    @Test
+    fun `useGymHelper() should print no meals found when call GetMealsForGymHelperUseCase and No meals approximately matched the proteins and calories amounts`() {
+        //Given
+        val calories = 10F
+        val proteins = 40F
+        every { floatReader.read() } returns calories andThen proteins
+        every {
+            getMealsForGymHelperUseCase.getGymHelperMeals(
+                calories, proteins, 20F
+            )
+        } returns Result.failure(
+            FoodChangeMoodExceptions.LogicException.NoMealsForGymHelperException(Constants.NO_MEALS_FOR_GYM_HELPER)
+        )
+
+        //When
+        gymHelperUI.useGymHelper()
+
+        //Then
+        verify { printer.printLine(Constants.NO_MEALS_FOR_GYM_HELPER) }
+    }
+
+    @Test
+    fun `useGymHelper() should print INVALID_INPUT when read invalid calories from user`() {
+        //Given
+        val calories = null
+        val proteins = 40F
+        every { floatReader.read() } returns calories andThen proteins
+
+        //When
+        gymHelperUI.useGymHelper()
+
+        //Then
+        verify { printer.printLine(Constants.INVALID_INPUT) }
+    }
+
+    @Test
+    fun `useGymHelper() should print INVALID_INPUT when read invalid proteins from user`() {
+        //Given
+        val calories = 10F
+        val proteins = null
+        every { floatReader.read() } returns calories andThen proteins
+
+        //When
+        gymHelperUI.useGymHelper()
+
+        //Then
+        verify { printer.printLine(Constants.INVALID_INPUT) }
+    }
+
 }
