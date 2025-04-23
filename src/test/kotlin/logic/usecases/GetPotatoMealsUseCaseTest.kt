@@ -1,6 +1,5 @@
 package logic.usecases
 
-import Fake.FakeMealRepository
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
@@ -14,7 +13,6 @@ class GetPotatoMealsUseCaseTest{
 
     private lateinit var mealRepository : MealsRepository
     private lateinit var getRandomPotatoMeals : GetPotatoMealsUseCase
-    private lateinit var fakeMealRepository: FakeMealRepository
 
   @BeforeEach
   fun setUp() {
@@ -183,7 +181,7 @@ class GetPotatoMealsUseCaseTest{
         assertThat(result.isSuccess).isTrue()
         val meals = result.getOrNull()!!
         assertThat(meals.size).isEqualTo(1)
-        assertThat(meals.all { it.ingredients!!.any { it.equals("potato", ignoreCase = true) } }).isTrue()
+        assertThat(meals.all { meal -> meal.ingredients!!.any { it.equals("potato", ignoreCase = true) } }).isTrue()
     }
 
  }
