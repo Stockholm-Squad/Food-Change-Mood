@@ -1,6 +1,6 @@
 package org.example.logic.usecases
 
-import model.Meal
+
 import org.example.logic.usecases.model.GuessPreparationTimeState
 
 class GetGuessPreparationTimeUseCase {
