@@ -13,11 +13,11 @@ class SearchByAddDateUI(
     fun searchMealsByDate() {
         while (true) {
             println("📅 Enter date (YYYY-MM-DD): ex: 2002-02-02\n or 0 to exit")
-            val date = readlnOrNull()
+            val date = readln()
 
-            if (date != null && date == "0") {
+            if (date == "0") {
                 return
-            } else if (date != null && dateValidator.isValidDate(date)) {
+            } else if (dateValidator.isValidDate(date)) {
                 println("Loading...")
                 searchFood(date)
             } else {
@@ -52,12 +52,11 @@ class SearchByAddDateUI(
             println()
             println("-1 -> search again or back")
             println("meal id -> view details")
-            val input = readlnOrNull()
-            val mealId = input?.toIntOrNull()
+            val input: String = readln()
 
-            when {
-                mealId == null -> println("Enter a valid ID or -1")
-                mealId == -1 -> break
+            when (val mealId: Int? = input.toIntOrNull()) {
+                null -> println("Enter a valid ID or -1")
+                -1 -> break
                 else -> meals.viewMealInListDetails(mealId)
             }
         }
