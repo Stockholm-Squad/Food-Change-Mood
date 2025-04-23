@@ -1,17 +1,15 @@
 package org.example.logic.usecases
 
-
 /**
  * A class implementing the Knuth-Morris-Pratt (KMP) algorithm for efficient substring search.
  * It preprocesses the pattern to create an LPS (Longest Prefix Suffix) table, reducing the number
  * of character comparisons during the search phase.
  */
-
 class SearchingByKmpUseCase {
 
     fun searchByKmp(mealName: String?, pattern: String?): Boolean =
         mealName?.lowercase()?.let { meal ->
-            pattern?.lowercase()?.let { pat ->
+            pattern?.trim()?.lowercase()?.let { pat -> // Trim the pattern to remove leading/trailing spaces
                 if (pat.isNotEmpty()) findPatternInText(meal, pat, createLpsTable(pat))
                 else false
             }
@@ -26,12 +24,10 @@ class SearchingByKmpUseCase {
                     matchIndex++
                     matchIndex == pattern.length
                 }
-
                 matchIndex != 0 -> {
                     matchIndex = lps[matchIndex - 1]
                     false
                 }
-
                 else -> false
             }
         }
