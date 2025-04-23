@@ -39,7 +39,7 @@ class ItalianLargeGroupMealsUITest {
     }
 
     @Test
-    fun `should display meals when use case returns success`() {
+    fun `italianLargeGroupMealsUI() should display meals when use case returns success`() {
         // Given
         val meal1 = buildMeal(id = 1, name = "Spaghetti Carbonara", tags = listOf("italian", "for-large-groups"))
         val meal2 = buildMeal(id = 2, name = "Pizza Margherita", tags = listOf("italian", "for-large-groups"))
@@ -61,7 +61,7 @@ class ItalianLargeGroupMealsUITest {
     }
 
     @Test
-    fun `should handle failure when use case fails`() {
+    fun `italianLargeGroupMealsUI() should handle failure when use case fails`() {
         // Given
         val exception = Exception("Database error")
         every { getItalianMealsForLargeGroupUseCase.getMeals() } returns Result.failure(exception)
@@ -80,7 +80,7 @@ class ItalianLargeGroupMealsUITest {
     }
 
     @Test
-    fun `should handle valid meal id input and display details`() {
+    fun `italianLargeGroupMealsUI() should handle valid meal id input and display details`() {
         // Given
         val meal1 = buildMeal(id = 1, name = "Spaghetti Carbonara", tags = listOf("italian", "for-large-groups"))
         every { getItalianMealsForLargeGroupUseCase.getMeals() } returns Result.success(listOf(meal1))
@@ -100,7 +100,7 @@ class ItalianLargeGroupMealsUITest {
     }
 
     @Test
-    fun `should handle invalid meal id input gracefully`() {
+    fun `italianLargeGroupMealsUI() should handle invalid meal id input gracefully`() {
         // Given
         val meal1 = buildMeal(id = 1, name = "Spaghetti Carbonara", tags = listOf("italian", "for-large-groups"))
         every { getItalianMealsForLargeGroupUseCase.getMeals() } returns Result.success(listOf(meal1))
@@ -119,7 +119,7 @@ class ItalianLargeGroupMealsUITest {
     }
 
     @Test
-    fun `should handle empty user input gracefully`() {
+    fun `italianLargeGroupMealsUI() should handle empty user input gracefully`() {
         // Given
         val meal1 = buildMeal(
             id = 1,
