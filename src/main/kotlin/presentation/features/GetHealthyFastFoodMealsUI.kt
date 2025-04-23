@@ -4,8 +4,13 @@ import model.Meal
 import org.example.logic.usecases.GetHealthyFastFoodUseCase
 
 class GetHealthyFastFoodMealsUI(
-    private val getHealthyFastFoodUseCase: GetHealthyFastFoodUseCase
+    private val getHealthyFastFoodUseCase: GetHealthyFastFoodUseCase,
+    private val outputController: (String) -> Unit
 ) {
+
+
+
+
 
     fun showHealthyFastFoodMeals() {
         getHealthyFastFoodUseCase.getHealthyFastFood().fold(
@@ -13,14 +18,14 @@ class GetHealthyFastFoodMealsUI(
                 showMeals(allMeals)
             },
             onFailure = { error ->
-                println("❌ Failed to load meals: ${error.message}")
+                outputController("❌ Failed to load meals: ${error.message}")
             }
         )
     }
 
-    fun showMeals(allMeals: List<Meal>) {
+    private fun showMeals(allMeals: List<Meal>) {
         allMeals.forEachIndexed { index, meal ->
-            println(
+            outputController(
                 "Meal ${index + 1}:\n" +
                         "Name='${meal.name}'\n" +
                         "ID=${meal.id}\n" +
@@ -36,6 +41,6 @@ class GetHealthyFastFoodMealsUI(
                         "IngredientsCount=${meal.numberOfIngredients}\n"
             )
         }
-
     }
 }
+
