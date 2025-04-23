@@ -8,7 +8,7 @@ import org.example.utils.Constants
 
 class GymHelperUI(
     private val getMealsForGymHelperUseCase: GetMealsForGymHelperUseCase,
-    private val floatReader: InputReader<Float>,
+    private val reader: InputReader,
     private val printer: OutputPrinter,
 ) {
 
@@ -32,12 +32,12 @@ class GymHelperUI(
 
     private fun getDesiredProteins(): Float? {
         printer.printLine("🔥 Enter desired proteins: ")
-        return floatReader.read()
+        return reader.readFloatOrNull()
     }
 
     private fun getDesiredCalories(): Float? {
         printer.printLine("🔥 Enter desired calories: ")
-        return floatReader.read()
+        return reader.readFloatOrNull()
     }
 
     private fun handleFailure(exception: Throwable) {
@@ -45,9 +45,7 @@ class GymHelperUI(
     }
 
     private fun handleSuccess(gymHelperMeals: List<Meal>) {
-        gymHelperMeals.forEach {
-            printer.printLine(it.toString())
-        }
+        printer.printMeals(gymHelperMeals)
     }
 
     private fun showInvalidInput() {
