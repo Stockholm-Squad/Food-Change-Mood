@@ -1,3 +1,4 @@
+import di.inputOutputModule
 import org.example.di.logicModule
 import org.example.di.uiModule
 import org.example.di.utilsModule
@@ -7,5 +8,5 @@ import java.io.File
 
 val appModule = module {
     single { File(Constants.MEAL_CSV_FILE) }
-    includes(dataModule, logicModule, uiModule, utilsModule)
+    includes(dataModule, logicModule, uiModule, utilsModule, inputOutputModule)
 }
