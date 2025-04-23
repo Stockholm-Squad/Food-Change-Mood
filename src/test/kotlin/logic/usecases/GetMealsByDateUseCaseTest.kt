@@ -100,7 +100,7 @@ class GetMealsByDateUseCaseTest {
 
 
     @Test
-    fun `getMealsByDate(invalidDate) should handle failure of getDateFromString in isMealWithDate`() {
+    fun `getMealsByDate() should handle failure of getDateFromString in isMealWithDate when invalidDate`() {
         // Given
         val invalidDate = "invalid-date"
         val meal = buildMeal(id = 1, submitted = Date()) // A meal with any date
@@ -116,10 +116,13 @@ class GetMealsByDateUseCaseTest {
         result.onSuccess { meals ->
             assertThat(meals).isEmpty() // No meals should be returned due to the failure
         }
+
+//        TODO: verify calling the get function once
+//        TODO: verify list size
     }
 
     @Test
-    fun `getMealsByDate(date) should handle meals with null submitted dates`() {
+    fun `getMealsByDate(date) should handle meals when null submitted dates`() {
         // Given
         val date = "2023-10-01"
         val validMeal = buildMeal(id = 1, submitted = getDateFromString(date).getOrThrow())
