@@ -1,16 +1,16 @@
 package org.example.presentation.features
 
 import model.Meal
-import org.example.logic.usecases.GetMealsForSoThinProblemUseCase
+import org.example.logic.usecases.GetMealForSoThinPeopleUseCase
 
 
 class SuggestMealForSoThinPeopleUI(
-    private val getMealsForSoThinProblemUseCase: GetMealsForSoThinProblemUseCase,
+    private val getMealForSoThinPeopleUseCase: GetMealForSoThinPeopleUseCase,
 ) {
-    fun getMaleWithHighCalorie() {
+    fun getMealWithHighCalorie() {
         println("-------------------------------------------------------------------------------------------------")
         println("🔥 Feeling too thin? This meal above 700 calories!")
-        getMealsForSoThinProblemUseCase.suggestRandomMealForSoThinPeople()
+        getMealForSoThinPeopleUseCase.suggestRandomMealForSoThinPeople()
             .fold(
                 onSuccess = { meal ->
                     println("------------------------------------------------------------------------------------------------")
@@ -19,20 +19,18 @@ class SuggestMealForSoThinPeopleUI(
                     println("--------------------------------------------------------------------------------------------------")
                     println("Do you like it? (yes/no) 😊")
                     when (readlnOrNull()?.trim()?.lowercase()) {
-                        "no" -> getMaleWithHighCalorie()
-                        "yes" -> displayFullDetails(meal)
+                        "no" -> getMealWithHighCalorie()
+                        "yes" -> showMealDetails(meal)
                         else -> println("Invalid input! Expected yes or no.")
                     }
                 },
                 onFailure = { exception ->
                     println(exception)
-                    null
                 }
             )
-
     }
 
-    private fun displayFullDetails(meal: Meal) {
+    private fun showMealDetails(meal: Meal) {
         println("Meal Name: " + meal.name)
         println("Meal Description: " + meal.description)
         println("Meal Preparation Time: " + meal.minutes + " minutes")

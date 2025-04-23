@@ -10,4 +10,5 @@ object Constants {
     const val NO_MEALS_FOUND_MATCHING = "No meals found matching"
     const val UNEXPECTED_ERROR = "Unexpected error occurred"
     const val ERROR_FETCHING_MEALS = "Error fetching meals: "
+    const val NO_MEAL_FOR_SO_THIN_PEOPLE = "no meal found with high calories."
 }
