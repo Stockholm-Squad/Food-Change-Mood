@@ -1,5 +1,6 @@
 import org.example.input_output.input.FloatReader
 import org.example.input_output.input.InputReader
+import org.example.input_output.input.StringReader
 import org.example.input_output.output.OutputPrinter
 import org.example.input_output.output.OutputPrinterImplementation
 import org.koin.dsl.module
@@ -8,4 +9,5 @@ import org.koin.dsl.module
 val inputOutputModule = module {
     factory<OutputPrinter> { OutputPrinterImplementation() }
     factory<InputReader<Float>> { FloatReader() }
+    factory<InputReader<String>> { StringReader() }
 }
