@@ -1,37 +1,44 @@
 package org.example.presentation.features
 
 import org.example.logic.usecases.GetPotatoMealsUseCase
+import org.example.utils.InputHandler
+import org.example.utils.OutputHandler
 
-class PotatoLoversUI(private val getPotatoMealsUseCase: GetPotatoMealsUseCase) {
-
-    fun showPotatoLoversUI() {
-        println("🥔 I ❤️ Potato! Here are 10 meals that include potatoes:\n")
-        showRandomPotatoMeals(10)
-    }
-
-    fun showRandomPotatoMeals(count: Int) {
-        getPotatoMealsUseCase.getRandomPotatoMeals(count)
-            .onSuccess { meals ->
-                meals.takeIf { it.isNotEmpty() }
-                    ?.forEachIndexed { index, meal ->
-                        println("🍽️ Meal #${index + 1}: ${meal.name}")
-                    }
-                    ?: run { println("No potato meals found.") }
+class PotatoLoversUI(
+    private val getPotatoMealsUseCase: GetPotatoMealsUseCase,
+    private val outputHandler: OutputHandler,
+    private val inputHandler: InputHandler? = null
+) {
+    fun showPotatoLoversUI(count: Int = 10) {
+        val result = getPotatoMealsUseCase.getRandomPotatoMeals(count)
+        if (result.isSuccess) {
+            val meals = result.getOrNull()
+            if (meals.isNullOrEmpty()) {
+                outputHandler.showMessage("😢 No potato meals found.")
+            } else {
+                outputHandler.showMessage("🥔 I ❤️ Potato Meals:")
+                meals.forEachIndexed { index, meal ->
+                    outputHandler.showMessage("🍽️ Meal #${index + 1}: ${meal.name}")
+                }
                 askForMoreMeals()
             }
-            .onFailure { exception ->
-                println("❌ Failed to fetch potato meals: ${exception.message}")
-            }
+        } else {
+            outputHandler.showMessage("❌ Error: ${result.exceptionOrNull()?.message}")
+        }
     }
 
     private fun askForMoreMeals() {
-        println(
-            "------------------------------------------------\n" +
-                    "Would you like to see more potato meals? (y or n)"
-        )
-        readlnOrNull()?.trim()?.lowercase()
-            .takeIf { it == "y" }
-            ?.let { showRandomPotatoMeals(10) }
-            ?: println("Okay! Enjoy your potato meals! 🥔😋")
+        inputHandler?.let {
+            outputHandler.showMessage(
+                "------------------------------------------------\n" +
+                        "Would you like to see more potato meals? (y or n)"
+            )
+            val answer = it.readInput()?.trim()?.lowercase()
+            if (answer == "y") {
+                showPotatoLoversUI()
+            } else {
+                outputHandler.showMessage("Okay! Enjoy your potato meals! 🥔😋")
+            }
+        }
     }
 }
