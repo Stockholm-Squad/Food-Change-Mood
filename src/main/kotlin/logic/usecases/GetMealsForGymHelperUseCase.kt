@@ -5,7 +5,6 @@ import model.Nutrition
 import org.example.logic.repository.MealsRepository
 import org.example.logic.usecases.model.GymHelperModel
 import org.example.model.FoodChangeMoodExceptions.LogicException.NoMealsForGymHelperException
-import org.example.utils.Constants
 import kotlin.math.abs
 
 class GetMealsForGymHelperUseCase(
@@ -50,19 +49,15 @@ class GetMealsForGymHelperUseCase(
         allMeals: List<Meal>,
         gymHelperModel: GymHelperModel
     ): List<Meal>? {
-        return allMeals.filter {
-            it.nutrition?.let { nutrition ->
-                isMealApproximatelyMatchesCaloriesAndProteins(
-                    nutrition, gymHelperModel
-                )
-            } ?: false
-        }
-            .takeIf { it.isNotEmpty() }
-            ?.sortedBy {
-                isMealApproximatelyMatchesCaloriesAndProteins(
-                    it.nutrition!!, gymHelperModel
-                )
-            }
+        return allMeals.filter { meal ->
+            meal.nutrition != null && isMealApproximatelyMatchesCaloriesAndProteins(
+                meal.nutrition, gymHelperModel
+            )
+        }.sortedBy { meal ->
+            isMealApproximatelyMatchesCaloriesAndProteins(
+                meal.nutrition!!, gymHelperModel
+            )
+        }.takeIf { it.isNotEmpty() }
     }
 
     private fun handleGetAllMealsFailure(exception: Throwable) =
