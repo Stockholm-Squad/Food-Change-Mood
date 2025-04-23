@@ -16,7 +16,7 @@ fun buildMeal(
     description: String? = null,
     ingredients: List<String>? = null,
     numberOfIngredients: Int? = null,
-    nutrition: Nutrition = buildNutrition()
+    nutrition: Nutrition? = buildNutrition()
 ): Meal {
 
     return Meal(
