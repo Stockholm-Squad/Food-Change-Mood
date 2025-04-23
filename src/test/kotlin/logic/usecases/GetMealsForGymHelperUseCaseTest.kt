@@ -3,10 +3,12 @@ package logic.usecases
 import com.google.common.truth.Truth
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import logic.usecases.utils.MealCreationHandler
 import org.example.logic.repository.MealsRepository
 import org.example.logic.usecases.GetMealsForGymHelperUseCase
 import org.example.model.FoodChangeMoodExceptions
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -23,6 +25,11 @@ class GetMealsForGymHelperUseCaseTest {
         repository = mockk(relaxed = true)
         getMealsForGymHelperUseCase = GetMealsForGymHelperUseCase(repository)
         mealCreationHandler = MealCreationHandler()
+    }
+
+    @AfterEach
+    fun tearDown() {
+        verify(exactly = 1) { repository.getAllMeals() }
     }
 
     @Test
