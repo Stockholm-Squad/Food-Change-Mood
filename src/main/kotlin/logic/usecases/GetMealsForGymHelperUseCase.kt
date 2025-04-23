@@ -43,7 +43,7 @@ class GetMealsForGymHelperUseCase(
         return getGymHelperMeals(allMeals, gymHelperModel)?.let {
             Result.success(it)
         }
-            ?: Result.failure(NoMealsForGymHelperException(message = Constants.NO_MEALS_FOR_GYM_HELPER))
+            ?: Result.failure(NoMealsForGymHelperException())
     }
 
     private fun getGymHelperMeals(
@@ -59,11 +59,9 @@ class GetMealsForGymHelperUseCase(
         }
             .takeIf { it.isNotEmpty() }
             ?.sortedBy {
-                it.nutrition?.let { nutrition ->
-                    isMealApproximatelyMatchesCaloriesAndProteins(
-                        nutrition, gymHelperModel
-                    )
-                }
+                isMealApproximatelyMatchesCaloriesAndProteins(
+                    it.nutrition!!, gymHelperModel
+                )
             }
     }
 
