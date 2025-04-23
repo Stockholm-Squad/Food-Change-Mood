@@ -3,7 +3,7 @@ package logic.usecases.utils
 import model.Meal
 import model.Nutrition
 
-class MealCreationMocker {
+class MealCreationHandler {
     fun getGymHelperMeal(name: String, calories: Float, proteins: Float): Meal {
         return Meal(
             name = name,
