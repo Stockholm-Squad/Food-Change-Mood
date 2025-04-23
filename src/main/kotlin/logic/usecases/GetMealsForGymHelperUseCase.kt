@@ -4,6 +4,7 @@ import model.Meal
 import model.Nutrition
 import org.example.logic.repository.MealsRepository
 import org.example.logic.usecases.model.GymHelperModel
+import org.example.model.FoodChangeMoodExceptions.LogicException.NoMealsForGymHelperException
 import org.example.utils.Constants
 import kotlin.math.abs
 
@@ -42,7 +43,7 @@ class GetMealsForGymHelperUseCase(
         return getGymHelperMeals(allMeals, gymHelperModel)?.let {
             Result.success(it)
         }
-            ?: Result.failure(Throwable(message = Constants.NO_MEALS_FOR_GYM_HELPER))
+            ?: Result.failure(NoMealsForGymHelperException(message = Constants.NO_MEALS_FOR_GYM_HELPER))
     }
 
     private fun getGymHelperMeals(
@@ -67,7 +68,7 @@ class GetMealsForGymHelperUseCase(
     }
 
     private fun handleGetAllMealsFailure(exception: Throwable) =
-        Result.failure<List<Meal>>(Throwable(Constants.NO_MEALS_FOR_GYM_HELPER + "\n" + exception.message))
+        Result.failure<List<Meal>>(exception)
 
     private fun isMealApproximatelyMatchesCaloriesAndProteins(
         nutrition: Nutrition,
