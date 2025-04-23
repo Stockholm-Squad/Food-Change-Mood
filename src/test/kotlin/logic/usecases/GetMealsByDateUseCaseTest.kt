@@ -119,7 +119,7 @@ class GetMealsByDateUseCaseTest {
     }
 
     @Test
-    fun `should handle meals with null submitted dates`() {
+    fun `getMealsByDate(date) should handle meals with null submitted dates`() {
         // Given
         val date = "2023-10-01"
         val validMeal = buildMeal(id = 1, submitted = getDateFromString(date).getOrThrow())
@@ -138,7 +138,7 @@ class GetMealsByDateUseCaseTest {
     }
 
     @Test
-    fun `should sort meals by id correctly`() {
+    fun `getMealsByDate(date) should sort meals by id correctly`() {
         // Given
         val date = "2023-10-01"
         val utilDate = getDateFromString(date).getOrThrow()
@@ -160,7 +160,7 @@ class GetMealsByDateUseCaseTest {
 
 
     @Test
-    fun `should handle timezone differences in submitted dates`() {
+    fun `getMealsByDate(date) should handle timezone differences in submitted dates`() {
         // Given
         val date = "2023-10-01"
         val utilDate = getDateFromString(date).getOrThrow()
