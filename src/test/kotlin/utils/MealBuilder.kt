@@ -16,13 +16,7 @@ fun buildMeal(
     description: String? = null,
     ingredients: List<String>? = null,
     numberOfIngredients: Int? = null,
-    calories: Float? = null,
-    totalFat: Float? = null,
-    sugar: Float? = null,
-    sodium: Float? = null,
-    protein: Float? = null,
-    saturatedFat: Float? = null,
-    carbohydrates: Float? = null
+    nutrition: Nutrition = buildNutrition()
 ): Meal {
 
     return Meal(
@@ -32,19 +26,31 @@ fun buildMeal(
         contributorId = contributorId,
         submitted = submitted,
         tags = tags,
-        nutrition = Nutrition(
-            calories = calories,
-            totalFat = totalFat,
-            sugar = sugar,
-            sodium = sodium,
-            protein = protein,
-            saturatedFat = saturatedFat,
-            carbohydrates = carbohydrates
-        ),
+        nutrition = nutrition,
         numberOfSteps = numberOfSteps,
         steps = steps,
         description = description,
         ingredients = ingredients,
         numberOfIngredients = numberOfIngredients
+    )
+}
+
+fun buildNutrition(
+    calories: Float? = null,
+    totalFat: Float? = null,
+    sugar: Float? = null,
+    sodium: Float? = null,
+    protein: Float? = null,
+    saturatedFat: Float? = null,
+    carbohydrates: Float? = null
+): Nutrition {
+    return Nutrition(
+        calories = calories,
+        totalFat = totalFat,
+        sugar = sugar,
+        sodium = sodium,
+        protein = protein,
+        saturatedFat = saturatedFat,
+        carbohydrates = carbohydrates
     )
 }
