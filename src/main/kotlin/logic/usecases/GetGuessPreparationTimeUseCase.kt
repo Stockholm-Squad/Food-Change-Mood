@@ -7,12 +7,12 @@ class GetGuessPreparationTimeUseCase {
     fun guessGame(
         userGuess: Int,
         attempts: Int,
-        preparationTime:Int
+        preparationTime:Int?
     ): Result<GuessPreparationTimeState> {
         return when {
             userGuess == preparationTime -> Result.success(GuessPreparationTimeState.CORRECT)
             attempts >= MAX_ATTEMPT -> Result.success(GuessPreparationTimeState.FAILED)
-            userGuess < preparationTime -> Result.success(GuessPreparationTimeState.TOO_LOW)
+            userGuess < preparationTime!! -> Result.success(GuessPreparationTimeState.TOO_LOW)
             else -> Result.success(GuessPreparationTimeState.TOO_HIGH)
         }
     }
