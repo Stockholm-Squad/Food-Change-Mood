@@ -1,57 +1,57 @@
 package org.example.presentation.features
 
 import model.Meal
+import org.example.input_output.input.InputReader
+import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetMealsForGymHelperUseCase
 import org.example.utils.Constants
 
 class GymHelperUI(
-    private val getMealsForGymHelperUseCase: GetMealsForGymHelperUseCase?
+    private val getMealsForGymHelperUseCase: GetMealsForGymHelperUseCase,
+    private val floatReader: InputReader<Float>,
+    private val printer: OutputPrinter,
 ) {
 
     fun useGymHelper() {
         this.getDesiredCalories()?.let { desiredCalories ->
             this@GymHelperUI.getDesiredProteins()?.let { desiredProteins ->
-                getMealsForGymHelperUseCase?.getGymHelperMeals(
+                getMealsForGymHelperUseCase.getGymHelperMeals(
                     desiredCalories = desiredCalories,
                     desiredProteins = desiredProteins
-                )?.fold(
+                ).fold(
                     onSuccess = { gymHelperMeals ->
                         this@GymHelperUI.handleSuccess(gymHelperMeals)
                     },
                     onFailure = { exception ->
                         this@GymHelperUI.handleFailure(exception)
                     }
-                ) ?: handleUnExpectedError()
+                )
             } ?: showInvalidInput()
         } ?: showInvalidInput()
     }
 
     private fun getDesiredProteins(): Float? {
-        print("🔥 Enter desired proteins: ")
-        return readlnOrNull()?.toFloatOrNull()
+        printer.printLine("🔥 Enter desired proteins: ")
+        return floatReader.read()
     }
 
     private fun getDesiredCalories(): Float? {
-        print("🔥 Enter desired calories: ")
-        return readlnOrNull()?.toFloatOrNull()
+        printer.printLine("🔥 Enter desired calories: ")
+        return floatReader.read()
     }
 
     private fun handleFailure(exception: Throwable) {
-        println(exception.message)
+        printer.printLine(exception.message)
     }
 
     private fun handleSuccess(gymHelperMeals: List<Meal>) {
         gymHelperMeals.forEach {
-            println(it)
+            printer.printLine(it.toString())
         }
     }
 
-    private fun handleUnExpectedError() {
-        this@GymHelperUI.handleFailure(Throwable("UnExpected Error ${GymHelperUI::class.simpleName}"))
-    }
-
     private fun showInvalidInput() {
-        println(Constants.INVALID_INPUT)
+        printer.printLine(Constants.INVALID_INPUT)
     }
 
 }
