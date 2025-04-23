@@ -43,7 +43,7 @@ class SearchByAddDateUITest {
     }
 
     @Test
-    fun `should handle valid date input and display meals`() {
+    fun `searchMealsByDate() should handle valid date input and display meals`() {
         // Given
         val date = "2023-10-01"
         val meal1 = buildMeal(id = 1, name = "Spaghetti Carbonara")
@@ -66,7 +66,7 @@ class SearchByAddDateUITest {
     }
 
     @Test
-    fun `should handle invalid date input gracefully`() {
+    fun `searchMealsByDate() should handle invalid date input gracefully`() {
         // Given
         val invalidDate = "invalid-date"
         every { dateValidator.isValidDate(invalidDate) } returns false
@@ -85,7 +85,7 @@ class SearchByAddDateUITest {
     }
 
     @Test
-    fun `should exit gracefully when user enters 0`() {
+    fun `searchMealsByDate() should exit gracefully when user enters 0`() {
         // Given
         val userInput = "0\n"
         System.setIn(ByteArrayInputStream(userInput.toByteArray()))
@@ -100,7 +100,7 @@ class SearchByAddDateUITest {
     }
 
     @Test
-    fun `should handle empty repository response gracefully`() {
+    fun `searchMealsByDate() should handle empty repository response gracefully`() {
         // Given
         val date = "2023-10-01"
         every { dateValidator.isValidDate(date) } returns true
@@ -121,7 +121,7 @@ class SearchByAddDateUITest {
     }
 
     @Test
-    fun `should handle repository failure gracefully`() {
+    fun `searchMealsByDate() should handle repository failure gracefully`() {
         // Given
         val date = "2023-10-01"
         val exception = Exception("Database error")
@@ -143,7 +143,7 @@ class SearchByAddDateUITest {
     }
 
     @Test
-    fun `should handle user interaction in handleUserInteraction`() {
+    fun `searchMealsByDate() should handle user interaction in handleUserInteraction`() {
         // Given
         val date = "2023-10-01"
         val meal1 = buildMeal(id = 1, name = "Spaghetti Carbonara")
@@ -167,7 +167,7 @@ class SearchByAddDateUITest {
     }
 
     @Test
-    fun `should handle invalid meal ID input gracefully`() {
+    fun `searchMealsByDate() should handle invalid meal ID input gracefully`() {
         // Given
         val date = "2023-10-01"
         val meal1 = buildMeal(id = 1, name = "Spaghetti Carbonara")
