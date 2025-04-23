@@ -18,15 +18,15 @@ class GymHelperUITest {
 
     private lateinit var gymHelperUI: GymHelperUI
     private lateinit var getMealsForGymHelperUseCase: GetMealsForGymHelperUseCase
-    private lateinit var floatReader: InputReader<Float>
+    private lateinit var reader: InputReader
     private lateinit var printer: OutputPrinter
 
     @BeforeEach
     fun setUp() {
-        floatReader = mockk(relaxed = true)
+        reader = mockk(relaxed = true)
         printer = mockk(relaxed = true)
         getMealsForGymHelperUseCase = mockk(relaxed = true)
-        gymHelperUI = GymHelperUI(getMealsForGymHelperUseCase, floatReader, printer)
+        gymHelperUI = GymHelperUI(getMealsForGymHelperUseCase, reader, printer)
 
     }
 
@@ -35,7 +35,7 @@ class GymHelperUITest {
         //Given
         val calories = 10F
         val proteins = 40F
-        every { floatReader.read() } returns calories andThen proteins
+        every { reader.readFloatOrNull() } returns calories andThen proteins
         every {
             getMealsForGymHelperUseCase.getGymHelperMeals(
                 calories, proteins, 20F
@@ -60,7 +60,7 @@ class GymHelperUITest {
         //Given
         val calories = 10F
         val proteins = 40F
-        every { floatReader.read() } returns calories andThen proteins
+        every { reader.readFloatOrNull() } returns calories andThen proteins
         every {
             getMealsForGymHelperUseCase.getGymHelperMeals(
                 calories, proteins, 20F
@@ -81,7 +81,7 @@ class GymHelperUITest {
         //Given
         val calories = null
         val proteins = 40F
-        every { floatReader.read() } returns calories andThen proteins
+        every { reader.readFloatOrNull() } returns calories andThen proteins
 
         //When
         gymHelperUI.useGymHelper()
@@ -95,7 +95,7 @@ class GymHelperUITest {
         //Given
         val calories = 10F
         val proteins = null
-        every { floatReader.read() } returns calories andThen proteins
+        every { reader.readFloatOrNull() } returns calories andThen proteins
 
         //When
         gymHelperUI.useGymHelper()
