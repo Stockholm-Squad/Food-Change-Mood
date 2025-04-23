@@ -4,7 +4,6 @@ import com.google.common.truth.Truth
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import logic.usecases.utils.MealCreationHandler
 import org.example.logic.repository.MealsRepository
 import org.example.logic.usecases.GetMealsForGymHelperUseCase
 import org.example.model.FoodChangeMoodExceptions
@@ -14,17 +13,17 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import utils.buildMeal
+import utils.buildNutrition
 
 class GetMealsForGymHelperUseCaseTest {
     private lateinit var repository: MealsRepository
     private lateinit var getMealsForGymHelperUseCase: GetMealsForGymHelperUseCase
-    private lateinit var mealCreationHandler: MealCreationHandler
 
     @BeforeEach
     fun setUp() {
         repository = mockk(relaxed = true)
         getMealsForGymHelperUseCase = GetMealsForGymHelperUseCase(repository)
-        mealCreationHandler = MealCreationHandler()
     }
 
     @AfterEach
@@ -37,9 +36,9 @@ class GetMealsForGymHelperUseCaseTest {
         //Given
         every { repository.getAllMeals() } returns Result.success(
             listOf(
-                mealCreationHandler.getGymHelperMeal("meal1", 20F, 50F),
-                mealCreationHandler.getGymHelperMeal("meal2", 9F, 45F),
-                mealCreationHandler.getGymHelperMeal("meal3", 10F, 45F),
+                buildMeal(1, nutrition = buildNutrition(calories = 20F, protein = 50F)),
+                buildMeal(2, nutrition = buildNutrition(calories = 9F, protein = 45F)),
+                buildMeal(3, nutrition = buildNutrition(calories = 10F, protein = 45F)),
             )
         )
         val desiredCalories = 10F
@@ -56,8 +55,8 @@ class GetMealsForGymHelperUseCaseTest {
         //Then
         Truth.assertThat(gymHelperMeals.getOrThrow()).isEqualTo(
             listOf(
-                mealCreationHandler.getGymHelperMeal("meal2", 9F, 45F),
-                mealCreationHandler.getGymHelperMeal("meal3", 10F, 45F),
+                buildMeal(2, nutrition = buildNutrition(calories = 9F, protein = 45F)),
+                buildMeal(3, nutrition = buildNutrition(calories = 10F, protein = 45F)),
             )
         )
     }
@@ -67,9 +66,9 @@ class GetMealsForGymHelperUseCaseTest {
         //Given
         every { repository.getAllMeals() } returns Result.success(
             listOf(
-                mealCreationHandler.getGymHelperMeal("meal1", 20F, 50F),
-                mealCreationHandler.getGymHelperMeal("meal2", 20F, 50F),
-                mealCreationHandler.getGymHelperMeal("meal3", 20F, 50F),
+                buildMeal(1, nutrition = buildNutrition(calories = 20F, protein = 50F)),
+                buildMeal(2, nutrition = buildNutrition(calories = 20F, protein = 50F)),
+                buildMeal(3, nutrition = buildNutrition(calories = 20F, protein = 50F)),
             )
         )
         val desiredCalories = 10F
@@ -110,9 +109,9 @@ class GetMealsForGymHelperUseCaseTest {
         //Given
         every { repository.getAllMeals() } returns Result.success(
             listOf(
-                mealCreationHandler.getGymHelperMealWithNullNutrition("meal1"),
-                mealCreationHandler.getGymHelperMealWithNullNutrition("meal2"),
-                mealCreationHandler.getGymHelperMealWithNullNutrition("meal3"),
+                buildMeal(1, nutrition = null),
+                buildMeal(2, nutrition = null),
+                buildMeal(3, nutrition = null),
             )
         )
 
@@ -134,8 +133,8 @@ class GetMealsForGymHelperUseCaseTest {
         //Given
         every { repository.getAllMeals() } returns Result.success(
             listOf(
-                mealCreationHandler.getGymHelperMeal("meal1", null, 40F),
-                mealCreationHandler.getGymHelperMeal("meal2", 10F, null),
+                buildMeal(1, nutrition = buildNutrition(calories = null, protein = 40F)),
+                buildMeal(2, nutrition = buildNutrition(calories = 10F, protein = null)),
             )
         )
 
@@ -164,9 +163,9 @@ class GetMealsForGymHelperUseCaseTest {
         //Given
         every { repository.getAllMeals() } returns Result.success(
             listOf(
-                mealCreationHandler.getGymHelperMeal("meal", 10F, 20F),
-                mealCreationHandler.getGymHelperMeal("meal", 20F, 40F),
-                mealCreationHandler.getGymHelperMeal("meal", 40F, 100F),
+                buildMeal(2, nutrition = buildNutrition(calories = 10F, protein = 20F)),
+                buildMeal(2, nutrition = buildNutrition(calories = 20F, protein = 40F)),
+                buildMeal(2, nutrition = buildNutrition(calories = 40F, protein = 100F)),
             )
         )
         val approximateAmount = 20F
@@ -181,7 +180,7 @@ class GetMealsForGymHelperUseCaseTest {
         //Then
         Truth.assertThat(gymHelperMeals.getOrThrow()).isEqualTo(
             listOf(
-                mealCreationHandler.getGymHelperMeal("meal", calories, proteins),
+                buildMeal(2, nutrition = buildNutrition(calories = calories, protein = proteins)),
             )
         )
     }

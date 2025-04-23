@@ -3,7 +3,6 @@ package presentation.features
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import logic.usecases.utils.MealCreationHandler
 import org.example.input_output.input.InputReader
 import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetMealsForGymHelperUseCase
@@ -12,12 +11,13 @@ import org.example.presentation.features.GymHelperUI
 import org.example.utils.Constants
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import utils.buildMeal
+import utils.buildNutrition
 
 class GymHelperUITest {
 
     private lateinit var gymHelperUI: GymHelperUI
     private lateinit var getMealsForGymHelperUseCase: GetMealsForGymHelperUseCase
-    private lateinit var mealCreationHandler: MealCreationHandler
     private lateinit var floatReader: InputReader<Float>
     private lateinit var printer: OutputPrinter
 
@@ -27,7 +27,6 @@ class GymHelperUITest {
         printer = mockk(relaxed = true)
         getMealsForGymHelperUseCase = mockk(relaxed = true)
         gymHelperUI = GymHelperUI(getMealsForGymHelperUseCase, floatReader, printer)
-        mealCreationHandler = MealCreationHandler()
 
     }
 
@@ -43,9 +42,9 @@ class GymHelperUITest {
             )
         } returns Result.success(
             listOf(
-                mealCreationHandler.getGymHelperMeal("meal1", 20F, 50F),
-                mealCreationHandler.getGymHelperMeal("meal2", 9F, 45F),
-                mealCreationHandler.getGymHelperMeal("meal3", 10F, 45F),
+                buildMeal(1, nutrition = buildNutrition(calories = 20F, protein = 50F)),
+                buildMeal(2, nutrition = buildNutrition(calories = 9F, protein = 45F)),
+                buildMeal(3, nutrition = buildNutrition(calories = 10F, protein = 45F)),
             )
         )
 
@@ -53,7 +52,7 @@ class GymHelperUITest {
         gymHelperUI.useGymHelper()
 
         //Then
-        verify { printer.printLine(mealCreationHandler.getGymHelperMeal("meal2", 9F, 45F).toString()) }
+        verify { printer.printLine(buildMeal(2, nutrition = buildNutrition(calories = 9F, protein = 45F)).toString()) }
     }
 
     @Test
