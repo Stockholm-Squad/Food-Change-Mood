@@ -7,6 +7,8 @@ import org.example.utils.Constants
 class GetPotatoMealsUseCase(private val mealsRepository: MealsRepository) {
 
     fun getRandomPotatoMeals(count: Int): Result<List<Meal>> {
+
+        if (count <= 0) return Result.success(emptyList())
         return mealsRepository.getAllMeals().fold(
             onSuccess = { allMeals ->
                 allMeals
