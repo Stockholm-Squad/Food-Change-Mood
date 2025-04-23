@@ -4,7 +4,7 @@ import model.Meal
 import model.Nutrition
 
 class MealCreationHandler {
-    fun getGymHelperMeal(name: String, calories: Float, proteins: Float): Meal {
+    fun getGymHelperMeal(name: String, calories: Float?, proteins: Float?): Meal {
         return Meal(
             name = name,
             id = 1,
@@ -21,6 +21,23 @@ class MealCreationHandler {
                 saturatedFat = 40F,
                 carbohydrates = 40F
             ),
+            numberOfSteps = 4,
+            steps = null,
+            description = "yuui",
+            ingredients = null,
+            numberOfIngredients = 5
+        )
+    }
+
+    fun getGymHelperMealWithNullNutrition(name: String): Meal {
+        return Meal(
+            name = name,
+            id = 1,
+            minutes = 30,
+            contributorId = 2,
+            submitted = null,
+            tags = null,
+            nutrition = null,
             numberOfSteps = 4,
             steps = null,
             description = "yuui",
