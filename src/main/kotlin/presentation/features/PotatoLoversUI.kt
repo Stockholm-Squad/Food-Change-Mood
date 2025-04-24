@@ -8,7 +8,7 @@ import org.example.utils.OutputPrinter
 class PotatoLoversUI(
     private val getPotatoMealsUseCase: GetPotatoMealsUseCase,
     private val outputPrinter: OutputPrinter,
-    private val inputReader: InputReader? = null
+    private val inputReader: InputReader
 ) {
 
     fun showPotatoLoversUI(count: Int = 10) {
@@ -45,14 +45,10 @@ class PotatoLoversUI(
         do {
             outputPrinter.printLine("\nWould you like to view the details of any of these meals? (Enter the number or 'n' to skip):")
 
-            val input = try {
-                inputReader?.readLineOrNull()?.trim()?.lowercase()
-            } catch (e: Exception) {
-                outputPrinter.printLine("Error reading input: ${e.message}")
-                return
-            }
+            val input = inputReader.readLineOrNull()!!.trim().lowercase()
 
-            if (input == null || input == "n") {
+
+            if ( input == "n") {
                 outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋")
                 return
             }
@@ -89,12 +85,8 @@ class PotatoLoversUI(
 
     fun askIfWantsMore(onYes: () -> Unit = { showPotatoLoversUI() }) {
         outputPrinter.printLine("Would you like to see more? (y/n)")
-        val input = try {
-            inputReader?.readLineOrNull()
-        } catch (e: Exception) {
-            outputPrinter.printLine("❌ Error: ${e.message}")
-            return
-        }
+        val input = inputReader.readLineOrNull()
+
 
         val normalizedAnswer = normalizeInput(input)
 
