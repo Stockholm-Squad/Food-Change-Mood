@@ -10,6 +10,8 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import utils.buildMeal
 
 class GetEasyFoodSuggestionsUseCaseTest {
@@ -92,7 +94,7 @@ class GetEasyFoodSuggestionsUseCaseTest {
     }
 
     @Test
-    fun `getEasyFood() should  return only meals that contains non nullable fields when meal have nullable fields`() {
+    fun `getEasyFood() should return only meals that contains value fields when meal have nullable fields`() {
         // Given
         val mealWithNullFields = buildMeal(
             1,
@@ -113,5 +115,59 @@ class GetEasyFoodSuggestionsUseCaseTest {
         Truth.assertThat(result.getOrThrow()).containsExactly(easyMeal)
     }
 
+    @ParameterizedTest
+    @CsvSource(
+        "20, 4, 5",    // All values within limits
+        "30, 5, 6",    // All values at max limits
+        "15, 3, 4"     // All values well within limits
+    )
+    fun `getEasyFood() should return meal when it meets easy criteria`(
+        minutes: Int,
+        ingredients: Int,
+        steps: Int
+    ) {
+        // Given
+        val testMeal = buildMeal(
+            1,
+            minutes = minutes,
+            numberOfIngredients = ingredients,
+            numberOfSteps = steps
+        )
 
+        every { repository.getAllMeals() } returns Result.success(listOf(testMeal))
+
+        // When
+        val result = getEasyFoodSuggestionsUseCase.getEasyFood()
+
+        // Then
+        Truth.assertThat(result.getOrThrow()).isEqualTo(listOf(testMeal))
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        "31, 5, 6",    // Minutes over limit
+        "30, 6, 6",    // Ingredients over limit
+        "30, 5, 7",    // Steps over limit
+    )
+    fun `getEasyFood() should not return meal when it fails easy criteria`(
+        minutes: Int?,
+        ingredients: Int?,
+        steps: Int?
+    ) {
+        // Given
+        val testMeal = buildMeal(
+            1,
+            minutes = minutes,
+            numberOfIngredients = ingredients,
+            numberOfSteps = steps
+        )
+
+        every { repository.getAllMeals() } returns Result.success(listOf(testMeal))
+
+        // When
+        val result = getEasyFoodSuggestionsUseCase.getEasyFood()
+
+        // Then
+        assertThrows<NoSuchElementException> { result.getOrThrow() }
+    }
 }
