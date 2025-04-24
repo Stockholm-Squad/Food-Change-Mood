@@ -17,15 +17,15 @@ class SearchByAddDateUI(
     fun searchMealsByDate() {
         while (true) {
             printer.printLine("📅 Enter date (YYYY-MM-DD): ex: 2002-02-02\n or 0 to exit")
-            val date = reader.readLine()
-
-            if (date == "0") {
-                return
-            } else if (dateValidator.isValidDate(date)) {
-                printer.printLine("Loading...")
-                searchFood(date)
-            } else {
-                printer.printLine("Enter a valid Date or zero => 0")
+            reader.readLine().also {
+                when{
+                    it == "0" -> return
+                    dateValidator.isValidDate(it) -> {
+                        printer.printLine("Loading...")
+                        searchFood(it)
+                    }
+                    else -> printer.printLine("Enter a valid Date or zero => 0")
+                }
             }
         }
     }
@@ -61,11 +61,17 @@ class SearchByAddDateUI(
             printer.printLine("meal id -> view details")
             val input = reader.readLine()
 
-            when (val mealId = input.toIntOrNull()) {
-                null -> printer.printLine("Enter a valid ID or -1")
-                -1 -> break
-                else -> meals.viewMealInListDetails(mealId, printer)
-            }
+            if (viewMealDetails(input, meals)) break
+
         }
+    }
+
+    private fun viewMealDetails(input: String, meals: List<Meal>): Boolean {
+        when (val mealId = input.toIntOrNull()) {
+            null -> printer.printLine("Enter a valid ID or -1")
+            -1 -> return true
+            else -> meals.viewMealInListDetails(mealId, printer)
+        }
+        return false
     }
 }

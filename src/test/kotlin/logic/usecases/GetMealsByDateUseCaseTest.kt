@@ -7,6 +7,7 @@ import io.mockk.verify
 import org.example.logic.repository.MealsRepository
 import org.example.logic.usecases.GetMealsByDateUseCase
 import org.example.utils.getDateFromString
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -23,6 +24,11 @@ class GetMealsByDateUseCaseTest {
         getMealsByDateUseCase = GetMealsByDateUseCase(mealsRepository)
     }
 
+    @AfterEach
+    fun teardown(){
+        verify(exactly = 1) { mealsRepository.getAllMeals() }
+    }
+
     @Test
     fun `getMealsByDate should return meals filtered by date when given valid date`() {
         // Given
@@ -37,7 +43,6 @@ class GetMealsByDateUseCaseTest {
 
         // Then
         assertThat(result.getOrThrow()).containsExactly(meal1)
-        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
     @Test
@@ -52,7 +57,6 @@ class GetMealsByDateUseCaseTest {
 
         // Then
         assertThat(result.getOrThrow()).isEmpty()
-        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
     @Test
@@ -67,7 +71,6 @@ class GetMealsByDateUseCaseTest {
 
         // Then
         assertThat(result.exceptionOrNull()).isEqualTo(exception)
-        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
     @Test
@@ -81,7 +84,6 @@ class GetMealsByDateUseCaseTest {
 
         // Then
         assertThat(result.getOrThrow()).isEmpty()
-        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
     @Test
@@ -96,7 +98,6 @@ class GetMealsByDateUseCaseTest {
 
         // Then
         assertThat(result.getOrThrow()).isEmpty()
-        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
     @Test
@@ -112,7 +113,6 @@ class GetMealsByDateUseCaseTest {
 
         // Then
         assertThat(result.getOrThrow()).containsExactly(validMeal)
-        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
     @Test
@@ -130,7 +130,6 @@ class GetMealsByDateUseCaseTest {
 
         // Then
         assertThat(result.getOrThrow()).containsExactly(meal1, meal3, meal2).inOrder()
-        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
     @Test
@@ -146,6 +145,5 @@ class GetMealsByDateUseCaseTest {
         // Then
         val thrown = assertThrows<Throwable> { result.getOrThrow() }
         assertThat(thrown).isEqualTo(exception)
-        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 }

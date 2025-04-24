@@ -6,6 +6,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.example.logic.repository.MealsRepository
 import org.example.logic.usecases.GetItalianMealsForLargeGroupUseCase
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -20,6 +21,11 @@ class GetItalianMealsForLargeGroupUseCaseTest {
     fun setUp() {
         mealsRepository = mockk(relaxed = true)
         getItalianMealsForLargeGroupUseCase = GetItalianMealsForLargeGroupUseCase(mealsRepository)
+    }
+
+    @AfterEach
+    fun tearDown() {
+        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
     @Test
@@ -37,7 +43,6 @@ class GetItalianMealsForLargeGroupUseCaseTest {
 
         // Then
         assertThat(result.getOrThrow()).containsExactly(meal1)
-        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
     @Test
@@ -54,7 +59,6 @@ class GetItalianMealsForLargeGroupUseCaseTest {
 
         // Then
         assertThat(result.getOrThrow()).isEmpty()
-        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
     @Test
@@ -71,7 +75,6 @@ class GetItalianMealsForLargeGroupUseCaseTest {
 
         // Then
         assertThat(result.getOrThrow()).containsExactly(meal2)
-        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
     @Test
@@ -89,7 +92,6 @@ class GetItalianMealsForLargeGroupUseCaseTest {
 
         // Then
         assertThat(result.getOrThrow()).containsExactly(meal2, meal3, meal1).inOrder()
-        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
     @Test
@@ -102,7 +104,6 @@ class GetItalianMealsForLargeGroupUseCaseTest {
 
         // Then
         assertThat(result.getOrThrow()).isEmpty()
-        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
     @Test
@@ -116,7 +117,6 @@ class GetItalianMealsForLargeGroupUseCaseTest {
 
         // Then
         assertThat(result.exceptionOrNull()).isEqualTo(exception)
-        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
     @Test
@@ -130,6 +130,5 @@ class GetItalianMealsForLargeGroupUseCaseTest {
 
         // Then
         assertThrows<Throwable> { result.getOrThrow() }
-        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 }
