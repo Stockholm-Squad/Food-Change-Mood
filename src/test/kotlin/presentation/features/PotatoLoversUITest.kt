@@ -3,7 +3,7 @@ package presentation.features
 import com.google.common.truth.Truth.assertThat
 import io.mockk.*
 import logic.usecases.buildMeal
-import logic.usecases.createMeal
+import Fake.createMeal
 import model.Meal
 import model.Nutrition
 import org.example.logic.usecases.GetPotatoMealsUseCase
