@@ -1,8 +1,10 @@
 package presentation.features
 
+import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import junit.framework.TestCase.assertEquals
 import logic.usecases.createMeal
 import org.example.logic.usecases.GetPotatoMealsUseCase
 import org.example.presentation.features.PotatoLoversUI
@@ -57,6 +59,35 @@ class PotatoLoversUITest {
    })
    outputHandler.showMessage("Okay! Enjoy your potato meals! 🥔😋")
   }
+ }
+
+ @Test
+ fun `handleSuccess should show potato meals when meals are found`() {
+  // Given
+  val meals = listOf(
+   createMeal(1, "Mashed Potatoes", listOf("Potato", "Butter")),
+   createMeal(2, "Potato Salad", listOf("Potato", "Onion"))
+  )
+
+  // When
+  potatoMealUi.handleSuccess(meals)
+
+  // Then
+  verify { outputHandler.showMessage("🥔 I ❤️ Potato Meals:") }
+  verify { outputHandler.showMessage("🍽️ Meal #1: Mashed Potatoes") }
+  verify { outputHandler.showMessage("🍽️ Meal #2: Potato Salad") }
+ }
+
+ @Test
+ fun `handleFailure should show error message when an exception occurs`() {
+  // Given
+  val exception = RuntimeException("Something went wrong")
+
+  // When
+  potatoMealUi.handleFailure(exception)
+
+  // Then
+  verify { outputHandler.showMessage("❌ Error: ${exception.message}") }
  }
 
  @Test
@@ -227,6 +258,36 @@ class PotatoLoversUITest {
 
   // Then
   verify { outputHandler.showMessage("❌ Error: Input error") }
+ }
+
+ @Test
+ fun `askForMoreMeals should treat mixed case input with spaces as yes`() {
+
+  // Given
+  val meals = listOf(createMeal(1, "Roasted Potatoes", listOf("Potato")))
+  every { potatoMeals.getRandomPotatoMeals(10) } returnsMany listOf(
+   Result.success(meals),
+   Result.success(emptyList())
+  )
+  every { inputHandler.readInput() } returnsMany listOf("  Y   ", "n")
+
+  // When
+  potatoMealUi.showPotatoLoversUI()
+
+  // Then
+  verify(exactly = 2) { potatoMeals.getRandomPotatoMeals(10) }
+ }
+
+ @Test
+ fun `normalizeInput trims and lowercases correctly`() {
+  val result = PotatoLoversUI.normalizeInput("  Y ")
+  assertThat(result).isEqualTo("y")
+ }
+
+ @Test
+ fun `normalizeInput returns empty for null input`() {
+  val result = PotatoLoversUI.normalizeInput(null)
+  assertThat(result).isEmpty()
  }
 
 
