@@ -7,5 +7,5 @@ import java.io.File
 
 val appModule = module {
     single { File(Constants.MEAL_CSV_FILE) }
-    includes(dataModule, logicModule, uiModule, utilsModule)
+    includes(dataModule, logicModule, uiModule, utilsModule, inputOutputModule)
 }
