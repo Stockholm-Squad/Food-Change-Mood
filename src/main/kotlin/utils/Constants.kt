@@ -1,8 +1,8 @@
 package org.example.utils
 
 object Constants {
-    val COULD_NOT_FIND_DESSERTS = "Couldn't find desserts"
-    val GOODBYE_MESSAGE = "Good Bye"
+    const val COULD_NOT_FIND_DESSERTS = "Couldn't find desserts"
+    const val GOODBYE_MESSAGE = "Good Bye"
     const val MEAL_CSV_FILE = "food.csv"
     const val INVALID_INPUT = "Invalid input"
     const val NO_MEALS_FOR_GYM_HELPER = "No meals match the desired protein and calories!!"
@@ -13,4 +13,6 @@ object Constants {
     const val UNEXPECTED_ERROR = "Unexpected error occurred"
     const val ERROR_FETCHING_MEALS = "Error fetching meals: "
     const val HERE_ARE_THE_MEALS = "Here are the meals"
+    const val ERROR_WHILE_READING_FROM_FILE = "Error while reading from the file!!"
+    const val INSUFFICIANT_DATA_IN_ROW = "Insufficient data in row while parsing!!"
 }

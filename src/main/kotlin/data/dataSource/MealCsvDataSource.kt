@@ -16,21 +16,17 @@ class MealCsvDataSource(
                 }
                 Result.success(meals)
             },
-            onFailure = { exception ->  Result.failure(exception) }
+            onFailure = { exception -> Result.failure(exception) }
         )
     }
 
-    private fun parseLine(line: String) = try {
-        mealCsvParser.parseLine(line).fold(
-            onSuccess = {result -> result},
-            onFailure = {
-                exception ->
+    private fun parseLine(line: String): Meal? {
+        return mealCsvParser.parseLine(line).fold(
+            onSuccess = { result -> result },
+            onFailure = { exception ->
                 exception.printStackTrace()
                 null
             }
         )
-    } catch (e: Exception) {
-        e.printStackTrace()
-        null
     }
 }

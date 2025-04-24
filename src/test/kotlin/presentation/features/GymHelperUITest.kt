@@ -18,15 +18,15 @@ class GymHelperUITest {
 
     private lateinit var gymHelperUI: GymHelperUI
     private lateinit var getMealsForGymHelperUseCase: GetMealsForGymHelperUseCase
-    private lateinit var floatReader: InputReader<Float>
+    private lateinit var reader: InputReader
     private lateinit var printer: OutputPrinter
 
     @BeforeEach
     fun setUp() {
-        floatReader = mockk(relaxed = true)
+        reader = mockk(relaxed = true)
         printer = mockk(relaxed = true)
         getMealsForGymHelperUseCase = mockk(relaxed = true)
-        gymHelperUI = GymHelperUI(getMealsForGymHelperUseCase, floatReader, printer)
+        gymHelperUI = GymHelperUI(getMealsForGymHelperUseCase, reader, printer)
 
     }
 
@@ -35,14 +35,13 @@ class GymHelperUITest {
         //Given
         val calories = 10F
         val proteins = 40F
-        every { floatReader.read() } returns calories andThen proteins
+        every { reader.readFloatOrNull() } returns calories andThen proteins
         every {
             getMealsForGymHelperUseCase.getGymHelperMeals(
                 calories, proteins, 20F
             )
         } returns Result.success(
             listOf(
-                buildMeal(1, nutrition = buildNutrition(calories = 20F, protein = 50F)),
                 buildMeal(2, nutrition = buildNutrition(calories = 9F, protein = 45F)),
                 buildMeal(3, nutrition = buildNutrition(calories = 10F, protein = 45F)),
             )
@@ -52,7 +51,14 @@ class GymHelperUITest {
         gymHelperUI.useGymHelper()
 
         //Then
-        verify { printer.printLine(buildMeal(2, nutrition = buildNutrition(calories = 9F, protein = 45F)).toString()) }
+        verify {
+            printer.printMeals(
+                listOf(
+                    buildMeal(2, nutrition = buildNutrition(calories = 9F, protein = 45F)),
+                    buildMeal(3, nutrition = buildNutrition(calories = 10F, protein = 45F))
+                )
+            )
+        }
     }
 
     @Test
@@ -60,7 +66,7 @@ class GymHelperUITest {
         //Given
         val calories = 10F
         val proteins = 40F
-        every { floatReader.read() } returns calories andThen proteins
+        every { reader.readFloatOrNull() } returns calories andThen proteins
         every {
             getMealsForGymHelperUseCase.getGymHelperMeals(
                 calories, proteins, 20F
@@ -81,7 +87,7 @@ class GymHelperUITest {
         //Given
         val calories = null
         val proteins = 40F
-        every { floatReader.read() } returns calories andThen proteins
+        every { reader.readFloatOrNull() } returns calories andThen proteins
 
         //When
         gymHelperUI.useGymHelper()
@@ -95,7 +101,7 @@ class GymHelperUITest {
         //Given
         val calories = 10F
         val proteins = null
-        every { floatReader.read() } returns calories andThen proteins
+        every { reader.readFloatOrNull() } returns calories andThen proteins
 
         //When
         gymHelperUI.useGymHelper()

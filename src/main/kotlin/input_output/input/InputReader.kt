@@ -1,5 +1,9 @@
 package org.example.input_output.input
 
-interface InputReader<T> {
-    fun read(): T?
+import java.util.Date
+
+interface InputReader {
+    fun readLineOrNull(): String?
+    fun readDateOrNull(): Date?
+    fun readFloatOrNull(): Float?
 }
