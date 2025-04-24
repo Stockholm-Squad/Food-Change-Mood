@@ -21,6 +21,9 @@ class ItalianLargeGroupMealsUI(private val getItalianMealsForLargeGroupUseCase: 
     }
 
     private fun printMealsIdName(mealsList: List<Meal>) {
+        if (mealsList.isEmpty()){
+            println("No meals found.")
+        }
         mealsList.forEach { meal ->
             println("${meal.id} -> ${meal.name}")
         }
