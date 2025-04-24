@@ -20,12 +20,13 @@ class GetSeaFoodByProteinRankUseCase(private val mealsRepository: MealsRepositor
             ) == true &&
             meal.nutrition?.protein != null
         }.sortedWith(
-            compareByDescending<Meal> { it.nutrition?.protein }
+            compareByDescending<Meal> { it.nutrition!!.protein }
                 .thenBy { it.name }
-        ).takeIf { meal -> meal.isNotEmpty() }
-            ?.let { Result.success(it) } ?: Result.failure(FoodChangeMoodExceptions.LogicException.NoMealsFound())
+        ).takeIf { meals -> meals.isNotEmpty() }
+            ?.let { Result.success(it) } ?: Result.failure(FoodChangeMoodExceptions.LogicException.NoSeaFoodMealsFound())
     }
     private fun getFailureResult(throwable: Throwable): Result<List<Meal>>{
         return  Result.failure(exception = throwable)
     }
+
 }

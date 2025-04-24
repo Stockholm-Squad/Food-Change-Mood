@@ -1,4 +1,5 @@
 package presentation.features
+
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -26,25 +27,31 @@ class ProteinSeafoodRankingUITest() {
     fun tearDown() {
         verify(exactly = 1) { getSeaFoodByProteinRankUseCase.getSeaFoodByProteinRank() }
     }
+
     @Test
     fun `proteinSeafoodRanking() should print seafood ranked by protein when received meals`() {
+
         // Given
         val rankedMeals = getSeaFoodMeals()
         every { getSeaFoodByProteinRankUseCase.getSeaFoodByProteinRank() } returns Result.success(rankedMeals)
+
         //When
         seafoodRankingUI.proteinSeafoodRanking()
 
-        rankedMeals.mapIndexed { index, meal ->
-            verify {
+        //Then
+        verify {
+            rankedMeals.mapIndexed { index, meal ->
                 printer.printLine("Rank: ${index + 1} Meal name: ${meal.name} Protein amount : ${meal.nutrition?.protein}")
             }
         }
+
     }
 
     @Test
     fun `proteinSeafoodRanking() should print exception message when received exception`() {
+
         // Given
-        val exception = FoodChangeMoodExceptions.LogicException.NoMealsFound()
+        val exception = FoodChangeMoodExceptions.LogicException.NoSeaFoodMealsFound()
         every { getSeaFoodByProteinRankUseCase.getSeaFoodByProteinRank() } returns Result.failure(exception)
 
         // When
