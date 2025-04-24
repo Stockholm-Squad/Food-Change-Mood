@@ -1,4 +1,4 @@
-package data
+package org.example.data.parser
 
 import model.Meal
 import model.Nutrition
@@ -12,8 +12,9 @@ import java.util.Date
 
 class MealCsvParser(
     private val csvLineFormatter: CsvLineFormatter
-) {
-    fun parseLine(row: String): Result<Meal> {
+): MealParser {
+
+    override fun parseLine(row: String): Result<Meal> {
         return try {
             val mealRow = csvLineFormatter.formatMealLine(row)
             validateMealRow(mealRow = mealRow)
