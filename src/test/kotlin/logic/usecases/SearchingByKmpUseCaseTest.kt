@@ -30,7 +30,7 @@ class SearchingByKmpUseCaseTest {
         "'two 12 inch good and easy pepperoni pizzas', '  pepperoni', true",
         "'bread   butter pickle deviled eggs', 'butter pickle', true",
     )
-    fun `should return true when pattern is found in meal name`(
+    fun `searchByKmp() should return true when pattern is found in meal name`(
         nameMeal: String,
         pattern: String,
         expect: Boolean
@@ -54,7 +54,7 @@ class SearchingByKmpUseCaseTest {
         "'pizza wrap', 'wrap!', false",
         "'pizza wrap', '@', false"
     )
-    fun `should return false for pattern is not found in meal name`(
+    fun `searchByKmp() should return false for pattern is not found in meal name`(
         nameMeal: String,
         pattern: String,
         expected: Boolean

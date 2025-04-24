@@ -26,7 +26,7 @@ class GetMealByNameUseCaseTest {
     }
 
     @Test
-    fun `should return meal when pattern is found in meal name`() {
+    fun `getMealByName() should return meal when pattern is found in meal name`() {
 
         // Given
         val matchingMeal = listOf(
@@ -63,7 +63,7 @@ class GetMealByNameUseCaseTest {
     }
 
     @Test
-    fun `should return failure when no meals match the pattern`() {
+    fun `getMealByName() should return failure when no meals match the pattern`() {
 
         // Given
         val allMeals = listOf(
@@ -89,7 +89,7 @@ class GetMealByNameUseCaseTest {
     }
 
     @Test
-    fun `should return failure when pattern is blank`() {
+    fun `getMealByName() should return failure when pattern is blank`() {
 
         // When
         val result = getMealByNameUseCase.getMealByName("   ")
@@ -103,7 +103,7 @@ class GetMealByNameUseCaseTest {
     }
 
     @Test
-    fun `should return failure when repository fails`() {
+    fun `getMealByName() should return failure when repository fails`() {
 
         // Given
         val pattern = "piz"
