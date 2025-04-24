@@ -20,5 +20,6 @@ sealed class FoodChangeMoodExceptions(message: String) : Throwable(message) {
 
         data class CanNotParseDateFromString(override val message: String = Constants.CAN_NOT_PARSE_DATE_FROM_STRING) :
             LogicException(message)
+        data class NoMealsForSoThinPeopleException(override val message: String = Constants.NO_MEAL_FOR_SO_THIN_PEOPLE) : LogicException(message)
     }
 }

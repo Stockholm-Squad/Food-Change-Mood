@@ -1,42 +1,45 @@
 package org.example.presentation.features
 
 import model.Meal
-import org.example.logic.usecases.GetMealsForSoThinProblemUseCase
+import org.example.input_output.input.InputReader
+import org.example.input_output.output.OutputPrinter
+import org.example.logic.usecases.GetMealForSoThinPeopleUseCase
+import org.example.utils.Constants
 
 
 class SuggestMealForSoThinPeopleUI(
-    private val getMealsForSoThinProblemUseCase: GetMealsForSoThinProblemUseCase,
+    private val getMealForSoThinPeopleUseCase: GetMealForSoThinPeopleUseCase,
+    private val reader: InputReader,
+    private val printer: OutputPrinter,
 ) {
-    fun getMaleWithHighCalorie() {
-        println("-------------------------------------------------------------------------------------------------")
-        println("🔥 Feeling too thin? This meal above 700 calories!")
-        getMealsForSoThinProblemUseCase.suggestRandomMealForSoThinPeople()
+    fun showMealWithHighCalorie() {
+        printer.printLine("-------------------------------------------------------------------------------------------------")
+        printer.printLine("🔥 Feeling too thin? This meal above 700 calories!")
+        getMealForSoThinPeopleUseCase.suggestRandomMealForSoThinPeople()
             .fold(
                 onSuccess = { meal ->
-                    println("------------------------------------------------------------------------------------------------")
-                    println("Name: " + meal.name)
-                    println("Description: " + meal.description)
-                    println("--------------------------------------------------------------------------------------------------")
-                    println("Do you like it? (yes/no) 😊")
-                    when (readlnOrNull()?.trim()?.lowercase()) {
-                        "no" -> getMaleWithHighCalorie()
-                        "yes" -> displayFullDetails(meal)
-                        else -> println("Invalid input! Expected yes or no.")
+                    printer.printLine("------------------------------------------------------------------------------------------------")
+                    printer.printLine("Name: " + meal.name)
+                    printer.printLine("Description: " + meal.description)
+                    printer.printLine("--------------------------------------------------------------------------------------------------")
+                    printer.printLine("Do you like it? (yes/no) 😊")
+                    when (reader.readStringOrNull()?.lowercase()?.trim()) {
+                        "no" -> showMealWithHighCalorie()
+                        "yes" -> showMealDetails(meal)
+                        else -> printer.printLine(Constants.INVALID_INPUT)
                     }
                 },
-                onFailure = { exception ->
-                    println(exception)
-                    null
-                }
+                onFailure =::handleFailure
             )
-
     }
-
-    private fun displayFullDetails(meal: Meal) {
-        println("Meal Name: " + meal.name)
-        println("Meal Description: " + meal.description)
-        println("Meal Preparation Time: " + meal.minutes + " minutes")
-        println("Meal " + meal.nutrition)
+    private fun handleFailure(exception: Throwable){
+        printer.printLine(exception.message)
+    }
+    private fun showMealDetails(meal: Meal) {
+        printer.printLine("Meal Name: " + meal.name)
+        printer.printLine("Meal Description: " + meal.description)
+        printer.printLine("Meal Preparation Time: " + meal.minutes + " minutes")
+        printer.printLine("Meal " + meal.nutrition)
 
     }
 }
