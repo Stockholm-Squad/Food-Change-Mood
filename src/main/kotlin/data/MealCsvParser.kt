@@ -3,6 +3,8 @@ package data
 import model.Meal
 import model.Nutrition
 import org.example.data.utils.CsvLineFormatter
+import org.example.model.FoodChangeMoodExceptions.ValidationException
+import org.example.utils.Constants
 import org.example.utils.MealColumnIndex
 import org.example.utils.NutritionIndex
 import org.example.utils.getDateFromString
@@ -36,8 +38,8 @@ class MealCsvParser(
     }
 
     private fun validateMealRow(mealRow: List<String>): Result<Unit> {
-        if (mealRow.size < MealColumnIndex.entries.size) {
-            return Result.failure(Throwable("Insufficient data in row: $mealRow"))
+        if (mealRow.isEmpty() || mealRow.size < MealColumnIndex.entries.size) {
+            return Result.failure(ValidationException.RowParsingException(Constants.INSUFFICIANT_DATA_IN_ROW))
         }
         return Result.success(Unit)
     }
