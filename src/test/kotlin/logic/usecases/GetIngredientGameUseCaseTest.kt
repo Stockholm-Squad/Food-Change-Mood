@@ -1,10 +1,13 @@
 package logic.usecases
 
+import IngredientGameUI
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import model.Meal
 import org.example.logic.repository.MealsRepository
 import org.example.logic.usecases.GetIngredientGameUseCase
+import org.example.logic.usecases.model.IngredientQuestionModel
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import kotlin.test.Test
@@ -33,7 +36,7 @@ class GetIngredientGameUseCaseTest {
     }
 
     @Test
-    fun `startIngredientGame() should return correct Question when have meals`() {
+    fun `startIngredientGame should return valid question with correct ingredient included in options`() {
         // Given
         every { mealRepository.getAllMeals() } returns Result.success(listOf(meal))
 
@@ -41,21 +44,30 @@ class GetIngredientGameUseCaseTest {
         val result = ingredientGameUseCase.startIngredientGame()
 
         // Then
-        assertEquals("Spaghetti", result.mealName)
-        assert(result.options.contains(result.correctIngredient))
-        assert(result.options.size == 3)
+        assertTrue(result.isSuccess, "Expected result to be successful")
+        val question = result.getOrNull()
+        requireNotNull(question)
+        assertEquals("Spaghetti", question.mealName)
+        assertTrue(question.options.contains(question.correctIngredient))
+        assertEquals(3, question.options.size, "There should be exactly 3 options")
     }
 
+
     @Test
-    fun `submitAnswer() should return true when user select correct answer`() {
+    fun `submitAnswer should return true when user selects correct answer`() {
         // Given
         every { mealRepository.getAllMeals() } returns Result.success(listOf(meal))
-        ingredientGameUseCase.startIngredientGame()
-        // when
-        val result = ingredientGameUseCase.submitAnswer("Tomato")
-        // then
-        assert(result)
+        val questionResult = ingredientGameUseCase.startIngredientGame()
+        val question = questionResult.getOrNull()
+        requireNotNull(question)
+
+        // When
+        val result = ingredientGameUseCase.submitAnswer(question.correctIngredient)
+
+        // Then
+        assertTrue(result)
     }
+
 
     @Test
     fun `submitAnswer() should return false when user select incorrect answer`() {
@@ -74,18 +86,20 @@ class GetIngredientGameUseCaseTest {
     fun `startIngredientGame() should fails when repository has no meals`() {
         // given
         every { mealRepository.getAllMeals() } returns Result.success(emptyList())
-
-        // when & then
-        assertFails { ingredientGameUseCase.startIngredientGame() }
+        //when
+        val result = ingredientGameUseCase.startIngredientGame()
+        // then
+        assert(result.isFailure)
     }
 
     @Test
     fun `startIngredientGame() should fails when repository failure`() {
         // given
         every { mealRepository.getAllMeals() } returns Result.failure(Exception("Repository error"))
-
-        // when & then
-        assertFails { ingredientGameUseCase.startIngredientGame() }
+        //when
+        val result = ingredientGameUseCase.startIngredientGame()
+        //  then
+        assert(result.isFailure)
     }
 
     @Test
@@ -105,9 +119,12 @@ class GetIngredientGameUseCaseTest {
         every { mealRepository.getAllMeals() } returns Result.success(listOf(meal, meal2))
 
         // when
-        val question = ingredientGameUseCase.startIngredientGame()
+        val result = ingredientGameUseCase.startIngredientGame()
 
         // then
+        assertTrue(result.isSuccess, "Expected result to be successful")
+        val question = result.getOrNull()
+        requireNotNull(question)
         assert(question.options.contains(question.correctIngredient))
     }
 }

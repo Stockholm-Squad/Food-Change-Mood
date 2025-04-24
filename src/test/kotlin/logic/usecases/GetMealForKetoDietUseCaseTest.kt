@@ -51,8 +51,8 @@ class GetMealForKetoDietUseCaseTest {
 
 
         // then
-        assertNotNull(result)
-        assertEquals(ketoMeal, result)
+        assertNotNull(result.getOrNull())
+        assertEquals(ketoMeal, result.getOrNull())
     }
 
     @Test
@@ -83,7 +83,7 @@ class GetMealForKetoDietUseCaseTest {
         val result = useCase.getKetoMeal()
 
         //then
-        assertNull(result)
+        assertNull(result.getOrNull())
     }
 
     @Test
@@ -115,8 +115,8 @@ class GetMealForKetoDietUseCaseTest {
         val secondResult = useCase.getKetoMeal()
 
         //then
-        assertEquals(ketoMeal, firstResult)
-        assertNull(secondResult)
+        assertEquals(ketoMeal, firstResult.getOrNull())
+        assertNull(secondResult.getOrNull())
     }
 //
     @Test
@@ -127,7 +127,7 @@ class GetMealForKetoDietUseCaseTest {
         //when
         val result = useCase.getKetoMeal()
         //then
-        assertNull(result)
+        assertNull(result.getOrNull())
     }
 
     @Test
@@ -151,6 +151,6 @@ class GetMealForKetoDietUseCaseTest {
         val result = useCase.getKetoMeal()
 
         //then
-        assertNull(result)
+        assertNull(result.getOrNull())
     }
 }

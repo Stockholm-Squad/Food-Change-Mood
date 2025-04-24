@@ -1,11 +1,11 @@
 package org.example.presentation
 
+import IngredientGameUI
 import org.example.presentation.features.ExploreCountryFoodUI
 import org.example.presentation.features.GetHealthyFastFoodMealsUI
 import org.example.presentation.features.GetIraqiMealsUI
 import org.example.presentation.features.GuessGameUI
 import org.example.presentation.features.GymHelperUI
-import org.example.presentation.features.IngredientGameUI
 import org.example.presentation.features.ItalianLargeGroupMealsUI
 import org.example.presentation.features.KetoDietMealUI
 import org.example.presentation.features.PotatoLoversUI

@@ -1,13 +1,13 @@
 package org.example.di
 
 
+import IngredientGameUI
 import org.example.presentation.FoodConsoleUI
 import org.example.presentation.features.ExploreCountryFoodUI
 import org.example.presentation.features.GetHealthyFastFoodMealsUI
 import org.example.presentation.features.GetIraqiMealsUI
 import org.example.presentation.features.GuessGameUI
 import org.example.presentation.features.GymHelperUI
-import org.example.presentation.features.IngredientGameUI
 import org.example.presentation.features.ItalianLargeGroupMealsUI
 import org.example.presentation.features.KetoDietMealUI
 import org.example.presentation.features.PotatoLoversUI
@@ -28,9 +28,9 @@ val uiModule = module {
     factory { GetIraqiMealsUI(get()) }
     factory { GuessGameUI(get(),get()) }
     factory { GymHelperUI(get(), get(), get())}
-    factory { IngredientGameUI(get()) }
+    factory { IngredientGameUI(get(), get(), get()) }
     factory { ItalianLargeGroupMealsUI(get()) }
-    factory { KetoDietMealUI(get()) }
+    factory { KetoDietMealUI(get() , get() , get()) }
     factory { PotatoLoversUI(get()) }
     factory { ProteinSeafoodRankingUI(get()) }
     factory { SearchMealByNameUI(get()) }
