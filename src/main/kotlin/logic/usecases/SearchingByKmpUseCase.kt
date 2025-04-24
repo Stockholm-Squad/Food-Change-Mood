@@ -7,64 +7,63 @@ package org.example.logic.usecases
  */
 class SearchingByKmpUseCase {
 
+
     fun searchByKmp(mealName: String?, pattern: String?): Boolean {
         val normalizedMeal = normalizeString(mealName)
         val normalizedPattern = normalizeString(pattern)
 
-        return if (normalizedPattern.isNotEmpty()) {
-            findPatternInText(normalizedMeal, normalizedPattern, createLpsTable(normalizedPattern))
-        } else {
-            false
+        return normalizedPattern.takeIf { it.isNotEmpty() }
+            ?.let { findPatternInText(normalizedMeal, it, createLpsTable(it)) }
+            ?: false
+    }
+
+    private fun normalizeString(input: String?): String =
+        input?.trim()?.lowercase() ?: ""
+
+
+    private fun findPatternInText(mealName: String, pattern: String, lps: IntArray): Boolean =
+        findPatternRecursive(mealName, pattern, lps, textIndex = 0, patternIndex = 0)
+
+
+    private tailrec fun findPatternRecursive(
+        mealName: String,
+        pattern: String,
+        lps: IntArray,
+        textIndex: Int,
+        patternIndex: Int
+    ): Boolean =
+        when {
+            textIndex >= mealName.length -> false
+            mealName[textIndex] == pattern[patternIndex] -> {
+                val newPatternIndex = patternIndex + 1
+                if (newPatternIndex == pattern.length) true
+                else findPatternRecursive(mealName, pattern, lps, textIndex + 1, newPatternIndex)
+            }
+            patternIndex != 0 -> findPatternRecursive(mealName, pattern, lps, textIndex, lps[patternIndex - 1])
+            else -> findPatternRecursive(mealName, pattern, lps, textIndex + 1, 0)
         }
-    }
 
-    private fun normalizeString(input: String?): String {
-        return input?.trim()?.lowercase() ?: ""
-    }
 
-    private fun findPatternInText(mealName: String, pattern: String, lps: IntArray): Boolean {
-        var i = 0
-        var j = 0
+    private fun createLpsTable(pattern: String): IntArray =
+        buildLpsTableRecursive(pattern, IntArray(pattern.length), prefixLength = 0, currentIndex = 1)
 
-        while (i < mealName.length) {
-            if (mealName[i] == pattern[j]) {
-                i++
-                j++
-                if (j == pattern.length) {
-                    return true
-                }
-            } else {
-                if (j != 0) {
-                    j = lps[j - 1]
-                } else {
-                    i++
-                }
+
+    private tailrec fun buildLpsTableRecursive(
+        pattern: String,
+        lps: IntArray,
+        prefixLength: Int,
+        currentIndex: Int
+    ): IntArray =
+        when {
+            currentIndex >= pattern.length -> lps
+            pattern[currentIndex] == pattern[prefixLength] -> {
+                lps[currentIndex] = prefixLength + 1
+                buildLpsTableRecursive(pattern, lps, prefixLength + 1, currentIndex + 1)
+            }
+            prefixLength != 0 -> buildLpsTableRecursive(pattern, lps, lps[prefixLength - 1], currentIndex)
+            else -> {
+                lps[currentIndex] = 0
+                buildLpsTableRecursive(pattern, lps, 0, currentIndex + 1)
             }
         }
-
-        return false
-    }
-
-    private fun createLpsTable(pattern: String): IntArray {
-        val lps = IntArray(pattern.length)
-        var length = 0
-        var i = 1
-
-        while (i < pattern.length) {
-            if (pattern[i] == pattern[length]) {
-                length++
-                lps[i] = length
-                i++
-            } else {
-                if (length != 0) {
-                    length = lps[length - 1]
-                } else {
-                    lps[i] = 0
-                    i++
-                }
-            }
-        }
-
-        return lps
-    }
 }
