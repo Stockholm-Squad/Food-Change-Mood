@@ -4,7 +4,7 @@ import model.Meal
 import model.Nutrition
 import org.example.logic.repository.MealsRepository
 import org.example.logic.usecases.model.GymHelperModel
-import org.example.utils.Constants
+import org.example.model.FoodChangeMoodExceptions.LogicException.NoMealsForGymHelperException
 import kotlin.math.abs
 
 class GetMealsForGymHelperUseCase(
@@ -42,32 +42,26 @@ class GetMealsForGymHelperUseCase(
         return getGymHelperMeals(allMeals, gymHelperModel)?.let {
             Result.success(it)
         }
-            ?: Result.failure(Throwable(message = Constants.NO_MEALS_FOR_GYM_HELPER))
+            ?: Result.failure(NoMealsForGymHelperException())
     }
 
     private fun getGymHelperMeals(
         allMeals: List<Meal>,
         gymHelperModel: GymHelperModel
     ): List<Meal>? {
-        return allMeals.filter {
-            it.nutrition?.let { nutrition ->
-                isMealApproximatelyMatchesCaloriesAndProteins(
-                    nutrition, gymHelperModel
-                )
-            } ?: false
-        }
-            .takeIf { it.isNotEmpty() }
-            ?.sortedBy {
-                it.nutrition?.let { nutrition ->
-                    isMealApproximatelyMatchesCaloriesAndProteins(
-                        nutrition, gymHelperModel
-                    )
-                }
-            }
+        return allMeals.filter { meal ->
+            meal.nutrition != null && isMealApproximatelyMatchesCaloriesAndProteins(
+                meal.nutrition, gymHelperModel
+            )
+        }.sortedBy { meal ->
+            isMealApproximatelyMatchesCaloriesAndProteins(
+                meal.nutrition!!, gymHelperModel
+            )
+        }.takeIf { it.isNotEmpty() }
     }
 
     private fun handleGetAllMealsFailure(exception: Throwable) =
-        Result.failure<List<Meal>>(Throwable(Constants.NO_MEALS_FOR_GYM_HELPER + "\n" + exception.message))
+        Result.failure<List<Meal>>(exception)
 
     private fun isMealApproximatelyMatchesCaloriesAndProteins(
         nutrition: Nutrition,
