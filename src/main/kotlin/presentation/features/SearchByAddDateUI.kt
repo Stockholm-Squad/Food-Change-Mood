@@ -4,7 +4,9 @@ import model.Meal
 import org.example.input_output.input.InputReader
 import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetMealsByDateUseCase
+import org.example.utils.Constants.ENTER_VALID_DATE
 import org.example.utils.Constants.NO_MEALS_FOUND_WITH_THIS_DATE
+import org.example.utils.Constants.SEARCH_AGAIN_OR_BACK
 import org.example.utils.DateValidator
 import org.example.utils.viewMealInListDetails
 
@@ -18,14 +20,15 @@ class SearchByAddDateUI(
     fun searchMealsByDate() {
         while (true) {
             printer.printLine("📅 Enter date (YYYY-MM-DD): ex: 2002-02-02\n or 0 to exit")
-            reader.readLine().also {
+            reader.readStringOrNull().also {
                 when{
+                    it == null -> printer.printLine(ENTER_VALID_DATE)
                     it == "0" -> return
                     dateValidator.isValidDate(it) -> {
                         printer.printLine("Loading...")
                         searchFood(it)
                     }
-                    else -> printer.printLine("Enter a valid Date or zero => 0")
+                    else -> printer.printLine(ENTER_VALID_DATE)
                 }
             }
         }
@@ -35,7 +38,7 @@ class SearchByAddDateUI(
         getMealsByDateUseCase.getMealsByDate(date).fold(
             onSuccess = { meals -> meals },
             onFailure = { exception ->
-                printer.printLine(("error: " + exception.message) ?: "An error occurred")
+                printer.printLine("error: " + (exception.message ?: "Unknown Error"))
                 emptyList()
             }
         ).also {
@@ -58,17 +61,17 @@ class SearchByAddDateUI(
 
         while (true) {
             printer.printLine("")
-            printer.printLine("-1 -> search again or back")
+            printer.printLine("-1 -> $SEARCH_AGAIN_OR_BACK")
             printer.printLine("meal id -> view details")
-            val input = reader.readLine()
+            val input = reader.readStringOrNull()
 
             if (viewMealDetails(input, meals)) break
 
         }
     }
 
-    private fun viewMealDetails(input: String, meals: List<Meal>): Boolean {
-        when (val mealId = input.toIntOrNull()) {
+    private fun viewMealDetails(input: String?, meals: List<Meal>): Boolean {
+        when (val mealId = input?.toIntOrNull()) {
             null -> printer.printLine("Enter a valid ID or -1")
             -1 -> return true
             else -> meals.viewMealInListDetails(mealId, printer)

@@ -39,7 +39,7 @@ class GetItalianMealsForLargeGroupUseCaseTest {
         every { mealsRepository.getAllMeals() } returns Result.success(allMeals)
 
         // When
-        val result = getItalianMealsForLargeGroupUseCase.getMeals()
+        val result = getItalianMealsForLargeGroupUseCase.getItalianMealsForLargeGroup()
 
         // Then
         assertThat(result.getOrThrow()).containsExactly(meal1)
@@ -55,7 +55,7 @@ class GetItalianMealsForLargeGroupUseCaseTest {
         every { mealsRepository.getAllMeals() } returns Result.success(allMeals)
 
         // When
-        val result = getItalianMealsForLargeGroupUseCase.getMeals()
+        val result = getItalianMealsForLargeGroupUseCase.getItalianMealsForLargeGroup()
 
         // Then
         assertThat(result.getOrThrow()).isEmpty()
@@ -71,7 +71,7 @@ class GetItalianMealsForLargeGroupUseCaseTest {
         every { mealsRepository.getAllMeals() } returns Result.success(allMeals)
 
         // When
-        val result = getItalianMealsForLargeGroupUseCase.getMeals()
+        val result = getItalianMealsForLargeGroupUseCase.getItalianMealsForLargeGroup()
 
         // Then
         assertThat(result.getOrThrow()).containsExactly(meal2)
@@ -88,7 +88,7 @@ class GetItalianMealsForLargeGroupUseCaseTest {
         every { mealsRepository.getAllMeals() } returns Result.success(allMeals)
 
         // When
-        val result = getItalianMealsForLargeGroupUseCase.getMeals()
+        val result = getItalianMealsForLargeGroupUseCase.getItalianMealsForLargeGroup()
 
         // Then
         assertThat(result.getOrThrow()).containsExactly(meal2, meal3, meal1).inOrder()
@@ -100,7 +100,7 @@ class GetItalianMealsForLargeGroupUseCaseTest {
         every { mealsRepository.getAllMeals() } returns Result.success(emptyList())
 
         // When
-        val result = getItalianMealsForLargeGroupUseCase.getMeals()
+        val result = getItalianMealsForLargeGroupUseCase.getItalianMealsForLargeGroup()
 
         // Then
         assertThat(result.getOrThrow()).isEmpty()
@@ -113,20 +113,20 @@ class GetItalianMealsForLargeGroupUseCaseTest {
         every { mealsRepository.getAllMeals() } returns Result.failure(exception)
 
         // When
-        val result = getItalianMealsForLargeGroupUseCase.getMeals()
+        val result = getItalianMealsForLargeGroupUseCase.getItalianMealsForLargeGroup()
 
         // Then
         assertThat(result.exceptionOrNull()).isEqualTo(exception)
     }
 
     @Test
-    fun `getMeals should throw when getOrThrow is called and repository fails`() {
+    fun `getMeals should throw when repository fails`() {
         // Given
         val exception = Exception("Database error")
         every { mealsRepository.getAllMeals() } returns Result.failure(exception)
 
         // When
-        val result = getItalianMealsForLargeGroupUseCase.getMeals()
+        val result = getItalianMealsForLargeGroupUseCase.getItalianMealsForLargeGroup()
 
         // Then
         assertThrows<Throwable> { result.getOrThrow() }

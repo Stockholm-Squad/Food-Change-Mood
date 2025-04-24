@@ -34,8 +34,13 @@ class ItalianLargeGroupMealsUITest {
         // Given
         val meal1 = buildMeal(id = 1, name = "Pasta", tags = listOf("italian", "for-large-groups"))
         val meal2 = buildMeal(id = 2, name = "Pizza", tags = listOf("italian", "for-large-groups"))
-        every { getItalianMealsForLargeGroupUseCase.getMeals() } returns Result.success(listOf(meal1, meal2))
-        every { reader.readLine() } returns "-1"
+        every { getItalianMealsForLargeGroupUseCase.getItalianMealsForLargeGroup() } returns Result.success(
+            listOf(
+                meal1,
+                meal2
+            )
+        )
+        every { reader.readStringOrNull() } returns "-1"
 
         // When
         italianLargeGroupMealsUI.italianLargeGroupMealsUI()
@@ -49,8 +54,8 @@ class ItalianLargeGroupMealsUITest {
     fun `italianLargeGroupMealsUI should display error message when use case fails`() {
         // Given
         val exception = Exception("Database error")
-        every { getItalianMealsForLargeGroupUseCase.getMeals() } returns Result.failure(exception)
-        every { reader.readLine() } returns "-1"
+        every { getItalianMealsForLargeGroupUseCase.getItalianMealsForLargeGroup() } returns Result.failure(exception)
+        every { reader.readStringOrNull() } returns "-1"
 
         // When
         italianLargeGroupMealsUI.italianLargeGroupMealsUI()
@@ -60,12 +65,26 @@ class ItalianLargeGroupMealsUITest {
     }
 
     @Test
+    fun `italianLargeGroupMealsUI should display error message when use case fails with no message`() {
+        // Given
+        val exception = Exception()
+        every { getItalianMealsForLargeGroupUseCase.getItalianMealsForLargeGroup() } returns Result.failure(exception)
+        every { reader.readStringOrNull() } returns "-1"
+
+        // When
+        italianLargeGroupMealsUI.italianLargeGroupMealsUI()
+
+        // Then
+        verify(exactly = 1) { printer.printLine("Error: Unknown Error") }
+    }
+
+    @Test
     fun `italianLargeGroupMealsUI should show meal details when valid meal ID is entered`() {
         // Given
         val meal = buildMeal(id = 1, name = "Lasagna", tags = listOf("italian", "for-large-groups"))
 
-        every { getItalianMealsForLargeGroupUseCase.getMeals() } returns Result.success(listOf(meal))
-        every { reader.readLine() } returnsMany listOf("1", "-1")
+        every { getItalianMealsForLargeGroupUseCase.getItalianMealsForLargeGroup() } returns Result.success(listOf(meal))
+        every { reader.readStringOrNull() } returnsMany listOf("1", "-1")
 
 
         // When
@@ -79,8 +98,8 @@ class ItalianLargeGroupMealsUITest {
     fun `italianLargeGroupMealsUI should show error when invalid meal ID is entered`() {
         // Given
         val meal = buildMeal(id = 1, name = "Risotto", tags = listOf("italian", "for-large-groups"))
-        every { getItalianMealsForLargeGroupUseCase.getMeals() } returns Result.success(listOf(meal))
-        every { reader.readLine() } returnsMany listOf("99", "-1")
+        every { getItalianMealsForLargeGroupUseCase.getItalianMealsForLargeGroup() } returns Result.success(listOf(meal))
+        every { reader.readStringOrNull() } returnsMany listOf("99", "-1")
 
         // When
         italianLargeGroupMealsUI.italianLargeGroupMealsUI()
@@ -93,8 +112,8 @@ class ItalianLargeGroupMealsUITest {
     @Test
     fun `italianLargeGroupMealsUI should display empty message when no meals found`() {
         // Given
-        every { getItalianMealsForLargeGroupUseCase.getMeals() } returns Result.success(emptyList())
-        every { reader.readLine() } returns "-1"
+        every { getItalianMealsForLargeGroupUseCase.getItalianMealsForLargeGroup() } returns Result.success(emptyList())
+        every { reader.readStringOrNull() } returns "-1"
 
         // When
         italianLargeGroupMealsUI.italianLargeGroupMealsUI()
@@ -108,8 +127,8 @@ class ItalianLargeGroupMealsUITest {
     fun `italianLargeGroupMealsUI() should handle empty user input gracefully`() {
         // Given
         val meal1 = buildMeal(id = 1, name = "Spaghetti Carbonara", tags = listOf("italian", "for-large-groups"))
-        every { getItalianMealsForLargeGroupUseCase.getMeals() } returns Result.success(listOf(meal1))
-        every { reader.readLine() } returnsMany listOf("", "-1")
+        every { getItalianMealsForLargeGroupUseCase.getItalianMealsForLargeGroup() } returns Result.success(listOf(meal1))
+        every { reader.readStringOrNull() } returnsMany listOf("", "-1")
 
         // When
         italianLargeGroupMealsUI.italianLargeGroupMealsUI()
@@ -121,8 +140,8 @@ class ItalianLargeGroupMealsUITest {
     @Test
     fun `italianLargeGroupMealsUI should display header and loading message when started`() {
         // Given
-        every { getItalianMealsForLargeGroupUseCase.getMeals() } returns Result.success(emptyList())
-        every { reader.readLine() } returns "-1"
+        every { getItalianMealsForLargeGroupUseCase.getItalianMealsForLargeGroup() } returns Result.success(emptyList())
+        every { reader.readStringOrNull() } returns "-1"
 
         // When
         italianLargeGroupMealsUI.italianLargeGroupMealsUI()
@@ -134,4 +153,18 @@ class ItalianLargeGroupMealsUITest {
         verify(exactly = 1) { printer.printLine("Loading...") }
     }
 
+    @Test
+    fun `italianLargeGroupMealsUI should continue when meal ID input is null`() {
+        // Given
+        val meal = buildMeal(id = 1, name = "Fettuccine", tags = listOf("italian", "for-large-groups"))
+        every { getItalianMealsForLargeGroupUseCase.getItalianMealsForLargeGroup() } returns Result.success(listOf(meal))
+        every { reader.readStringOrNull() } returnsMany listOf(null, "-1")
+
+        // When
+        italianLargeGroupMealsUI.italianLargeGroupMealsUI()
+
+        // Then
+        verify(exactly = 1) { printer.printLine("1 -> Fettuccine") }
+        verify(exactly = 1) { printer.printLine("Enter a valid ID or -1") }
+    }
 }

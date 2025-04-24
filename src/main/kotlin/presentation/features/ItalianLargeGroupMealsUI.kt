@@ -17,10 +17,10 @@ class ItalianLargeGroupMealsUI(
         printer.printLine("🍝 Planning a big Italian feast? Here's a list of meals perfect for large groups:")
         printer.printLine("Loading...")
 
-        getItalianMealsForLargeGroupUseCase.getMeals().fold(
+        getItalianMealsForLargeGroupUseCase.getItalianMealsForLargeGroup().fold(
             onSuccess = { meals -> meals },
             onFailure = { exception ->
-                printer.printLine("Error: ${exception.message ?: "Unknown error"}")
+                printer.printLine("Error: ${exception.message ?: "Unknown Error"}")
                 emptyList()
             }
         ).also {
@@ -45,14 +45,14 @@ class ItalianLargeGroupMealsUI(
             printer.printLine("")
             printer.printLine("-1 -> back")
             printer.printLine("meal id -> view details")
-            val input = reader.readLine()
+            val input = reader.readStringOrNull()
 
             if (viewMealDetails(input, meals)) break
         }
     }
 
-    private fun viewMealDetails(input: String, meals: List<Meal>): Boolean {
-        when (val mealId = input.toIntOrNull()) {
+    private fun viewMealDetails(input: String?, meals: List<Meal>): Boolean {
+        when (val mealId = input?.toIntOrNull()) {
             null -> printer.printLine("Enter a valid ID or -1")
             -1 -> return true
             else -> meals.viewMealInListDetails(mealId, printer)

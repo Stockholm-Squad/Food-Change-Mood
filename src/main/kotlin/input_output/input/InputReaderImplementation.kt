@@ -4,7 +4,7 @@ import org.example.utils.getDateFromString
 import java.util.*
 
 class InputReaderImplementation : InputReader {
-    override fun readLineOrNull(): String? {
+    override fun readStringOrNull(): String? {
         return readlnOrNull()
     }
 
@@ -17,10 +17,6 @@ class InputReaderImplementation : InputReader {
 
     override fun readFloatOrNull(): Float? {
         return readlnOrNull()?.toFloatOrNull()
-    }
-
-    override fun readLine(): String {
-        return readln()
     }
 
 }

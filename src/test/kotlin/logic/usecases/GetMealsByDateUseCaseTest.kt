@@ -133,7 +133,7 @@ class GetMealsByDateUseCaseTest {
     }
 
     @Test
-    fun `getMealsByDate should throw when getOrThrow is called and repository fails`() {
+    fun `getMealsByDate should throw when repository fails`() {
         // Given
         val date = "2025-04-23"
         val exception = Exception("Database error")
