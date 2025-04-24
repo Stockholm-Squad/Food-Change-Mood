@@ -12,5 +12,5 @@ object Constants {
     const val ERROR_FETCHING_MEALS = "Error fetching meals: "
 
     
-    const val CANT_PARSE_DATE_FROM_STRING = "Can't parse date from string"
+    const val CAN_NOT_PARSE_DATE_FROM_STRING = "Can't parse date from string"
 }

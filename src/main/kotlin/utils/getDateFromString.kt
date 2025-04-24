@@ -11,6 +11,6 @@ fun getDateFromString(stringDate: String): Result<Date> {
         val date = Date.from(LocalDate.parse(stringDate).atStartOfDay(ZoneId.systemDefault()).toInstant())
         Result.success(date)
     } catch (e: Exception) {
-        return Result.failure(FoodChangeMoodExceptions.LogicException.CantParseDateFromString())
+        return Result.failure(FoodChangeMoodExceptions.LogicException.CanNotParseDateFromString())
     }
 }
