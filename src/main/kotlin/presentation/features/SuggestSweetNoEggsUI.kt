@@ -8,7 +8,7 @@ import org.example.utils.Constants
 
 class SuggestSweetNoEggsUI(
     private val getSweetWithNoEggs: GetDessertsWithNoEggsUseCase,
-    private val reader: InputReader<String>,
+    private val reader: InputReader,
     private val printer: OutputPrinter
 ) {
 
@@ -24,15 +24,38 @@ class SuggestSweetNoEggsUI(
 
     private fun showResultsRandomly(model: MutableList<Meal>) {
         do {
-            val index = (0..model.size).random()
-            printer.printLine("Dessert: ${model[index].name}\nDescription: ${model[index].description}\n")
-            printer.printLine("Do you like this dessert?.   (y/n)")
-            if (reader.read() == "y") {
-                printer.printLine("\nMeal Name: ${model[index].name}\nMeal Description: ${model[index].description}\nMeal Ingredients: ${model[index].ingredients}\nMeal preparation steps: ${model[index].steps}\n")
-                return
+            getRandomIndex(model.size).let { index ->
+                printDessertBrief(model, index)
+
+                if (continueDecision()) {
+                    printDessertInDetails(model[index])
+                    return
+                }
+                model.removeAt(index)
             }
-            model.removeAt(index)
         } while (model.isNotEmpty())
+        printer.printLine(Constants.NO_MORE_DESSERTS_AVAILABLE)
+    }
+
+    private fun printDessertBrief(model: MutableList<Meal>, index: Int) {
+        printer.printLine("Dessert: ${model[index].name}\nDescription: ${model[index].description}\n")
+    }
+
+    private fun getRandomIndex(size: Int): Int {
+        return (0 until size).random()
+    }
+
+    private fun printDessertInDetails(model: Meal) {
+        printer.printLine(
+            "\nMeal Name: ${model.name}\n" +
+                    "Meal Description: ${model.description}\nMeal Ingredients: ${model.ingredients}\n" +
+                    "Meal preparation steps: ${model.steps}\n"
+        )
+    }
+
+    private fun continueDecision(): Boolean {
+        printer.printLine("Do you like this dessert?.   (y/n)")
+        return reader.readLineOrNull() == "y"
     }
 
 

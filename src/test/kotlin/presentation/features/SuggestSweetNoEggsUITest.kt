@@ -15,7 +15,7 @@ import kotlin.test.Test
 class SuggestSweetNoEggsUITest {
     private lateinit var getDessertsWithNoEggsUseCase: GetDessertsWithNoEggsUseCase
     private lateinit var suggestSweetNoEggsUI: SuggestSweetNoEggsUI
-    private lateinit var stringReader: InputReader<String>
+    private lateinit var stringReader: InputReader
     private lateinit var printer: OutputPrinter
 
     @BeforeEach
@@ -33,12 +33,10 @@ class SuggestSweetNoEggsUITest {
         val meal = buildMeal(
             id = 1, name = "No-Egg Brownie", tags = listOf("desserts"), ingredients = listOf("flour", "suger")
         )
-
         every { getDessertsWithNoEggsUseCase.getDessertsWithNNoEggs() } returns Result.success(listOf(meal))
-        every { stringReader.read() } returns "y"
+        every { stringReader.readLineOrNull() } returns "y"
         //When
         suggestSweetNoEggsUI.handleSweetsNoEggs()
-
         //Then
         verify { printer.printLine(match { it.contains("Meal Name: No-Egg Brownie") }) }
     }
@@ -51,6 +49,22 @@ class SuggestSweetNoEggsUITest {
         suggestSweetNoEggsUI.handleSweetsNoEggs()
         //Then
         verify { printer.printLine(Constants.NO_MEALS_FOUND_MATCHING) }
+    }
+
+    @Test
+    fun `handleSweetsNoEggs() should show a fallback message when user dislikes all desserts`() {
+        // Given
+        val meal1 = buildMeal(id = 1, name = "No-Egg Brownie", tags = listOf("desserts"))
+        val meal2 = buildMeal(id = 2, name = "Pancake", tags = listOf("desserts"))
+
+        every { getDessertsWithNoEggsUseCase.getDessertsWithNNoEggs() } returns Result.success(listOf(meal1, meal2))
+        every { stringReader.readLineOrNull() } returnsMany listOf("n", "n")
+
+        // When
+        suggestSweetNoEggsUI.handleSweetsNoEggs()
+
+        // Then
+        verify { printer.printLine(Constants.NO_MORE_DESSERTS_AVAILABLE) }
     }
 
 

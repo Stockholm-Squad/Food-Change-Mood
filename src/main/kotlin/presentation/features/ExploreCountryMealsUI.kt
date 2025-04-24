@@ -8,15 +8,14 @@ import org.example.utils.Constants
 
 class ExploreCountryMealsUI(
     private val getCountriesFood: GetCountryMealsUseCase,
-    private val reader: InputReader<String>,
+    private val reader: InputReader,
     private val printer: OutputPrinter
 ) {
-
     fun handleCountryByNameAction() {
         printer.printLine("🌍 Let's take your taste buds on a world tour!")
         printer.printLine("Enter the country you want to explore: ")
 
-        reader.read()?.trim()
+        reader.readLineOrNull()?.trim()
             ?.takeIf { it.isNotBlank() }
             ?.let { countryName ->
                 getCountriesFood.getMealsForCountry(countryName)

@@ -100,7 +100,7 @@ class GetCountryMealsUseCaseTest {
     fun `getMealsForCountry() should return the meals size ignoring Upper and Lower case`() {
         // Given
         val meal1 = buildMeal(
-            id = 1, name = "emotional balance  spice mixture", tags = listOf("AsIan", "indian")
+            id = 1, name = "emotional balance  spice mixture", tags = listOf("A sIan", "indian")
         )
         val meal2 = buildMeal(
             id = 2, name = "i stole the idea from mirj  sesame noodles", tags = listOf("cairo")

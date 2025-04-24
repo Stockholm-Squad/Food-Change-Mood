@@ -1,6 +1,7 @@
 package org.example.utils
 
 object Constants {
+    val NO_MORE_DESSERTS_AVAILABLE = "No more desserts available"
     const val COULD_NOT_FIND_DESSERTS = "Couldn't find desserts"
     const val GOODBYE_MESSAGE = "Good Bye"
     const val MEAL_CSV_FILE = "food.csv"

@@ -17,7 +17,7 @@ class ExploreCountryMealsUITest {
 
     private lateinit var getCountryMealsUseCase: GetCountryMealsUseCase
     private lateinit var exploreCountryMealsUI: ExploreCountryMealsUI
-    private lateinit var stringReader: InputReader<String>
+    private lateinit var stringReader: InputReader
     private lateinit var printer: OutputPrinter
 
     @BeforeEach
@@ -42,7 +42,7 @@ class ExploreCountryMealsUITest {
         val meal3 = buildMeal(
             id = 3, tags = listOf("asian")
         )
-        every { stringReader.read() } returns countryName
+        every { stringReader.readLineOrNull() } returns countryName
         every { getCountryMealsUseCase.getMealsForCountry(countryName) } returns Result.success(
             listOf(meal1, meal2, meal3)
         )
@@ -66,7 +66,7 @@ class ExploreCountryMealsUITest {
         val meal3 = buildMeal(
             id = 3, tags = listOf("asian")
         )
-        every { stringReader.read() } returns countryName
+        every { stringReader.readLineOrNull() } returns countryName
         every { getCountryMealsUseCase.getMealsForCountry(countryName) } returns Result.success(
             listOf(meal1, meal2, meal3)
         )
@@ -90,7 +90,7 @@ class ExploreCountryMealsUITest {
         val meal3 = buildMeal(
             id = 3, tags = listOf("asian")
         )
-        every { stringReader.read() } returns countryName
+        every { stringReader.readLineOrNull() } returns countryName
         every { getCountryMealsUseCase.getMealsForCountry(countryName) } returns Result.failure(
             NoSuchElementException(
                 Constants.INVALID_INPUT
@@ -114,7 +114,7 @@ class ExploreCountryMealsUITest {
             id = 2, name = "i stole the idea from mirj sesame noodles", tags = listOf("asian")
         )
 
-        every { stringReader.read() } returns countryName
+        every { stringReader.readLineOrNull() } returns countryName
         every { getCountryMealsUseCase.getMealsForCountry(countryName) } returns Result.success(
             listOf(meal1, meal2)
         )
@@ -130,7 +130,7 @@ class ExploreCountryMealsUITest {
         //Given
         val countryName = "asian"
 
-        every { stringReader.read() } returns countryName
+        every { stringReader.readLineOrNull() } returns countryName
         every { getCountryMealsUseCase.getMealsForCountry(countryName) } returns Result.failure(NoSuchElementException(Constants.INVALID_INPUT))
         //When
         exploreCountryMealsUI.handleCountryByNameAction()
