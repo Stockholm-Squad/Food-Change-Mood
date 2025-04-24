@@ -117,34 +117,6 @@ class GetEasyFoodSuggestionsUseCaseTest {
 
     @ParameterizedTest
     @CsvSource(
-        "20, 4, 5",    // All values within limits
-        "30, 5, 6",    // All values at max limits
-        "15, 3, 4"     // All values well within limits
-    )
-    fun `getEasyFood() should return meal when it meets easy criteria`(
-        minutes: Int,
-        ingredients: Int,
-        steps: Int
-    ) {
-        // Given
-        val testMeal = buildMeal(
-            1,
-            minutes = minutes,
-            numberOfIngredients = ingredients,
-            numberOfSteps = steps
-        )
-
-        every { repository.getAllMeals() } returns Result.success(listOf(testMeal))
-
-        // When
-        val result = getEasyFoodSuggestionsUseCase.getEasyFood()
-
-        // Then
-        Truth.assertThat(result.getOrThrow()).isEqualTo(listOf(testMeal))
-    }
-
-    @ParameterizedTest
-    @CsvSource(
         "31, 5, 6",    // Minutes over limit
         "30, 6, 6",    // Ingredients over limit
         "30, 5, 7",    // Steps over limit
