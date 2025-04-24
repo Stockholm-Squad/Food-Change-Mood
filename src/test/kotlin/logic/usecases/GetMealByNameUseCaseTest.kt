@@ -1,20 +1,19 @@
 package logic.usecases
 
+import com.google.common.truth.Truth.assertThat
 import io.mockk.every
+import io.mockk.verify
 import io.mockk.mockk
 import org.example.logic.repository.MealsRepository
 import org.example.logic.usecases.GetMealByNameUseCase
 import org.example.logic.usecases.SearchingByKmpUseCase
 import org.example.utils.Constants
 import org.junit.jupiter.api.BeforeEach
+import utils.buildMeal
 import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
-import kotlin.test.assertFalse
-import kotlin.test.assertNotNull
+
 
 class GetMealByNameUseCaseTest {
-// add given /when / then
     private lateinit var mealsRepository: MealsRepository
     private lateinit var getMealByNameUseCase: GetMealByNameUseCase
     private lateinit var searchingByKmpUseCase: SearchingByKmpUseCase
@@ -28,79 +27,84 @@ class GetMealByNameUseCaseTest {
 
     @Test
     fun `should return meal when pattern is found in meal name`() {
+
+        // Given
         val matchingMeal = listOf(
-            meal(name = "5 minute bread pizza"),
-            meal(name = "pizza wrap")
+            buildMeal(name = "5 minute bread pizza", id = 1),
+            buildMeal(name = "pizza wrap", id = 2)
         )
-        val meals = listOf(
-            meal(name = "5 minute bread pizza"),
-            meal(name = "ww core polenta crust pizza"),
-            meal(name = "pizza wrap"),
-            meal(name = "bbq meatballs   egg noodles"),
-            meal(name = "bread   butter pickle deviled eggs")
+
+        val allMeals = listOf(
+            buildMeal(name = "5 minute bread pizza", id = 1),
+            buildMeal(name = "ww core polenta crust pizza", id = 2),
+            buildMeal(name = "pizza wrap", id = 3),
+            buildMeal(name = "bbq meatballs   egg noodles", id = 4),
+            buildMeal(name = "bread   butter pickle deviled eggs", id = 5)
         )
+
         val pattern = "piz"
 
-        every { mealsRepository.getAllMeals() } returns Result.success(meals)
+        every { mealsRepository.getAllMeals() } returns Result.success(allMeals)
         every { searchingByKmpUseCase.searchByKmp("5 minute bread pizza", pattern) } returns true
         every { searchingByKmpUseCase.searchByKmp("pizza wrap", pattern) } returns true
         every { searchingByKmpUseCase.searchByKmp("ww core polenta crust pizza", pattern) } returns false
         every { searchingByKmpUseCase.searchByKmp("bbq meatballs   egg noodles", pattern) } returns false
         every { searchingByKmpUseCase.searchByKmp("bread   butter pickle deviled eggs", pattern) } returns false
 
+        // when
         val result = getMealByNameUseCase.getMealByName(pattern)
 
-        // truth
-        assertTrue(result.isSuccess)
-        assertEquals(
-            matchingMeal.map { it.name },
-            result.getOrNull()?.map { it.name }
-        )
+        // Then
+        assertThat(result.isSuccess).isTrue()
+        assertThat(result.getOrNull()?.map { it.name }).isEqualTo(matchingMeal.map { it.name })
+        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
     @Test
     fun `should return failure when no meals match the pattern`() {
-        val meals = listOf(
-            meal(name = "bbq meatballs   egg noodles"),
-            meal(name = "bread   butter pickle deviled eggs")
+        val allMeals = listOf(
+            buildMeal(name = "bbq meatballs   egg noodles", id = 1),
+            buildMeal(name = "bread   butter pickle deviled eggs", id = 2)
         )
         val pattern = "piz"
 
 
-        every { mealsRepository.getAllMeals() } returns Result.success(meals)
+        every { mealsRepository.getAllMeals() } returns Result.success(allMeals)
         every { searchingByKmpUseCase.searchByKmp("bbq meatballs   egg noodles", pattern) } returns false
         every { searchingByKmpUseCase.searchByKmp("bread   butter pickle deviled eggs", pattern) } returns false
 
         val result = getMealByNameUseCase.getMealByName(pattern)
-// truth
-        assertFalse(result.isSuccess)
-        assertEquals(Constants.NO_MEALS_FOUND_MATCHING, result.exceptionOrNull()?.message)
+
+        assertThat(result.isSuccess).isFalse()
+        assertThat(result.exceptionOrNull()?.message).isEqualTo(Constants.NO_MEALS_FOUND_MATCHING)
+        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
     @Test
     fun `should return failure when pattern is blank`() {
         val result = getMealByNameUseCase.getMealByName("   ")
-        assertTrue(result.isFailure)
-        assertEquals(Constants.SEARCH_QUERY_CAN_NOT_BE_EMPTY, result.exceptionOrNull()?.message)
+        assertThat(result.isFailure).isTrue()
+        assertThat(result.exceptionOrNull()?.message).isEqualTo(Constants.SEARCH_QUERY_CAN_NOT_BE_EMPTY)
+        verify(exactly = 0) { mealsRepository.getAllMeals() }
     }
 
     @Test
     fun `should return failure when repository fails`() {
         val pattern = "piz"
-        val repositoryErrorMessage = "Csv.file failed"
-        every { mealsRepository.getAllMeals() } returns Result.failure(Throwable(repositoryErrorMessage))
+        every { mealsRepository.getAllMeals() } returns Result.failure(Throwable())
 
         val result = getMealByNameUseCase.getMealByName(pattern)
-        assertTrue(result.isFailure)
+
+        assertThat(result.isFailure).isTrue()
 
         val exception = result.exceptionOrNull()
-        assertNotNull(exception)
+        assertThat(exception).isNotNull()
 
-        val errorMessage = exception.message
-        assertNotNull(errorMessage)
+        val errorMessage = exception?.message
+        assertThat(errorMessage).isNotNull()
 
-        assertTrue(errorMessage.contains(Constants.ERROR_FETCHING_MEALS))
-        // throwable truth
-        assertTrue(errorMessage.contains(repositoryErrorMessage))
+        assertThat(errorMessage).contains(Constants.ERROR_FETCHING_MEALS)
+        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
+
 }
