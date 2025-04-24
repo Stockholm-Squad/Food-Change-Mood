@@ -18,6 +18,7 @@ class OutputPrinterImplementation : OutputPrinter {
 
     override fun printMeal(meal: Meal?) {
         println("Meal: \n")
+        printMealsDetails(meal)
 
     }
 
