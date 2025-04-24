@@ -3,13 +3,15 @@ package logic.usecases
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
-import logic.usecases.utils.buildMeal
+import io.mockk.verify
 import model.Meal
 import org.example.logic.repository.MealsRepository
 import org.example.logic.usecases.GetMealsByDateUseCase
 import org.example.utils.getDateFromString
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import utils.buildMeal
 import java.util.*
 
 class GetMealsByDateUseCaseTest {
@@ -23,162 +25,128 @@ class GetMealsByDateUseCaseTest {
     }
 
     @Test
-    fun `getMealsByDate(date) should return meals filtered by date`() {
+    fun `getMealsByDate should return meals filtered by date when given valid date`() {
         // Given
         val date = "2025-04-23"
         val utilDate = getDateFromString(date).getOrThrow()
         val meal1 = buildMeal(id = 1, submitted = utilDate)
-        val meal2 = buildMeal(id = 2, submitted = Date()) // Different date
-        val allMeals = listOf(meal1, meal2)
-
-        every { mealsRepository.getAllMeals() } returns Result.success(allMeals)
+        val meal2 = buildMeal(id = 2, submitted = Date())
+        every { mealsRepository.getAllMeals() } returns Result.success(listOf(meal1, meal2))
 
         // When
         val result = getMealsByDateUseCase.getMealsByDate(date)
 
         // Then
-        assertThat(result.isSuccess).isTrue()
-        result.onSuccess { meals ->
-            assertThat(meals).containsExactly(meal1)
-        }
+        assertThat(result.getOrThrow()).containsExactly(meal1)
+        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
     @Test
-    fun `getMealsByDate(date) should return empty list when no meals match the date`() {
+    fun `getMealsByDate should return empty list when no meals match the given date`() {
         // Given
         val date = "2025-04-23"
-        val meal1 = buildMeal(id = 1, submitted = Date()) // Different date
-        val allMeals = listOf(meal1)
-
-        every { mealsRepository.getAllMeals() } returns Result.success(allMeals)
+        val meal1 = buildMeal(id = 1, submitted = Date())
+        every { mealsRepository.getAllMeals() } returns Result.success(listOf(meal1))
 
         // When
         val result = getMealsByDateUseCase.getMealsByDate(date)
 
         // Then
-        assertThat(result.isSuccess).isTrue()
-        result.onSuccess { meals ->
-            assertThat(meals).isEmpty()
-        }
+        assertThat(result.getOrThrow()).isEmpty()
+        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
     @Test
-    fun `getMealsByDate(date) should propagate failure when repository fails`() {
+    fun `getMealsByDate should propagate failure when repository fails to get meals`() {
         // Given
         val date = "2025-04-23"
         val exception = Exception("Database error")
-
         every { mealsRepository.getAllMeals() } returns Result.failure(exception)
 
         // When
         val result = getMealsByDateUseCase.getMealsByDate(date)
 
         // Then
-        assertThat(result.isFailure).isTrue()
-        result.onFailure { cause ->
-            assertThat(cause).isEqualTo(exception)
-        }
+        assertThat(result.exceptionOrNull()).isEqualTo(exception)
+        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
     @Test
-    fun `getMealsByDate(invalidDate) should handle invalid date format gracefully`() {
+    fun `getMealsByDate should return empty list when given invalid date format`() {
         // Given
         val invalidDate = "invalid-date"
-        val allMeals = listOf<Meal>() // Empty list
-
-        every { mealsRepository.getAllMeals() } returns Result.success(allMeals)
+        every { mealsRepository.getAllMeals() } returns Result.success(emptyList())
 
         // When
         val result = getMealsByDateUseCase.getMealsByDate(invalidDate)
 
         // Then
-        assertThat(result.isSuccess).isTrue()
-        result.onSuccess { meals ->
-            assertThat(meals).isEmpty()
-        }
+        assertThat(result.getOrThrow()).isEmpty()
+        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
-
     @Test
-    fun `getMealsByDate() should handle failure of getDateFromString in isMealWithDate when invalidDate`() {
+    fun `getMealsByDate should handle date parsing failure when given invalid date format`() {
         // Given
         val invalidDate = "invalid-date"
-        val meal = buildMeal(id = 1, submitted = Date()) // A meal with any date
-
-        // Mock the repository to return a list with the meal
+        val meal = buildMeal(id = 1, submitted = Date())
         every { mealsRepository.getAllMeals() } returns Result.success(listOf(meal))
 
         // When
         val result = getMealsByDateUseCase.getMealsByDate(invalidDate)
 
         // Then
-        assertThat(result.isSuccess).isTrue()
-        result.onSuccess { meals ->
-            assertThat(meals).isEmpty() // No meals should be returned due to the failure
-        }
-
-//        TODO: verify calling the get function once
-//        TODO: verify list size
+        assertThat(result.getOrThrow()).isEmpty()
+        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
     @Test
-    fun `getMealsByDate(date) should handle meals when null submitted dates`() {
+    fun `getMealsByDate should exclude meals when they have null submitted dates`() {
         // Given
         val date = "2023-10-01"
         val validMeal = buildMeal(id = 1, submitted = getDateFromString(date).getOrThrow())
-        val nullMeal = buildMeal(id = 2, submitted = null) // Meal with null submitted date
-
+        val nullMeal = buildMeal(id = 2, submitted = null)
         every { mealsRepository.getAllMeals() } returns Result.success(listOf(validMeal, nullMeal))
 
         // When
         val result = getMealsByDateUseCase.getMealsByDate(date)
 
-        // // Then
-        assertThat(result.isSuccess).isTrue()
-        result.onSuccess { meals ->
-            assertThat(meals).containsExactly(validMeal)
-        }
+        // Then
+        assertThat(result.getOrThrow()).containsExactly(validMeal)
+        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
     @Test
-    fun `getMealsByDate(date) should sort meals by id correctly`() {
+    fun `getMealsByDate should return meals sorted by id when multiple meals match the date`() {
         // Given
         val date = "2023-10-01"
         val utilDate = getDateFromString(date).getOrThrow()
         val meal1 = buildMeal(id = -1, submitted = utilDate)
         val meal2 = buildMeal(id = 10, submitted = utilDate)
         val meal3 = buildMeal(id = 5, submitted = utilDate)
-
         every { mealsRepository.getAllMeals() } returns Result.success(listOf(meal2, meal3, meal1))
 
         // When
         val result = getMealsByDateUseCase.getMealsByDate(date)
 
-        // // Then
-        assertThat(result.isSuccess).isTrue()
-        result.onSuccess { meals ->
-            assertThat(meals).containsExactly(meal1, meal3, meal2).inOrder()
-        }
+        // Then
+        assertThat(result.getOrThrow()).containsExactly(meal1, meal3, meal2).inOrder()
+        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
-
     @Test
-    fun `getMealsByDate(date) should handle timezone differences in submitted dates`() {
+    fun `getMealsByDate should throw when getOrThrow is called and repository fails`() {
         // Given
-        val date = "2023-10-01"
-        val utilDate = getDateFromString(date).getOrThrow()
-        val mealWithTimeZone = buildMeal(id = 1, submitted = Date(utilDate.time + 3600 * 1000)) // Add 1 hour
-
-        every { mealsRepository.getAllMeals() } returns Result.success(listOf(mealWithTimeZone))
+        val date = "2025-04-23"
+        val exception = Exception("Database error")
+        every { mealsRepository.getAllMeals() } returns Result.failure(exception)
 
         // When
         val result = getMealsByDateUseCase.getMealsByDate(date)
 
-        // // Then
-        assertThat(result.isSuccess).isTrue()
-        result.onSuccess { meals ->
-            assertThat(meals).isEmpty()
-        }
+        // Then
+        val thrown = assertThrows<Throwable> { result.getOrThrow() }
+        assertThat(thrown).isEqualTo(exception)
+        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
-
 }

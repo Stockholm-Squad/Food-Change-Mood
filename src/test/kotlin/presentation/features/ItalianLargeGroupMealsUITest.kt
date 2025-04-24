@@ -1,144 +1,136 @@
 package presentation.features
 
-import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
-import logic.usecases.utils.buildMeal
+import io.mockk.verify
+import org.example.input_output.input.InputReader
+import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetItalianMealsForLargeGroupUseCase
 import org.example.presentation.features.ItalianLargeGroupMealsUI
-import org.junit.jupiter.api.AfterEach
+import org.example.utils.viewMealInListDetails
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.PrintStream
+import utils.buildMeal
 
 class ItalianLargeGroupMealsUITest {
-
     private lateinit var getItalianMealsForLargeGroupUseCase: GetItalianMealsForLargeGroupUseCase
+    private lateinit var reader: InputReader
+    private lateinit var printer: OutputPrinter
     private lateinit var italianLargeGroupMealsUI: ItalianLargeGroupMealsUI
-
-    // Redirect System.out to capture console output
-    private val outContent = ByteArrayOutputStream()
-    private val originalOut = System.out
 
     @BeforeEach
     fun setUp() {
         // Mock the use case
         getItalianMealsForLargeGroupUseCase = mockk(relaxed = true)
-        italianLargeGroupMealsUI = ItalianLargeGroupMealsUI(getItalianMealsForLargeGroupUseCase)
-
-        // Redirect System.out to capture output
-        System.setOut(PrintStream(outContent))
+        reader = mockk(relaxed = true)
+        printer = mockk(relaxed = true)
+        italianLargeGroupMealsUI = ItalianLargeGroupMealsUI(getItalianMealsForLargeGroupUseCase, reader, printer)
     }
 
-    @AfterEach
-    fun tearDown() {
-        // Restore original System.out
-        System.setOut(originalOut)
-    }
 
     @Test
-    fun `italianLargeGroupMealsUI() should display meals when use case returns success`() {
+    fun `italianLargeGroupMealsUI should display meals when use case returns success`() {
         // Given
-        val meal1 = buildMeal(id = 1, name = "Spaghetti Carbonara", tags = listOf("italian", "for-large-groups"))
-        val meal2 = buildMeal(id = 2, name = "Pizza Margherita", tags = listOf("italian", "for-large-groups"))
+        val meal1 = buildMeal(id = 1, name = "Pasta", tags = listOf("italian", "for-large-groups"))
+        val meal2 = buildMeal(id = 2, name = "Pizza", tags = listOf("italian", "for-large-groups"))
         every { getItalianMealsForLargeGroupUseCase.getMeals() } returns Result.success(listOf(meal1, meal2))
-
-        // Simulate user input (-1 to exit)
-        val userInput = "-1\n"
-        System.setIn(ByteArrayInputStream(userInput.toByteArray()))
+        every { reader.readLine() } returns "-1"
 
         // When
         italianLargeGroupMealsUI.italianLargeGroupMealsUI()
 
         // Then
-        val output = outContent.toString()
-        assertThat(output).contains("🍝 Planning a big Italian feast?")
-        assertThat(output).contains("1 -> Spaghetti Carbonara")
-        assertThat(output).contains("2 -> Pizza Margherita")
-        assertThat(output).contains("-1 -> back")
+        verify(exactly = 1) { printer.printLine("1 -> Pasta") }
+        verify(exactly = 1) { printer.printLine("2 -> Pizza") }
     }
 
     @Test
-    fun `italianLargeGroupMealsUI() should handle failure when use case fails`() {
+    fun `italianLargeGroupMealsUI should display error message when use case fails`() {
         // Given
         val exception = Exception("Database error")
         every { getItalianMealsForLargeGroupUseCase.getMeals() } returns Result.failure(exception)
-
-        // Simulate user input (-1 to exit)
-        val userInput = "-1\n"
-        System.setIn(ByteArrayInputStream(userInput.toByteArray()))
+        every { reader.readLine() } returns "-1"
 
         // When
         italianLargeGroupMealsUI.italianLargeGroupMealsUI()
 
         // Then
-        val output = outContent.toString()
-        assertThat(output).contains("error: java.lang.Exception: Database error")
-        assertThat(output).contains("-1 -> back")
+        verify(exactly = 1) { printer.printLine("Error: Database error") }
     }
 
     @Test
-    fun `italianLargeGroupMealsUI() should handle valid meal id input and display details`() {
+    fun `italianLargeGroupMealsUI should show meal details when valid meal ID is entered`() {
         // Given
-        val meal1 = buildMeal(id = 1, name = "Spaghetti Carbonara", tags = listOf("italian", "for-large-groups"))
-        every { getItalianMealsForLargeGroupUseCase.getMeals() } returns Result.success(listOf(meal1))
+        val meal = buildMeal(id = 1, name = "Lasagna", tags = listOf("italian", "for-large-groups"))
 
-        // Simulate user input (valid meal ID followed by -1 to exit)
-        val userInput = "1\n-1\n"
-        System.setIn(ByteArrayInputStream(userInput.toByteArray()))
+        every { getItalianMealsForLargeGroupUseCase.getMeals() } returns Result.success(listOf(meal))
+        every { reader.readLine() } returnsMany listOf("1", "-1")
+
 
         // When
         italianLargeGroupMealsUI.italianLargeGroupMealsUI()
 
         // Then
-        val output = outContent.toString()
-        assertThat(output).contains("id= 1")
-        assertThat(output).contains("name= Spaghetti Carbonara")
-        assertThat(output).contains("-1 -> back")
+        verify(exactly = 1) { listOf(meal).viewMealInListDetails(1, printer) }
     }
 
     @Test
-    fun `italianLargeGroupMealsUI() should handle invalid meal id input gracefully`() {
+    fun `italianLargeGroupMealsUI should show error when invalid meal ID is entered`() {
         // Given
-        val meal1 = buildMeal(id = 1, name = "Spaghetti Carbonara", tags = listOf("italian", "for-large-groups"))
-        every { getItalianMealsForLargeGroupUseCase.getMeals() } returns Result.success(listOf(meal1))
-
-        // Simulate user input (invalid meal ID followed by -1 to exit)
-        val userInput = "99\n-1\n"
-        System.setIn(ByteArrayInputStream(userInput.toByteArray()))
+        val meal = buildMeal(id = 1, name = "Risotto", tags = listOf("italian", "for-large-groups"))
+        every { getItalianMealsForLargeGroupUseCase.getMeals() } returns Result.success(listOf(meal))
+        every { reader.readLine() } returnsMany listOf("99", "-1")
 
         // When
         italianLargeGroupMealsUI.italianLargeGroupMealsUI()
 
         // Then
-        val output = outContent.toString()
-        assertThat(output).contains("The meal with ID 99 does not exist.")
-        assertThat(output).contains("-1 -> back")
+        verify(exactly = 1) { printer.printLine("The meal with ID 99 does not exist.") }
     }
+
+
+    @Test
+    fun `italianLargeGroupMealsUI should display empty message when no meals found`() {
+        // Given
+        every { getItalianMealsForLargeGroupUseCase.getMeals() } returns Result.success(emptyList())
+        every { reader.readLine() } returns "-1"
+
+        // When
+        italianLargeGroupMealsUI.italianLargeGroupMealsUI()
+
+        // Then
+        verify(exactly = 1) { printer.printLine("No Italian meals for large groups found.") }
+    }
+
 
     @Test
     fun `italianLargeGroupMealsUI() should handle empty user input gracefully`() {
         // Given
-        val meal1 = buildMeal(
-            id = 1,
-            name = "Spaghetti Carbonara",
-            tags = listOf("italian", "for-large-groups")
-        )
+        val meal1 = buildMeal(id = 1, name = "Spaghetti Carbonara", tags = listOf("italian", "for-large-groups"))
         every { getItalianMealsForLargeGroupUseCase.getMeals() } returns Result.success(listOf(meal1))
-
-        // Simulate user input (empty input followed by -1 to exit)
-        val userInput = "\n-1\n"
-        System.setIn(ByteArrayInputStream(userInput.toByteArray()))
+        every { reader.readLine() } returnsMany listOf("", "-1")
 
         // When
         italianLargeGroupMealsUI.italianLargeGroupMealsUI()
 
         // Then
-        val output = outContent.toString()
-        assertThat(output).contains("Enter a valid ID or -1")
-        assertThat(output).contains("-1 -> back")
+        verify(exactly = 1) { printer.printLine("Enter a valid ID or -1") }
+    }
+
+    @Test
+    fun `italianLargeGroupMealsUI should display header and loading message when started`() {
+        // Given
+        every { getItalianMealsForLargeGroupUseCase.getMeals() } returns Result.success(emptyList())
+        every { reader.readLine() } returns "-1"
+
+        // When
+        italianLargeGroupMealsUI.italianLargeGroupMealsUI()
+
+        // Then
+        verify(exactly = 1) {
+            printer.printLine("🍝 Planning a big Italian feast? Here's a list of meals perfect for large groups:")
+        }
+        verify(exactly = 1) { printer.printLine("Loading...") }
     }
 
 }

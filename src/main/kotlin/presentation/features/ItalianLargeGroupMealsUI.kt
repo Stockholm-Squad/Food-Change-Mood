@@ -1,18 +1,25 @@
 package org.example.presentation.features
 
 import model.Meal
+import org.example.input_output.input.InputReader
+import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetItalianMealsForLargeGroupUseCase
 import org.example.utils.viewMealInListDetails
 
-class ItalianLargeGroupMealsUI(private val getItalianMealsForLargeGroupUseCase: GetItalianMealsForLargeGroupUseCase) {
+class ItalianLargeGroupMealsUI(
+    private val getItalianMealsForLargeGroupUseCase: GetItalianMealsForLargeGroupUseCase,
+    private val reader: InputReader,
+    private val printer: OutputPrinter
+) {
 
     fun italianLargeGroupMealsUI() {
-        println("🍝 Planning a big Italian feast? Here's a list of meals perfect for large groups:")
-        println("Loading...")
+        printer.printLine("🍝 Planning a big Italian feast? Here's a list of meals perfect for large groups:")
+        printer.printLine("Loading...")
+
         getItalianMealsForLargeGroupUseCase.getMeals().fold(
             onSuccess = { meals -> meals },
             onFailure = { exception ->
-                println("error: " + exception)
+                printer.printLine("Error: ${exception.message ?: "Unknown error"}")
                 emptyList()
             }
         ).also {
@@ -21,11 +28,12 @@ class ItalianLargeGroupMealsUI(private val getItalianMealsForLargeGroupUseCase: 
     }
 
     private fun printMealsIdName(mealsList: List<Meal>) {
-        if (mealsList.isEmpty()){
-            println("No meals found.")
+        if (mealsList.isEmpty()) {
+            printer.printLine("No Italian meals for large groups found.")
+            return
         }
         mealsList.forEach { meal ->
-            println("${meal.id} -> ${meal.name}")
+            printer.printLine("${meal.id} -> ${meal.name}")
         }
     }
 
@@ -33,15 +41,15 @@ class ItalianLargeGroupMealsUI(private val getItalianMealsForLargeGroupUseCase: 
         printMealsIdName(meals)
 
         while (true) {
-            println()
-            println("-1 -> back")
-            println("meal id -> view details")
-            val input: String = readln()
+            printer.printLine("")
+            printer.printLine("-1 -> back")
+            printer.printLine("meal id -> view details")
+            val input = reader.readLine()
 
-            when (val mealId: Int? = input.toIntOrNull()) {
-                null -> println("Enter a valid ID or -1")
+            when (val mealId = input.toIntOrNull()) {
+                null -> printer.printLine("Enter a valid ID or -1")
                 -1 -> break
-                else -> meals.viewMealInListDetails(mealId)
+                else -> meals.viewMealInListDetails(mealId, printer)
             }
         }
     }

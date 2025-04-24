@@ -3,190 +3,144 @@ package presentation.features
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
-import logic.usecases.utils.buildMeal
+import io.mockk.verify
 import model.Meal
+import org.example.input_output.input.InputReader
+import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetMealsByDateUseCase
 import org.example.presentation.features.SearchByAddDateUI
 import org.example.utils.DateValidator
-import org.example.utils.getDateFromString
-import org.junit.jupiter.api.AfterEach
+import org.example.utils.viewMealInListDetails
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.PrintStream
+import utils.buildMeal
 
 class SearchByAddDateUITest {
-
     private lateinit var getMealsByDateUseCase: GetMealsByDateUseCase
     private lateinit var dateValidator: DateValidator
+    private lateinit var reader: InputReader
+    private lateinit var printer: OutputPrinter
     private lateinit var searchByAddDateUI: SearchByAddDateUI
-
-    // Redirect System.out to capture console output
-    private val outContent = ByteArrayOutputStream()
-    private val originalOut = System.out
 
     @BeforeEach
     fun setUp() {
         getMealsByDateUseCase = mockk(relaxed = true)
         dateValidator = mockk(relaxed = true)
-        searchByAddDateUI = SearchByAddDateUI(getMealsByDateUseCase, dateValidator)
+        reader = mockk(relaxed = true)
+        printer = mockk(relaxed = true)
+        searchByAddDateUI = SearchByAddDateUI(getMealsByDateUseCase, dateValidator, reader, printer)
 
-        // Redirect System.out to capture output
-        System.setOut(PrintStream(outContent))
-    }
-
-    @AfterEach
-    fun tearDown() {
-        // Restore original System.out
-        System.setOut(originalOut)
     }
 
     @Test
-    fun `searchMealsByDate() should handle valid date input and display meals`() {
+    fun `searchMealsByDate should display meals when given valid date input`() {
         // Given
         val date = "2023-10-01"
-        val meal1 = buildMeal(id = 1, name = "Spaghetti Carbonara")
+        val meal = buildMeal(id = 1, name = "Pasta")
         every { dateValidator.isValidDate(date) } returns true
-        every { getMealsByDateUseCase.getMealsByDate(date) } returns Result.success(listOf(meal1))
-
-        // Simulate user input (valid date followed by -1 to exit)
-        val userInput = "$date\n-1\n0\n"
-        System.setIn(ByteArrayInputStream(userInput.toByteArray()))
+        every { reader.readLine() } returnsMany listOf(date, "-1", "0")
+        every { getMealsByDateUseCase.getMealsByDate(date) } returns Result.success(listOf(meal))
 
         // When
         searchByAddDateUI.searchMealsByDate()
 
         // Then
-        val output = outContent.toString()
-        assertThat(output).contains("📅 Enter date (YYYY-MM-DD): ex: 2002-02-02")
-        assertThat(output).contains("Loading...")
-        assertThat(output).contains("1 -> Spaghetti Carbonara")
-        assertThat(output).contains("-1 -> search again or back")
+        verify(exactly = 2) { printer.printLine("📅 Enter date (YYYY-MM-DD): ex: 2002-02-02\n or 0 to exit") }
+        verify(exactly = 1) { printer.printLine("Loading...") }
+        verify(exactly = 1) { printer.printLine("1 -> Pasta") }
+        verify(exactly = 1) { getMealsByDateUseCase.getMealsByDate(date) }
     }
 
     @Test
-    fun `searchMealsByDate() should handle invalid date input gracefully`() {
+    fun `searchMealsByDate should show error message when given invalid date format`() {
         // Given
         val invalidDate = "invalid-date"
         every { dateValidator.isValidDate(invalidDate) } returns false
-
-        // Simulate user input (invalid date followed by 0 to exit)
-        val userInput = "$invalidDate\n0\n"
-        System.setIn(ByteArrayInputStream(userInput.toByteArray()))
+        every { reader.readLine() } returnsMany listOf(invalidDate, "0")
 
         // When
         searchByAddDateUI.searchMealsByDate()
 
         // Then
-        val output = outContent.toString()
-        assertThat(output).contains("📅 Enter date (YYYY-MM-DD): ex: 2002-02-02")
-        assertThat(output).contains("Enter a valid Date or zero => 0")
+        verify(exactly = 1) { printer.printLine("Enter a valid Date or zero => 0") }
+        verify(exactly = 0) { getMealsByDateUseCase.getMealsByDate(any()) }
     }
 
     @Test
-    fun `searchMealsByDate() should exit gracefully when user enters 0`() {
+    fun `searchMealsByDate should exit when user enters 0`() {
         // Given
-        val userInput = "0\n"
-        System.setIn(ByteArrayInputStream(userInput.toByteArray()))
+        every { reader.readLine() } returns "0"
 
         // When
         searchByAddDateUI.searchMealsByDate()
 
         // Then
-        val output = outContent.toString()
-        assertThat(output).contains("📅 Enter date (YYYY-MM-DD): ex: 2002-02-02")
-        assertThat(output).doesNotContain("Loading...")
+        verify(exactly = 1) { printer.printLine("📅 Enter date (YYYY-MM-DD): ex: 2002-02-02\n or 0 to exit") }
+        verify(exactly = 0) { getMealsByDateUseCase.getMealsByDate(any()) }
     }
 
     @Test
-    fun `searchMealsByDate() should handle empty repository response gracefully`() {
+    fun `searchMealsByDate should show empty message when no meals found`() {
         // Given
         val date = "2023-10-01"
         every { dateValidator.isValidDate(date) } returns true
-        every { getMealsByDateUseCase.getMealsByDate(date) } returns Result.success(emptyList<Meal>())
-
-        // Simulate user input (valid date followed by 0 to exit)
-        val userInput = "$date\n-1\n0\n"
-        System.setIn(ByteArrayInputStream(userInput.toByteArray()))
+        every { reader.readLine() } returnsMany listOf(date, "-1", "0")
+        every { getMealsByDateUseCase.getMealsByDate(date) } returns Result.success(emptyList())
 
         // When
         searchByAddDateUI.searchMealsByDate()
 
         // Then
-        val output = outContent.toString()
-        assertThat(output).contains("📅 Enter date (YYYY-MM-DD): ex: 2002-02-02")
-        assertThat(output).contains("Loading...")
-        assertThat(output.split("->").size - 1).isEqualTo(2)
+        verify(exactly = 1) { printer.printLine("Loading...") }
+        verify(exactly = 1) { printer.printLine("No meals found.") }
     }
 
     @Test
-    fun `searchMealsByDate() should handle repository failure gracefully`() {
+    fun `searchMealsByDate should show error message when repository fails`() {
         // Given
         val date = "2023-10-01"
         val exception = Exception("Database error")
         every { dateValidator.isValidDate(date) } returns true
+        every { reader.readLine() } returnsMany listOf(date, "-1", "0")
         every { getMealsByDateUseCase.getMealsByDate(date) } returns Result.failure(exception)
 
-        // Simulate user input (valid date followed by 0 to exit)
-        val userInput = "$date\n-1\n0\n"
-        System.setIn(ByteArrayInputStream(userInput.toByteArray()))
-
         // When
         searchByAddDateUI.searchMealsByDate()
 
         // Then
-        val output = outContent.toString()
-        assertThat(output).contains("📅 Enter date (YYYY-MM-DD): ex: 2002-02-02")
-        assertThat(output).contains("Loading...")
-        assertThat(output).contains("Database error") // Error message should be displayed
+        verify(exactly = 1) { printer.printLine("error: Database error") }
     }
 
     @Test
-    fun `searchMealsByDate() should handle user interaction in handleUserInteraction`() {
+    fun `searchMealsByDate should show meal details when valid meal ID is entered`() {
         // Given
         val date = "2023-10-01"
-        val meal1 = buildMeal(id = 1, name = "Spaghetti Carbonara")
+        val meal = buildMeal(id = 1, name = "Pizza")
         every { dateValidator.isValidDate(date) } returns true
-        every { getMealsByDateUseCase.getMealsByDate(date) } returns Result.success(listOf(meal1))
-
-        // Simulate user input (valid date, valid meal ID, then -1 to exit)
-        val userInput = "$date\n1\n-1\n0\n"
-        System.setIn(ByteArrayInputStream(userInput.toByteArray()))
+        every { reader.readLine() } returnsMany listOf(date, "1", "-1", "0")
+        every { getMealsByDateUseCase.getMealsByDate(date) } returns Result.success(listOf(meal))
 
         // When
         searchByAddDateUI.searchMealsByDate()
 
         // Then
-        val output = outContent.toString()
-        assertThat(output).contains("📅 Enter date (YYYY-MM-DD): ex: 2002-02-02")
-        assertThat(output).contains("Loading...")
-        assertThat(output).contains("1 -> Spaghetti Carbonara")
-        assertThat(output).contains("id= 1,")
-        assertThat(output).contains("-1 -> search again or back")
+        verify(exactly = 1) { printer.printLine("1 -> Pizza") }
+        verify(exactly = 1) { listOf(meal).viewMealInListDetails(1, printer) }
     }
 
     @Test
-    fun `searchMealsByDate() should handle invalid meal ID input gracefully`() {
+    fun `searchMealsByDate should show error when invalid meal ID is entered`() {
         // Given
         val date = "2023-10-01"
-        val meal1 = buildMeal(id = 1, name = "Spaghetti Carbonara")
+        val meal = buildMeal(id = 1, name = "Pizza")
         every { dateValidator.isValidDate(date) } returns true
-        every { getMealsByDateUseCase.getMealsByDate(date) } returns Result.success(listOf(meal1))
-
-        // Simulate user input (valid date, invalid meal ID, then -1 to exit)
-        val userInput = "$date\n99\n-1\n0\n"
-        System.setIn(ByteArrayInputStream(userInput.toByteArray()))
+        every { reader.readLine() } returnsMany listOf(date, "99", "-1", "0")
+        every { getMealsByDateUseCase.getMealsByDate(date) } returns Result.success(listOf(meal))
 
         // When
         searchByAddDateUI.searchMealsByDate()
 
         // Then
-        val output = outContent.toString()
-        assertThat(output).contains("📅 Enter date (YYYY-MM-DD): ex: 2002-02-02")
-        assertThat(output).contains("Loading...")
-        assertThat(output).contains("1 -> Spaghetti Carbonara")
-        assertThat(output).contains("The meal with ID 99 does not exist.")
-        assertThat(output).contains("-1 -> search again or back")
+        verify(exactly = 1) { printer.printLine("The meal with ID 99 does not exist.") }
     }
 }

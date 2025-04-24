@@ -1,27 +1,31 @@
 package org.example.presentation.features
 
 import model.Meal
+import org.example.input_output.input.InputReader
+import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetMealsByDateUseCase
 import org.example.utils.DateValidator
 import org.example.utils.viewMealInListDetails
 
 class SearchByAddDateUI(
     private val getMealsByDateUseCase: GetMealsByDateUseCase,
-    private val dateValidator: DateValidator
+    private val dateValidator: DateValidator,
+    private val reader: InputReader,
+    private val printer: OutputPrinter
 ) {
 
     fun searchMealsByDate() {
         while (true) {
-            println("📅 Enter date (YYYY-MM-DD): ex: 2002-02-02\n or 0 to exit")
-            val date = readln()
+            printer.printLine("📅 Enter date (YYYY-MM-DD): ex: 2002-02-02\n or 0 to exit")
+            val date = reader.readLine()
 
             if (date == "0") {
                 return
             } else if (dateValidator.isValidDate(date)) {
-                println("Loading...")
+                printer.printLine("Loading...")
                 searchFood(date)
             } else {
-                println("Enter a valid Date or zero => 0")
+                printer.printLine("Enter a valid Date or zero => 0")
             }
         }
     }
@@ -30,7 +34,7 @@ class SearchByAddDateUI(
         getMealsByDateUseCase.getMealsByDate(date).fold(
             onSuccess = { meals -> meals },
             onFailure = { exception ->
-                println(exception)
+                printer.printLine(("error: " + exception.message) ?: "An error occurred")
                 emptyList()
             }
         ).also {
@@ -38,10 +42,13 @@ class SearchByAddDateUI(
         }
     }
 
-
     private fun printMealsIdName(mealsList: List<Meal>) {
+        if (mealsList.isEmpty()) {
+            printer.printLine("No meals found.")
+        }
+
         mealsList.forEach { meal ->
-            println("${meal.id} -> ${meal.name}")
+            printer.printLine("${meal.id} -> ${meal.name}")
         }
     }
 
@@ -49,15 +56,15 @@ class SearchByAddDateUI(
         printMealsIdName(meals)
 
         while (true) {
-            println()
-            println("-1 -> search again or back")
-            println("meal id -> view details")
-            val input: String = readln()
+            printer.printLine("")
+            printer.printLine("-1 -> search again or back")
+            printer.printLine("meal id -> view details")
+            val input = reader.readLine()
 
-            when (val mealId: Int? = input.toIntOrNull()) {
-                null -> println("Enter a valid ID or -1")
+            when (val mealId = input.toIntOrNull()) {
+                null -> printer.printLine("Enter a valid ID or -1")
                 -1 -> break
-                else -> meals.viewMealInListDetails(mealId)
+                else -> meals.viewMealInListDetails(mealId, printer)
             }
         }
     }
