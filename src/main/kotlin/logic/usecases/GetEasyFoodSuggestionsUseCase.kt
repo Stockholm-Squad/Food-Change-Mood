@@ -23,7 +23,7 @@ class GetEasyFoodSuggestionsUseCase(
             .takeIf { it.isNotEmpty() }
             ?.take(10)
             ?.let { Result.success(it) }
-            ?: getFailureResult(NoSuchElementException("No easy meals found."))
+            ?: getFailureResult(Throwable("No easy meals found."))
 
     }
 
