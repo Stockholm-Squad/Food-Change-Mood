@@ -1,4 +1,4 @@
-package data
+package org.example.data.reader
 
 import org.example.data.utils.CsvLineHandler
 import org.example.model.FoodChangeMoodExceptions
@@ -9,10 +9,13 @@ import java.io.File
 class MealCsvReader(
     private val csvFile: File,
     private val csvLineHandler: CsvLineHandler
+): MealReader {
+
+    override fun readLinesFromFile(): Result<List<String>> {
+        val lines = mutableListOf<String>()
 ) {
     fun readLinesFromFile(): Result<List<String>> {
         return try {
-            val lines = mutableListOf<String>()
             csvFile.bufferedReader().use { csvFileReader ->
                 csvFileReader.readLine()
 
