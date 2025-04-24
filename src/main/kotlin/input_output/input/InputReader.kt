@@ -3,7 +3,7 @@ package org.example.input_output.input
 import java.util.Date
 
 interface InputReader {
-    fun readLineOrNull(): String?
+    fun readStringOrNull(): String?
     fun readDateOrNull(): Date?
     fun readFloatOrNull(): Float?
 }
