@@ -7,18 +7,24 @@ import org.example.logic.repository.MealsRepository
 class GetMealsForSoThinProblemUseCase(
     private val mealRepository: MealsRepository,
 ) {
-    fun suggestRandomMealForSoThinPeople(): Meal {
-        return mealRepository.getAllMeals()
-            .takeIf { meals -> meals.isNotEmpty() }
-            ?.filter { meal ->
-                meal.id !in seenMeal &&
-                        meal.nutrition?.hasMoreThanMinCalories() == true
-            }
-            ?.randomOrNull()
-            ?.also { meal ->
-                seenMeal.add(meal.id)
-            }
-            ?: throw IllegalStateException("Sorry, No meal found with more than 700 calories")
+    fun suggestRandomMealForSoThinPeople(): Result<Meal> {
+        return mealRepository.getAllMeals().fold(
+            onSuccess = { meals ->
+                Result.success(
+                    meals.takeIf { meals -> meals.isNotEmpty() }
+                        ?.filter { meal ->
+                            meal.id !in seenMeal &&
+                                    meal.nutrition?.hasMoreThanMinCalories() == true
+                        }
+                        ?.randomOrNull()
+                        ?.also { meal ->
+                            seenMeal.add(meal.id)
+                        }
+                        ?: throw IllegalStateException("Sorry, No meal found with more than 700 calories"))
+            },
+            onFailure = { exception -> Result.failure(exception) }
+        )
+
     }
 
     private fun Nutrition.hasMoreThanMinCalories(): Boolean {

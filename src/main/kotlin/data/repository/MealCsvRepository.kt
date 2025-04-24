@@ -13,14 +13,13 @@ class MealCsvRepository(
     override fun getAllMeals(): Result<List<Meal>> {
         return allMeals
             .takeIf { it.isNotEmpty() }?.let { Result.success(it) }
-            ?: handleFailure(Throwable("Error while loading data")).apply {
-                mealDatasource.getAllMeals().fold(
-                    onSuccess = { meals ->
-                        handleSuccess(meals)
-                    },
-                    onFailure = { exception -> handleFailure(exception) }
-                )
-            }
+            ?: mealDatasource.getAllMeals().fold(
+                onSuccess = { meals ->
+                    handleSuccess(meals)
+                },
+                onFailure = { exception -> handleFailure(exception) }
+            )
+
     }
 
     companion object {

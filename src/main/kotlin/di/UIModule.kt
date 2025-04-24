@@ -22,11 +22,12 @@ import org.koin.dsl.module
 
 val uiModule = module {
     singleOf(::FoodConsoleUI)
+
     factory { ExploreCountryFoodUI(get()) }
-    factory { GetHealthyFastFoodMealsUI(get()) }
+    factory { GetHealthyFastFoodMealsUI(get(),get()) }
     factory { GetIraqiMealsUI(get()) }
-    factory { GuessGameUI(get()) }
-    factory { GymHelperUI(get()) }
+    factory { GuessGameUI(get(),get()) }
+    factory { GymHelperUI(get(), get(), get())}
     factory { IngredientGameUI(get()) }
     factory { ItalianLargeGroupMealsUI(get()) }
     factory { KetoDietMealUI(get()) }
