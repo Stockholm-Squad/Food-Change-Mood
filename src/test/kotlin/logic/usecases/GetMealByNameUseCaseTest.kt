@@ -57,11 +57,15 @@ class GetMealByNameUseCaseTest {
         // Then
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrNull()?.map { it.name }).isEqualTo(matchingMeal.map { it.name })
+
+        // And
         verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
     @Test
     fun `should return failure when no meals match the pattern`() {
+
+        // Given
         val allMeals = listOf(
             buildMeal(name = "bbq meatballs   egg noodles", id = 1),
             buildMeal(name = "bread   butter pickle deviled eggs", id = 2)
@@ -73,30 +77,45 @@ class GetMealByNameUseCaseTest {
         every { searchingByKmpUseCase.searchByKmp("bbq meatballs   egg noodles", pattern) } returns false
         every { searchingByKmpUseCase.searchByKmp("bread   butter pickle deviled eggs", pattern) } returns false
 
+        // When
         val result = getMealByNameUseCase.getMealByName(pattern)
 
+        // Then
         assertThat(result.isSuccess).isFalse()
         assertThat(result.exceptionOrNull()?.message).isEqualTo(Constants.NO_MEALS_FOUND_MATCHING)
+
+        // And
         verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
     @Test
     fun `should return failure when pattern is blank`() {
+
+        // When
         val result = getMealByNameUseCase.getMealByName("   ")
+
+        // Then
         assertThat(result.isFailure).isTrue()
         assertThat(result.exceptionOrNull()?.message).isEqualTo(Constants.SEARCH_QUERY_CAN_NOT_BE_EMPTY)
+
+        // And
         verify(exactly = 0) { mealsRepository.getAllMeals() }
     }
 
     @Test
     fun `should return failure when repository fails`() {
+
+        // Given
         val pattern = "piz"
         every { mealsRepository.getAllMeals() } returns Result.failure(Throwable())
 
+        // When
         val result = getMealByNameUseCase.getMealByName(pattern)
 
+        // Then
         assertThat(result.isFailure).isTrue()
 
+        // And
         val exception = result.exceptionOrNull()
         assertThat(exception).isNotNull()
 
@@ -104,6 +123,7 @@ class GetMealByNameUseCaseTest {
         assertThat(errorMessage).isNotNull()
 
         assertThat(errorMessage).contains(Constants.ERROR_FETCHING_MEALS)
+
         verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
