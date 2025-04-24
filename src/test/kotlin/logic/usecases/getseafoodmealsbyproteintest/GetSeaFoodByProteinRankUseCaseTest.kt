@@ -9,15 +9,10 @@ import org.example.logic.usecases.GetSeaFoodByProteinRankUseCase
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
+import utils.buildMeal
+import utils.buildNutrition
 import kotlin.test.Test
 
-//success
-// no meals found
-// no protein level
-// protein levels ranked from high to low
-//multiple seafood with same level
-// get from repo failed
-// when meals has one with no seafood
 class GetSeaFoodByProteinRankUseCaseTest() {
     private lateinit var mealsRepository: MealsRepository
     private lateinit var getSeaFoodByProteinRankUseCase: GetSeaFoodByProteinRankUseCase
@@ -29,14 +24,14 @@ class GetSeaFoodByProteinRankUseCaseTest() {
     }
 
     @AfterEach
-    fun verifyRepoCalls() {
+    fun tearDown() {
         verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
-    //Paramatrized 
+
     @Test
     fun `getSeaFoodByProteinRank() should return ranked seafood meals by protein when called`() {
         //Given
-        val meals = SeaFoodMeals.getAllMeals()
+        val meals = getSeaFoodMeals()
         every { mealsRepository.getAllMeals() } returns Result.success(meals)
         //When
         val result = getSeaFoodByProteinRankUseCase.getSeaFoodByProteinRank()
@@ -49,20 +44,14 @@ class GetSeaFoodByProteinRankUseCaseTest() {
     }
 
     @Test
-    fun `getSeaFoodByProteinRank() should return failure when meals repository returns NoSuchElementException`() {
-        //Given
-        every { mealsRepository.getAllMeals() } returns Result.failure(NoSuchElementException())
-        //When
-        val result = getSeaFoodByProteinRankUseCase.getSeaFoodByProteinRank()
-        //Then
-        assertThat(result.isFailure).isTrue()
-        assertThat(result.exceptionOrNull()).isInstanceOf(NoSuchElementException()::class.java)
-    }
-
-    @Test
     fun `getSeaFoodByProteinRank() should return seafood meals ranked by protein and ignore meals with null protein`() {
         //Given
-        val meals = SeaFoodMeals.getAllMealsContainsMealWithNullProtein()
+        val meals = getSeaFoodMeals() + buildMeal(
+            id = 4,
+            name = "Shrimp pasta",
+            description = "A tasty seafood pasta",
+            nutrition = buildNutrition(protein = null)
+        )
         every { mealsRepository.getAllMeals() } returns Result.success(meals)
         //When
         val result = getSeaFoodByProteinRankUseCase.getSeaFoodByProteinRank()
@@ -76,7 +65,12 @@ class GetSeaFoodByProteinRankUseCaseTest() {
     @Test
     fun `getSeaFoodByProteinRank() should return seafood meals sorted by protein and name when protein values match`() {
         //Given
-        val meals = SeaFoodMeals.getAllMealsWithMealsWithSameProteinLevel()
+        val meals = getSeaFoodMeals() + buildMeal(
+            id = 3,
+            name = "Vaggie salad",
+            description = "Fresh salad with no seafood",
+            nutrition = buildNutrition(protein = 5f)
+        )
         every { mealsRepository.getAllMeals() } returns Result.success(meals)
         //When
         val result = getSeaFoodByProteinRankUseCase.getSeaFoodByProteinRank()
@@ -91,7 +85,12 @@ class GetSeaFoodByProteinRankUseCaseTest() {
     @Test
     fun `getSeaFoodByProteinRank() should return seafood meals sorted by protein ignoring non-seafood meals`() {
         //Given
-        val meals = SeaFoodMeals.getAllMealsWithOneWithNoSeaFood()
+        val meals = getSeaFoodMeals() + buildMeal(
+            id = 4,
+            name = "pasta",
+            description = "A tasty pasta",
+            nutrition = buildNutrition(protein = 20f)
+        )
         every { mealsRepository.getAllMeals() } returns Result.success(meals)
         //When
         val result = getSeaFoodByProteinRankUseCase.getSeaFoodByProteinRank()
@@ -102,14 +101,13 @@ class GetSeaFoodByProteinRankUseCaseTest() {
         assertThat(seafoodResult?.get(1)?.name).isEqualTo("Shrimp pasta")
         assertThat(seafoodResult?.get(2)?.name).isEqualTo("Veggie salad")
     }
-    @Test
-    fun `getSeaFoodByProteinRank() should return failure when meals repo returns failure`(){
-        every { mealsRepository.getAllMeals() } returns Result.failure(Throwable())
 
-        val result = getSeaFoodByProteinRankUseCase.getSeaFoodByProteinRank()
-        assertThat(result.isFailure).isTrue()
-        assertThat(result.exceptionOrNull()).isInstanceOf(Throwable::class.java)
-        //get or throwable
+    @Test
+    fun `getSeaFoodByProteinRank() should return failure when meals repo returns failure`() {
+        every { mealsRepository.getAllMeals() } returns Result.failure(Throwable())
+        assertThrows<Throwable> {
+            getSeaFoodByProteinRankUseCase.getSeaFoodByProteinRank().getOrThrow()
+        }
     }
 
 }

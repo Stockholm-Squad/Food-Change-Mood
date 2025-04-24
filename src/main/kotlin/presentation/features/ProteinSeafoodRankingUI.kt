@@ -1,10 +1,11 @@
 package org.example.presentation.features
 
 import model.Meal
+import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetSeaFoodByProteinRankUseCase
 import org.example.model.FoodChangeMoodExceptions
 
-class ProteinSeafoodRankingUI(private val getSeaFoodByProteinRankUseCase: GetSeaFoodByProteinRankUseCase) {
+class ProteinSeafoodRankingUI(private val getSeaFoodByProteinRankUseCase: GetSeaFoodByProteinRankUseCase,private val printer: OutputPrinter) {
 
     fun proteinSeafoodRanking() {
         getSeaFoodByProteinRankUseCase.getSeaFoodByProteinRank().fold(
@@ -13,11 +14,11 @@ class ProteinSeafoodRankingUI(private val getSeaFoodByProteinRankUseCase: GetSea
     }
 
     private fun handleSuccess(meals: List<Meal>) {
-        meals.mapIndexed { index, meal -> println("Rank: ${index + 1} Meal name: ${meal.name} Protein amount : ${meal.nutrition?.protein}") }
+        meals.mapIndexed { index, meal -> printer.printLine("Rank: ${index + 1} Meal name: ${meal.name} Protein amount : ${meal.nutrition?.protein}") }
 
     }
 
     private fun handleFailure( exceptionMessage: String?) {
-        println(exceptionMessage)
+        printer.printLine(exceptionMessage)
     }
 }
