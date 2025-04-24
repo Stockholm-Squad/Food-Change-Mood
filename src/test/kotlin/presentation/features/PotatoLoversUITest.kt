@@ -36,10 +36,34 @@ class PotatoLoversUITest {
  fun `showPotatoLoversUI should print meals when call GetPotatoMealUseCase with valid potato meals`() {
 
   // Given
-  val meals = listOf(
-   createMeal(1, "Mashed Potatoes", listOf("Potato", "Butter")),
-   createMeal(2, "Potato Salad", listOf("Potato", "Onion"))
-  )
+  val meals = listOf(Meal(
+   name = "Mashed Potatoes",
+   minutes = 20,
+   numberOfSteps = 0,
+   steps = null,
+   description = "Just plain white rice",
+   nutrition = Nutrition(12.0f, 12.0f,12.0f,12.0f,12.0f,12.0f,12.0f),
+   numberOfIngredients = 0,
+   ingredients = null,
+   submitted = null,
+   contributorId = 12,
+   id = 1,
+   tags = null
+  ),
+   Meal(
+    name = "Potato Salad",
+    minutes = 20,
+    numberOfSteps = 0,
+    steps = null,
+    description = "Just plain white rice",
+    nutrition = Nutrition(12.0f, 12.0f,12.0f,12.0f,12.0f,12.0f,12.0f),
+    numberOfIngredients = 0,
+    ingredients = null,
+    submitted = null,
+    contributorId = 12,
+    id = 2,
+    tags = null
+   ))
 
   val inputCount = 10
   every { potatoMeals.getRandomPotatoMeals(inputCount) } returns Result.success(meals)
@@ -63,10 +87,34 @@ class PotatoLoversUITest {
  @Test
  fun `handleSuccess should show potato meals when meals are found`() {
   // Given
-  val meals = listOf(
-   createMeal(1, "Mashed Potatoes", listOf("Potato", "Butter")),
-   createMeal(2, "Potato Salad", listOf("Potato", "Onion"))
-  )
+  val meals = listOf(Meal(
+   name = "Mashed Potatoes",
+   minutes = 20,
+   numberOfSteps = 0,
+   steps = null,
+   description = "Just plain white rice",
+   nutrition = Nutrition(12.0f, 12.0f,12.0f,12.0f,12.0f,12.0f,12.0f),
+   numberOfIngredients = 0,
+   ingredients = null,
+   submitted = null,
+   contributorId = 12,
+   id = 1,
+   tags = null
+  ),
+   Meal(
+    name = "Potato Salad",
+    minutes = 20,
+    numberOfSteps = 0,
+    steps = null,
+    description = "Just plain white rice",
+    nutrition = Nutrition(12.0f, 12.0f,12.0f,12.0f,12.0f,12.0f,12.0f),
+    numberOfIngredients = 0,
+    ingredients = null,
+    submitted = null,
+    contributorId = 12,
+    id = 2,
+    tags = null
+   ))
 
   val inputCount = 10
   every { potatoMeals.getRandomPotatoMeals(inputCount) } returns Result.success(meals)
@@ -125,7 +173,20 @@ class PotatoLoversUITest {
  fun `showPotatoLoversUI should handle when inputHandler read a readInput is empty string`() {
   // Given
   val potatoUi = PotatoLoversUI(potatoMeals, outputPrinter, inputReader)
-  val meals = listOf(createMeal(1, "Chips", listOf("Potato")))
+  val meals = listOf(Meal(
+   name = "Chips",
+   minutes = 20,
+   numberOfSteps = 0,
+   steps = null,
+   description = "Just plain white rice",
+   nutrition = Nutrition(12.0f, 12.0f,12.0f,12.0f,12.0f,12.0f,12.0f),
+   numberOfIngredients = 0,
+   ingredients = null,
+   submitted = null,
+   contributorId = 12,
+   id = 1,
+   tags = null
+  ))
 
   every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
   every { inputReader.readLineOrNull() } returns "n"
@@ -141,7 +202,35 @@ class PotatoLoversUITest {
  fun `askForMoreMeals should recall showPotatoLoversUI when input is capital Y`() {
 
   // Given
-  val meals = listOf(createMeal(1, "Baked Potato", listOf("Potato")))
+  val meals = listOf(Meal(
+   name = "Mashed Potatoes",
+   minutes = 20,
+   numberOfSteps = 0,
+   steps = null,
+   description = "Just plain white rice",
+   nutrition = Nutrition(12.0f, 12.0f,12.0f,12.0f,12.0f,12.0f,12.0f),
+   numberOfIngredients = 0,
+   ingredients = null,
+   submitted = null,
+   contributorId = 12,
+   id = 1,
+   tags = null
+  ),
+   Meal(
+    name = "Potato Salad",
+    minutes = 20,
+    numberOfSteps = 0,
+    steps = null,
+    description = "Just plain white rice",
+    nutrition = Nutrition(12.0f, 12.0f,12.0f,12.0f,12.0f,12.0f,12.0f),
+    numberOfIngredients = 0,
+    ingredients = null,
+    submitted = null,
+    contributorId = 12,
+    id = 2,
+    tags = null
+   ))
+
   every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
   every { inputReader.readLineOrNull() } returnsMany listOf("Y", "n")
 
@@ -157,7 +246,35 @@ class PotatoLoversUITest {
  fun `askForMoreMeals should not recall showPotatoLoversUI when input is capital N`() {
 
   // Given
-  val meals = listOf(createMeal(1, "Baked Potato", listOf("Potato")))
+  val meals = listOf(Meal(
+   name = "Mashed Potatoes",
+   minutes = 20,
+   numberOfSteps = 0,
+   steps = null,
+   description = "Just plain white rice",
+   nutrition = Nutrition(12.0f, 12.0f,12.0f,12.0f,12.0f,12.0f,12.0f),
+   numberOfIngredients = 0,
+   ingredients = null,
+   submitted = null,
+   contributorId = 12,
+   id = 1,
+   tags = null
+  ),
+   Meal(
+    name = "Potato Salad",
+    minutes = 20,
+    numberOfSteps = 0,
+    steps = null,
+    description = "Just plain white rice",
+    nutrition = Nutrition(12.0f, 12.0f,12.0f,12.0f,12.0f,12.0f,12.0f),
+    numberOfIngredients = 0,
+    ingredients = null,
+    submitted = null,
+    contributorId = 12,
+    id = 2,
+    tags = null
+   ))
+
   every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
   every { inputReader.readLineOrNull() } returnsMany listOf("y", "N")
 
@@ -173,7 +290,35 @@ class PotatoLoversUITest {
  fun `askForMoreMeals should stop when input is no`() {
 
   // Given
-  val meals = listOf(createMeal(1, "Fries", listOf("Potato")))
+  val meals = listOf(Meal(
+   name = "Mashed Potatoes",
+   minutes = 20,
+   numberOfSteps = 0,
+   steps = null,
+   description = "Just plain white rice",
+   nutrition = Nutrition(12.0f, 12.0f,12.0f,12.0f,12.0f,12.0f,12.0f),
+   numberOfIngredients = 0,
+   ingredients = null,
+   submitted = null,
+   contributorId = 12,
+   id = 1,
+   tags = null
+  ),
+  Meal(
+   name = "Potato Salad",
+   minutes = 20,
+   numberOfSteps = 0,
+   steps = null,
+   description = "Just plain white rice",
+   nutrition = Nutrition(12.0f, 12.0f,12.0f,12.0f,12.0f,12.0f,12.0f),
+   numberOfIngredients = 0,
+   ingredients = null,
+   submitted = null,
+   contributorId = 12,
+   id = 2,
+   tags = null
+  ))
+
   every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
   every { inputReader.readLineOrNull() } returns "n"
 
@@ -188,7 +333,35 @@ class PotatoLoversUITest {
  fun `showPotatoLoversUI should handle when input is a number`() {
 
   // Given
-  val meals = listOf(createMeal(1, "Potato Wedges", listOf("Potato")))
+  val meals = listOf(Meal(
+   name = "Mashed Potatoes",
+   minutes = 20,
+   numberOfSteps = 0,
+   steps = null,
+   description = "Just plain white rice",
+   nutrition = Nutrition(12.0f, 12.0f,12.0f,12.0f,12.0f,12.0f,12.0f),
+   numberOfIngredients = 0,
+   ingredients = null,
+   submitted = null,
+   contributorId = 12,
+   id = 1,
+   tags = null
+  ),
+   Meal(
+    name = "Potato Salad",
+    minutes = 20,
+    numberOfSteps = 0,
+    steps = null,
+    description = "Just plain white rice",
+    nutrition = Nutrition(12.0f, 12.0f,12.0f,12.0f,12.0f,12.0f,12.0f),
+    numberOfIngredients = 0,
+    ingredients = null,
+    submitted = null,
+    contributorId = 12,
+    id = 2,
+    tags = null
+   ))
+
   val inputCount = 10
   every { potatoMeals.getRandomPotatoMeals(inputCount) } returns Result.success(meals)
   every { inputReader.readLineOrNull() } returns "1"
