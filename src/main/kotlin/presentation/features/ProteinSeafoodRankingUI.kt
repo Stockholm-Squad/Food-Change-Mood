@@ -2,13 +2,14 @@ package org.example.presentation.features
 
 import model.Meal
 import org.example.logic.usecases.GetSeaFoodByProteinRankUseCase
+import org.example.model.FoodChangeMoodExceptions
 
 class ProteinSeafoodRankingUI(private val getSeaFoodByProteinRankUseCase: GetSeaFoodByProteinRankUseCase) {
 
     fun proteinSeafoodRanking() {
         getSeaFoodByProteinRankUseCase.getSeaFoodByProteinRank().fold(
             onSuccess = { handleSuccess(it) },
-            onFailure = { handleFailure() })
+            onFailure = { handleFailure(it.message) })
     }
 
     private fun handleSuccess(meals: List<Meal>) {
@@ -16,7 +17,7 @@ class ProteinSeafoodRankingUI(private val getSeaFoodByProteinRankUseCase: GetSea
 
     }
 
-    private fun handleFailure() {
-        println("No seafood meals were found")
+    private fun handleFailure( exceptionMessage: String?) {
+        println(exceptionMessage)
     }
 }

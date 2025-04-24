@@ -2,6 +2,7 @@ package org.example.logic.usecases
 
 import model.Meal
 import org.example.logic.repository.MealsRepository
+import org.example.model.FoodChangeMoodExceptions
 
 class GetSeaFoodByProteinRankUseCase(private val mealsRepository: MealsRepository) {
     fun getSeaFoodByProteinRank(): Result<List<Meal>> {
@@ -16,9 +17,13 @@ class GetSeaFoodByProteinRankUseCase(private val mealsRepository: MealsRepositor
             meal.description?.contains(
                 "seafood",
                 ignoreCase = true
-            ) == true
-        }.sortedByDescending { meal -> meal.nutrition?.protein }.takeIf { meal -> meal.isNotEmpty() }
-            ?.let { Result.success(it) } ?: Result.failure(NoSuchElementException("No seafood meals found."))
+            ) == true &&
+            meal.nutrition?.protein != null
+        }.sortedWith(
+            compareByDescending<Meal> { it.nutrition?.protein }
+                .thenBy { it.name }
+        ).takeIf { meal -> meal.isNotEmpty() }
+            ?.let { Result.success(it) } ?: Result.failure(FoodChangeMoodExceptions.LogicException.NoMealsFound())
     }
     private fun getFailureResult(throwable: Throwable): Result<List<Meal>>{
         return  Result.failure(exception = throwable)
