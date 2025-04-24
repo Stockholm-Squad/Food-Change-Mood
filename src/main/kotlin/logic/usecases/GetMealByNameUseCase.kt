@@ -17,7 +17,7 @@ class GetMealByNameUseCase(
                     onFailure = ::handleFailure
                 )
             }
-            ?: Result.failure(Throwable(Constants.SEARCH_QUERY_CAN_NOT_BE_EMPTY))
+            ?: handleFailure(Throwable(Constants.SEARCH_QUERY_CAN_NOT_BE_EMPTY))
     }
 
     private fun handleSuccess(meals: List<Meal>, query: String): Result<List<Meal>> =
@@ -25,7 +25,7 @@ class GetMealByNameUseCase(
             .filter { searchingByKmpUseCase.searchByKmp(it.name, query) }
             .takeIf { it.isNotEmpty() }
             ?.let { Result.success(it) }
-            ?: Result.failure(Throwable(Constants.NO_MEALS_FOUND_MATCHING))
+            ?: handleFailure(Throwable(Constants.NO_MEALS_FOUND_MATCHING))
 
     private fun handleFailure(error: Throwable): Result<List<Meal>> =
         Result.failure(Throwable("${Constants.ERROR_FETCHING_MEALS} ${error.message}"))
