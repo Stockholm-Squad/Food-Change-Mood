@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.datetime.LocalDate
 import org.example.logic.repository.MealsRepository
 import org.example.logic.usecases.GetMealsByDateUseCase
 import org.example.utils.getDateFromString
@@ -12,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import utils.buildMeal
-import java.util.*
+
 
 class GetMealsByDateUseCaseTest {
     private lateinit var mealsRepository: MealsRepository
@@ -35,7 +36,7 @@ class GetMealsByDateUseCaseTest {
         val date = "2025-04-23"
         val utilDate = getDateFromString(date).getOrThrow()
         val meal1 = buildMeal(id = 1, submitted = utilDate)
-        val meal2 = buildMeal(id = 2, submitted = Date())
+        val meal2 = buildMeal(id = 2, submitted = LocalDate(2000 , 12 , 12))
         every { mealsRepository.getAllMeals() } returns Result.success(listOf(meal1, meal2))
 
         // When
@@ -49,7 +50,7 @@ class GetMealsByDateUseCaseTest {
     fun `getMealsByDate should return empty list when no meals match the given date`() {
         // Given
         val date = "2025-04-23"
-        val meal1 = buildMeal(id = 1, submitted = Date())
+        val meal1 = buildMeal(id = 1, submitted = LocalDate(2000 , 12 , 12))
         every { mealsRepository.getAllMeals() } returns Result.success(listOf(meal1))
 
         // When
@@ -90,7 +91,7 @@ class GetMealsByDateUseCaseTest {
     fun `getMealsByDate should handle date parsing failure when given invalid date format`() {
         // Given
         val invalidDate = "invalid-date"
-        val meal = buildMeal(id = 1, submitted = Date())
+        val meal = buildMeal(id = 1, submitted = LocalDate(2000 , 12 , 12))
         every { mealsRepository.getAllMeals() } returns Result.success(listOf(meal))
 
         // When

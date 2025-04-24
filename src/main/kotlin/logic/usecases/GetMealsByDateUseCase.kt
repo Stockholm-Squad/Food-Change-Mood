@@ -27,13 +27,13 @@ class GetMealsByDateUseCase(
     }
 
     private fun isMealWithDate(meal: Meal, date: String): Boolean {
-        val utilDate = getDateFromString(date).fold(
+        val localDate = getDateFromString(date).fold(
             onSuccess = { dateResult -> dateResult },
             onFailure = { exception ->
                 println(exception)
                 false
             }
         )
-        return meal.submitted == utilDate
+        return meal.submitted == localDate
     }
 }

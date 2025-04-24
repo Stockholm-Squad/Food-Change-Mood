@@ -1,7 +1,6 @@
 package model
 
-import org.example.utils.print
-import java.util.Date
+import kotlinx.datetime.LocalDate
 
 
 data class Meal(
@@ -9,7 +8,7 @@ data class Meal(
     val id: Int,
     val minutes: Int?,
     val contributorId: Int,
-    val submitted: Date?,
+    val submitted: LocalDate?,
     val tags: List<String>?,
     val nutrition: Nutrition?,
     val numberOfSteps: Int?,
@@ -24,7 +23,7 @@ data class Meal(
         id= $id,
         minutes= ${minutes ?: "N/A"},
         contributorId= $contributorId,
-        submitted= ${submitted?.print() ?: "N/A"},
+        submitted= ${submitted ?: "N/A"},
         tags= ${tags?.joinToString(", ") ?: "N/A"},
         nutrition= $nutrition,
         numberOfSteps= ${numberOfSteps ?: "N/A"},

@@ -1,5 +1,6 @@
 package org.example.data.parser
 
+import kotlinx.datetime.LocalDate
 import model.Meal
 import model.Nutrition
 import org.example.data.utils.CsvLineFormatter
@@ -8,7 +9,6 @@ import org.example.utils.Constants
 import org.example.utils.MealColumnIndex
 import org.example.utils.NutritionIndex
 import org.example.utils.getDateFromString
-import java.util.Date
 
 class MealCsvParser(
     private val csvLineFormatter: CsvLineFormatter
@@ -68,7 +68,7 @@ class MealCsvParser(
     private fun extractDateColumn(
         mealRow: List<String>,
         index: MealColumnIndex
-    ): Date? {
+    ): LocalDate? {
         return safeAccessColumn(mealRow, index.index, "Date") { dateField ->
             getDateFromString(dateField).fold(
                 onSuccess = { date -> date },
