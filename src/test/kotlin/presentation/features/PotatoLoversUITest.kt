@@ -215,22 +215,6 @@ class PotatoLoversUITest {
   assertThat(result).isEmpty()
  }
 
-// @Test
-// fun `showPotatoLoversUI should handle null input from user`() {
-//
-//  // Given
-//  val meals = listOf(createMeal(1, "Potato Bake", listOf("Potato")))
-//  val inputCount = 10
-//  every { potatoMeals.getRandomPotatoMeals(inputCount) } returns Result.success(meals)
-//  every { inputReader.readLineOrNull() } returns null
-//
-//  // When
-//  potatoMealUi.showPotatoLoversUI()
-//
-//  // Then
-//  verify { outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋") }
-// }
-
  @Test
  fun `askToViewMealDetails should prompt the user with the initial question`() {
   // Given
@@ -254,13 +238,12 @@ class PotatoLoversUITest {
   val meals = listOf(buildMeal(id = 1, name = "Potato Casserole", ingredients = listOf("Potato", "Cheese"), steps = listOf("Boil potatoes", "Add cheese", "Bake in oven"), minutes = 30, numberOfSteps = 3, numberOfIngredients = 2, description = "A cheesy baked potato dish", nutrition = Nutrition(null, null, null, null, null, null, null), submitted = null, contributorId = null),
    buildMeal(id = 1, name = "Potato Casserole", ingredients = listOf("Potato", "Cheese"), steps = listOf("Boil potatoes", "Add cheese", "Bake in oven"), minutes = 30, numberOfSteps = 3, numberOfIngredients = 2, description = "A cheesy baked potato dish", nutrition = Nutrition(null, null, null, null, null, null, null), submitted = null, contributorId = null))
    every { inputReader.readLineOrNull() } returns "n"
+
   // When
 
   potatoMealUi.askToViewMealDetails(meals)
 
   // Then
-
-
   verify {
    outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋")
   }
@@ -271,13 +254,12 @@ class PotatoLoversUITest {
   // Given
   val meals = listOf(buildMeal(id = 1, name = "Potato Casserole", ingredients = listOf("Potato", "Cheese"), steps = listOf("Boil potatoes", "Add cheese", "Bake in oven"), minutes = 30, numberOfSteps = 3, numberOfIngredients = 2, description = "A cheesy baked potato dish", nutrition = Nutrition(null, null, null, null, null, null, null), submitted = null, contributorId = null),
    buildMeal(id = 1, name = "Potato Casserole", ingredients = listOf("Potato", "Cheese"), steps = listOf("Boil potatoes", "Add cheese", "Bake in oven"), minutes = 30, numberOfSteps = 3, numberOfIngredients = 2, description = "A cheesy baked potato dish", nutrition = Nutrition(null, null, null, null, null, null, null), submitted = null, contributorId = null))
-
-  // When
   every { inputReader.readLineOrNull() } returns "" andThen "abc" andThen "1"
 
-  // Then
+  // When
   potatoMealUi.askToViewMealDetails(meals)
 
+  // Then
   verify {
    outputPrinter.printLine("Invalid selection. Please choose a valid number.")
    outputPrinter.printLine("Invalid selection. Please choose a valid number.")
@@ -308,13 +290,12 @@ class PotatoLoversUITest {
     contributorId = null
    )
   }
-
-  // When
   every { inputReader.readLineOrNull() } returnsMany listOf("11", "n")
 
-  // Then
+  // When
   potatoMealUi.askToViewMealDetails(meals)
 
+  // Then
   verify {
    outputPrinter.printLine("Invalid selection. Please choose a valid number.")
    outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋")
@@ -390,8 +371,8 @@ class PotatoLoversUITest {
  }
 
  @Test
- fun `showMealDetails handles null steps and null ingredients gracefully`() {
-  // Arrange
+ fun `showMealDetails handles null steps and null ingredients `() {
+  // Given
   val meal = Meal(
    name = "Plain Rice",
    minutes = 20,
@@ -411,7 +392,7 @@ class PotatoLoversUITest {
   every { outputPrinter.printLine(any()) } returns Unit
   potatoMealUi.showMealDetails(meal)
 
-  // Assert
+  // Then
   verifyOrder {
    outputPrinter.printLine("\n🍽️ Details of 'Plain Rice':")
    outputPrinter.printLine("🕒 Minutes to prepare: 20")
