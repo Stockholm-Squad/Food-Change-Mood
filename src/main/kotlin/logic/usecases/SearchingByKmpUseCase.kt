@@ -7,39 +7,64 @@ package org.example.logic.usecases
  */
 class SearchingByKmpUseCase {
 
-    fun searchByKmp(mealName: String?, pattern: String?): Boolean =
-        mealName?.lowercase()?.let { meal ->
-            pattern?.trim()?.lowercase()?.let { pat -> // Trim the pattern to remove leading/trailing spaces
-                if (pat.isNotEmpty()) findPatternInText(meal, pat, createLpsTable(pat))
-                else false
-            }
-        } ?: false
+    fun searchByKmp(mealName: String?, pattern: String?): Boolean {
+        val normalizedMeal = normalizeString(mealName)
+        val normalizedPattern = normalizeString(pattern)
 
-    private fun findPatternInText(mealName: String, pattern: String, lps: IntArray): Boolean {
-        var matchIndex = 0
-        return mealName.foldIndexed(false) { index, found, _ ->
-            when {
-                found -> true
-                pattern[matchIndex] == mealName[index] -> {
-                    matchIndex++
-                    matchIndex == pattern.length
-                }
-                matchIndex != 0 -> {
-                    matchIndex = lps[matchIndex - 1]
-                    false
-                }
-                else -> false
-            }
+        return if (normalizedPattern.isNotEmpty()) {
+            findPatternInText(normalizedMeal, normalizedPattern, createLpsTable(normalizedPattern))
+        } else {
+            false
         }
     }
 
-    private fun createLpsTable(pattern: String): IntArray =
-        pattern.foldIndexed(IntArray(pattern.length)) { index, lps, _ ->
-            if (index == 0) return@foldIndexed lps
-            var j = lps[index - 1]
-            while (j > 0 && pattern[j] != pattern[index]) j = lps[j - 1]
-            if (pattern[j] == pattern[index]) j++
-            lps[index] = j
-            lps
+    private fun normalizeString(input: String?): String {
+        return input?.trim()?.lowercase() ?: ""
+    }
+
+    private fun findPatternInText(mealName: String, pattern: String, lps: IntArray): Boolean {
+        var i = 0
+        var j = 0
+
+        while (i < mealName.length) {
+            if (mealName[i] == pattern[j]) {
+                i++
+                j++
+                if (j == pattern.length) {
+                    return true
+                }
+            } else {
+                if (j != 0) {
+                    j = lps[j - 1]
+                } else {
+                    i++
+                }
+            }
         }
+
+        return false
+    }
+
+    private fun createLpsTable(pattern: String): IntArray {
+        val lps = IntArray(pattern.length)
+        var length = 0
+        var i = 1
+
+        while (i < pattern.length) {
+            if (pattern[i] == pattern[length]) {
+                length++
+                lps[i] = length
+                i++
+            } else {
+                if (length != 0) {
+                    length = lps[length - 1]
+                } else {
+                    lps[i] = 0
+                    i++
+                }
+            }
+        }
+
+        return lps
+    }
 }

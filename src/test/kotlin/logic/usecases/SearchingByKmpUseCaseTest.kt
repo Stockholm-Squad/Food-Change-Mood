@@ -29,6 +29,18 @@ class SearchingByKmpUseCaseTest {
         "'pizza wrap', '  wrap  ', true",
         "'two 12 inch good and easy pepperoni pizzas', '  pepperoni', true",
         "'bread   butter pickle deviled eggs', 'butter pickle', true",
+        "'abcxabcdabcdabcy', 'abcxabcd', true",
+        "'abacababc', 'abac', true",
+        "'aaaaab', 'aaab', true",
+        "'abcabcabcabc', 'abcabcab', true",
+        "'abcdabcabcd', 'abcabcd', true",
+        "'abcabcabcd', 'abcabcd', true",
+        "'abcabcabcabcx', 'abcabcx', true",
+        "'abababcabababcabababc', 'abababc', true",
+        "'abcabcabcabcabcabc', 'abcabcabc', true",
+        "'aabaabaaa', 'aabaabaa', true",
+        "'abacababc', 'abac', true",
+        "'  FooBarBaz  ', 'bar', true"
     )
     fun `searchByKmp() should return true when pattern is found in meal name`(
         nameMeal: String,
@@ -52,7 +64,16 @@ class SearchingByKmpUseCaseTest {
         "'5 minute bread pizza', 'minute pizza', false",
         "'white spinach pizza oamc', 'b', false",
         "'pizza wrap', 'wrap!', false",
-        "'pizza wrap', '@', false"
+        "'pizza wrap', '@', false",
+        "null, abc, false",
+        "'bread pizza', null, false",
+        "'bread pizza', '', false",
+        "'bread pizza', '   ', false",
+        "'abcxabcdabcdabcy', 'abcdabca', false",
+        "'abacababc', 'abacabac', false",
+        "'xyzxyzxyzxyz', 'abc', false",
+        "'aaaaaaa', 'aaab', false",
+        "'  FooBarBaz  ', '  ', false"
     )
     fun `searchByKmp() should return false for pattern is not found in meal name`(
         nameMeal: String,
