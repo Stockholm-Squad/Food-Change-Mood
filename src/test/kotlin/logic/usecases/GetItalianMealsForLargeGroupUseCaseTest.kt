@@ -78,7 +78,7 @@ class GetItalianMealsForLargeGroupUseCaseTest {
     }
 
     @Test
-    fun `getMeals should return meals sorted by id when multiple meals match criteria`() {
+    fun `getMeals should return meals sorted by id when multiple meals returned`() {
         // Given
         val meal1 = buildMeal(id = 3, tags = listOf("italian", "for-large-groups"))
         val meal2 = buildMeal(id = 1, tags = listOf("italian", "for-large-groups"))
