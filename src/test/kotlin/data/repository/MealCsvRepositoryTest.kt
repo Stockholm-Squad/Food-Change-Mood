@@ -75,7 +75,7 @@ class MealCsvRepositoryTest {
 
     @Test
     @Order(3)
-    fun `getAllMeals() should return list of cashed meals when there is a cashed meals`() {
+    fun `getAllMeals() should return list of cached meals when there is a cached meals`() {
         //Given
         val meals = listOf(
             buildMeal(1), buildMeal(2), buildMeal(3),
