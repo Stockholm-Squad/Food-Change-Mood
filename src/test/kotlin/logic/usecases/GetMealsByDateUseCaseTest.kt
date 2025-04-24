@@ -4,7 +4,6 @@ import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import model.Meal
 import org.example.logic.repository.MealsRepository
 import org.example.logic.usecases.GetMealsByDateUseCase
 import org.example.utils.getDateFromString
