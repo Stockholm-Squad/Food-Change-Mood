@@ -10,5 +10,7 @@ object Constants {
     const val NO_MEALS_FOUND_MATCHING = "No meals found matching"
     const val UNEXPECTED_ERROR = "Unexpected error occurred"
     const val ERROR_FETCHING_MEALS = "Error fetching meals: "
+
+    
     const val CANT_PARSE_DATE_FROM_STRING = "Can't parse date from string"
 }
