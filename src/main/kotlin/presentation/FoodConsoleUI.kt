@@ -1,6 +1,6 @@
 package org.example.presentation
 
-import org.example.presentation.features.ExploreCountryFoodUI
+import org.example.presentation.features.ExploreCountryMealsUI
 import org.example.presentation.features.GetHealthyFastFoodMealsUI
 import org.example.presentation.features.GetIraqiMealsUI
 import org.example.presentation.features.GuessGameUI
@@ -20,7 +20,7 @@ import org.example.utils.MenuOption
 
 class FoodConsoleUI(
     private val healthyFastFoodMealsUI: GetHealthyFastFoodMealsUI,
-    private val exploreCountryFoodUI: ExploreCountryFoodUI,
+    private val exploreCountryMealsUI: ExploreCountryMealsUI,
     private val getIraqiMealsUI: GetIraqiMealsUI,
     private val guessGameUI: GuessGameUI,
     private val gymHelperUI: GymHelperUI,
@@ -53,11 +53,11 @@ class FoodConsoleUI(
             MenuOption.IRAQI_MEALS -> getIraqiMealsUI.getIraqiMeals()
             MenuOption.EASY_MEALS -> suggestEasyMealsUI.showEasySuggestions()
             MenuOption.GUESS_GAME -> guessGameUI.playGuessGame()
-            MenuOption.SWEETS_NO_EGGS -> suggestSweetNoEggsUI.showSweetsNoEggs()
+            MenuOption.SWEETS_NO_EGGS -> suggestSweetNoEggsUI.handleSweetsNoEggs()
             MenuOption.KETO_MEALS -> ketoDietMealUI.showKetoMeal()
             MenuOption.SEARCH_BY_DATE -> searchByAddDateUI.searchMealsByDate()
             MenuOption.GYM_HELPER -> gymHelperUI.useGymHelper()
-            MenuOption.COUNTRY_FOOD -> exploreCountryFoodUI.exploreCountryFoodCulture()
+            MenuOption.COUNTRY_FOOD -> exploreCountryMealsUI.handleCountryByNameAction()
             MenuOption.INGREDIENT_GAME -> ingredientGameUI.start()
             MenuOption.POTATO_LOVERS -> potatoLoversUI.showPotatoLoversUI()
             MenuOption.HIGH_CALORIE_MEAL -> suggestMealForSoThinPeopleUI.getMaleWithHighCalorie()

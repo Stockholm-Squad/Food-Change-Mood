@@ -2,7 +2,7 @@ package org.example.di
 
 
 import org.example.presentation.FoodConsoleUI
-import org.example.presentation.features.ExploreCountryFoodUI
+import org.example.presentation.features.ExploreCountryMealsUI
 import org.example.presentation.features.GetHealthyFastFoodMealsUI
 import org.example.presentation.features.GetIraqiMealsUI
 import org.example.presentation.features.GuessGameUI
@@ -23,7 +23,7 @@ import org.koin.dsl.module
 val uiModule = module {
     singleOf(::FoodConsoleUI)
 
-    factory { ExploreCountryFoodUI(get(),get(),get()) }
+    factory { ExploreCountryMealsUI(get(),get(),get()) }
     factory { GetHealthyFastFoodMealsUI(get()) }
     factory { GetIraqiMealsUI(get()) }
     factory { GuessGameUI(get(),get()) }
@@ -36,6 +36,6 @@ val uiModule = module {
     factory { SearchMealByNameUI(get()) }
     factory { SearchByAddDateUI(get(), get()) }
     factory { SuggestEasyMealsUI(get()) }
-    factory { SuggestSweetNoEggsUI(get()) }
+    factory { SuggestSweetNoEggsUI(get(),get(),get()) }
     factory { SuggestMealForSoThinPeopleUI(get()) }
 }
