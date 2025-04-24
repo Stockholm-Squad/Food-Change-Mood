@@ -1,4 +1,4 @@
-package data
+package org.example.data.parser
 
 import model.Meal
 import model.Nutrition

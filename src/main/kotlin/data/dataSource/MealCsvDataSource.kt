@@ -1,7 +1,7 @@
 package org.example.data.dataSource
 
-import data.MealCsvParser
-import data.MealCsvReader
+import org.example.data.parser.MealCsvParser
+import org.example.data.reader.MealCsvReader
 import model.Meal
 
 class MealCsvDataSource(

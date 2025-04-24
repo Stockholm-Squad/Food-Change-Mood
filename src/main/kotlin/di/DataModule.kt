@@ -1,5 +1,5 @@
-import data.MealCsvParser
-import data.MealCsvReader
+import org.example.data.parser.MealCsvParser
+import org.example.data.reader.MealCsvReader
 import org.example.data.dataSource.MealCsvDataSource
 import org.example.data.dataSource.MealDataSource
 import org.example.data.utils.CsvLineFormatter

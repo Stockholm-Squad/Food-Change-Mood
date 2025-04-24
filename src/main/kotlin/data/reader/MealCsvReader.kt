@@ -1,4 +1,4 @@
-package data
+package org.example.data.reader
 
 import org.example.data.utils.CsvLineHandler
 import org.example.model.FoodChangeMoodExceptions
