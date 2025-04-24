@@ -12,4 +12,5 @@ object Constants {
     const val ERROR_FETCHING_MEALS = "Error fetching meals: "
     const val ERROR_WHILE_READING_FROM_FILE = "Error while reading from the file!!"
     const val INSUFFICIANT_DATA_IN_ROW = "Insufficient data in row while parsing!!"
+    const val NO_IRAQI_MEALS = "no found any iraqi meals"
 }
