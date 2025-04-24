@@ -16,58 +16,56 @@ class GuessGameUI(
 ) {
     fun playGuessGame() {
         getRandomMealUseCase.getRandomMeal().fold(
-            onSuccess = { meal ->
-                startGame(meal)
-            },
-            onFailure = {
-                printer.printLine(Constants.UNEXPECTED_ERROR)
-            }
+            onSuccess = ::startGame,
+            onFailure = { printer.printLine(Constants.UNEXPECTED_ERROR) }
         )
     }
-    private fun startGame(meal: Meal){
-        val correctTime = meal.minutes
-        if (correctTime == null) {
-            printer.printLine(Constants.NO_PREPARATION_TIME)
-            return
-        }
 
-        printer.printLine("🎮 Guess the preparation time of: ${meal.name}")
-        var attempts = 0
-        while (attempts < MAX_ATTEMPTS) {
-            printer.printLine("Enter your guess:")
-            val userGuess = inputReader.readIntOrNull()
+    private fun startGame(meal: Meal) {
+        meal.minutes?.let { correctTime ->
+            printer.printLine("🎮 Guess the preparation time of: ${meal.name}")
 
-            if (userGuess == null) {
-                printer.printLine(Constants.INVALID_INPUT_MESSAGE)
-                continue
-            }
+            (1..MAX_ATTEMPTS).forEach { attempt ->
+                printer.printLine("Enter your guess:")
+                val userGuess = inputReader.readIntOrNull()
 
-            val result = getGuessPreparationTimeUseCase.guessGame(
-                userGuess = userGuess,
-                preparationTime = correctTime
-            )
+                userGuess
+                    ?.also { handleGuessGame(it, correctTime) }
+                    ?: run {
+                        printer.printLine(Constants.INVALID_INPUT_MESSAGE)
+                        return
+                    }
 
-            when (result.getOrNull()) {
-                GuessPreparationTimeState.CORRECT -> {
-                    printer.printLine("🎉 Correct! The preparation time is $correctTime minutes.")
-                    return
+                if (attempt == MAX_ATTEMPTS) {
+                    printer.printLine("❌ You've used all attempts. The correct time was $correctTime minutes.")
                 }
-                GuessPreparationTimeState.TOO_LOW -> printer.printLine(Constants.LOW_MESSAGE)
-                GuessPreparationTimeState.TOO_HIGH -> printer.printLine(Constants.HIGH_MESSAGE)
-                else -> printer.printLine("❗ Unexpected state.")
             }
+        } ?: printer.printLine(Constants.NO_PREPARATION_TIME)
+    }
 
-            attempts++
-            if (attempts == MAX_ATTEMPTS) {
-                printer.printLine("❌ You've used all attempts. The correct time was $correctTime minutes.")
-                return
+
+    private fun handleGuessGame(userGuess: Int?, correctTime: Int?) {
+        getGuessPreparationTimeUseCase.guessGame(
+            userGuess = userGuess,
+            preparationTime = correctTime
+        ).map { state ->
+            when (state) {
+                GuessPreparationTimeState.CORRECT -> "🎉 Correct! The preparation time is $correctTime minutes."
+                GuessPreparationTimeState.TOO_LOW -> Constants.LOW_MESSAGE
+                GuessPreparationTimeState.TOO_HIGH -> Constants.HIGH_MESSAGE
+                else -> "❗ Unexpected state."
             }
+        }.onSuccess { message ->
+            printer.printLine(message)
+        }.onFailure {
+            printer.printLine("❗ Failed to evaluate guess: ${it.message}")
         }
     }
-   companion object
-   {
-       const val MAX_ATTEMPTS=3
-   }
+
+
+    companion object {
+        const val MAX_ATTEMPTS = 3
+    }
 }
 
 
