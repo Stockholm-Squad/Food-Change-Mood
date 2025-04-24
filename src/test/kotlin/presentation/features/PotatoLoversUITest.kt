@@ -4,12 +4,11 @@ import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import junit.framework.TestCase.assertEquals
 import logic.usecases.createMeal
 import org.example.logic.usecases.GetPotatoMealsUseCase
 import org.example.presentation.features.PotatoLoversUI
-import org.example.utils.InputHandler
-import org.example.utils.OutputHandler
+import org.example.utils.InputReader
+import org.example.utils.OutputPrinter
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.IOException
@@ -18,18 +17,18 @@ class PotatoLoversUITest {
 
  private lateinit var potatoMeals: GetPotatoMealsUseCase
  private lateinit var potatoMealUi: PotatoLoversUI
- private lateinit var outputHandler: OutputHandler
- private lateinit var inputHandler: InputHandler
+ private lateinit var outputPrinter: OutputPrinter
+ private lateinit var inputReader: InputReader
 
  @BeforeEach
  fun setUp() {
   potatoMeals = mockk(relaxed = true)
-  outputHandler = mockk(relaxed = true)
-  inputHandler = mockk()
+  outputPrinter = mockk(relaxed = true)
+  inputReader = mockk()
   potatoMealUi = PotatoLoversUI(
    potatoMeals,
-   outputHandler,
-   inputHandler
+   outputPrinter,
+   inputReader
   )
  }
 
@@ -44,20 +43,20 @@ class PotatoLoversUITest {
 
   val inputCount = 10
   every { potatoMeals.getRandomPotatoMeals(inputCount) } returns Result.success(meals)
-  every { inputHandler.readInput() } returns "n"
+  every { inputReader.readLineOrNull() } returns "n"
 
   // When
   potatoMealUi.showPotatoLoversUI()
 
   // Then
   verify {
-   outputHandler.showMessage("🥔 I ❤️ Potato Meals:")
-   outputHandler.showMessage("🍽️ Meal #1: Mashed Potatoes")
-   outputHandler.showMessage("🍽️ Meal #2: Potato Salad")
-   outputHandler.showMessage(withArg { message ->
+   outputPrinter.printLine("🥔 I ❤️ Potato Meals:")
+   outputPrinter.printLine("🍽️ Meal #1: Mashed Potatoes")
+   outputPrinter.printLine("🍽️ Meal #2: Potato Salad")
+   outputPrinter.printLine(withArg { message ->
     assert(message.contains("Would you like to see more"))
    })
-   outputHandler.showMessage("Okay! Enjoy your potato meals! 🥔😋")
+   outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋")
   }
  }
 
@@ -73,9 +72,9 @@ class PotatoLoversUITest {
   potatoMealUi.handleSuccess(meals)
 
   // Then
-  verify { outputHandler.showMessage("🥔 I ❤️ Potato Meals:") }
-  verify { outputHandler.showMessage("🍽️ Meal #1: Mashed Potatoes") }
-  verify { outputHandler.showMessage("🍽️ Meal #2: Potato Salad") }
+  verify { outputPrinter.printLine("🥔 I ❤️ Potato Meals:") }
+  verify { outputPrinter.printLine("🍽️ Meal #1: Mashed Potatoes") }
+  verify { outputPrinter.printLine("🍽️ Meal #2: Potato Salad") }
  }
 
  @Test
@@ -87,20 +86,20 @@ class PotatoLoversUITest {
   potatoMealUi.handleFailure(exception)
 
   // Then
-  verify { outputHandler.showMessage("❌ Error: ${exception.message}") }
+  verify { outputPrinter.printLine("❌ Error: ${exception.message}") }
  }
 
  @Test
  fun `showPotatoLoversUI should show no meals found when GetPotatoMealUseCase returns empty list`() {
   // Given
   every { potatoMeals.getRandomPotatoMeals(any()) } returns Result.success(emptyList())
-  every { inputHandler.readInput() } returns "n"
+  every { inputReader.readLineOrNull() } returns "n"
 
   // When
   potatoMealUi.showPotatoLoversUI()
 
   // Then
-  verify { outputHandler.showMessage("😢 No potato meals found.") }
+  verify { outputPrinter.printLine("😢 No potato meals found.") }
  }
 
  @Test
@@ -109,19 +108,19 @@ class PotatoLoversUITest {
   // Given
   val exception = RuntimeException("Something went wrong")
   every { potatoMeals.getRandomPotatoMeals(any()) } returns Result.failure(exception)
-  every { inputHandler.readInput() } returns "n"
+  every { inputReader.readLineOrNull() } returns "n"
 
   // When
   potatoMealUi.showPotatoLoversUI()
 
   // Then
-  verify { outputHandler.showMessage("❌ Error: ${exception.message}") }
+  verify { outputPrinter.printLine("❌ Error: ${exception.message}") }
  }
 
  @Test
  fun `showPotatoLoversUI should not crash when inputHandler read a readInput is empty string`() {
   // Given
-  val potatoUi = PotatoLoversUI(potatoMeals, outputHandler, null)
+  val potatoUi = PotatoLoversUI(potatoMeals, outputPrinter, null)
   val meals = listOf(createMeal(1, "Chips", listOf("Potato")))
 
   every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
@@ -130,7 +129,7 @@ class PotatoLoversUITest {
   potatoUi.showPotatoLoversUI()
 
   // Then
-  verify { outputHandler.showMessage("🍽️ Meal #1: Chips") }
+  verify { outputPrinter.printLine("🍽️ Meal #1: Chips") }
  }
 
  @Test
@@ -139,14 +138,14 @@ class PotatoLoversUITest {
   // Given
   val meals = listOf(createMeal(1, "Baked Potato", listOf("Potato")))
   every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
-  every { inputHandler.readInput() } returnsMany listOf("Y", "n")
+  every { inputReader.readLineOrNull() } returnsMany listOf("Y", "n")
 
   // When
   potatoMealUi.showPotatoLoversUI()
 
   // Then
   verify(exactly = 2) { potatoMeals.getRandomPotatoMeals(10) }
-  verify { outputHandler.showMessage("Okay! Enjoy your potato meals! 🥔😋") }
+  verify { outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋") }
  }
 
  @Test
@@ -155,14 +154,14 @@ class PotatoLoversUITest {
   // Given
   val meals = listOf(createMeal(1, "Baked Potato", listOf("Potato")))
   every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
-  every { inputHandler.readInput() } returnsMany listOf("y", "N")
+  every { inputReader.readLineOrNull() } returnsMany listOf("y", "N")
 
   // When
   potatoMealUi.showPotatoLoversUI()
 
   // Then
   verify(exactly = 2) { potatoMeals.getRandomPotatoMeals(10) }
-  verify { outputHandler.showMessage("Okay! Enjoy your potato meals! 🥔😋") }
+  verify { outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋") }
  }
 
  @Test
@@ -171,13 +170,13 @@ class PotatoLoversUITest {
   // Given
   val meals = listOf(createMeal(1, "Hash Browns", listOf("Potato")))
   every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
-  every { inputHandler.readInput() } returns "no"
+  every { inputReader.readLineOrNull() } returns "no"
 
   // When
   potatoMealUi.showPotatoLoversUI()
 
   // Then
-  verify { outputHandler.showMessage("Okay! Enjoy your potato meals! 🥔😋") }
+  verify { outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋") }
  }
 
  @Test
@@ -186,13 +185,13 @@ class PotatoLoversUITest {
   // Given
   val meals = listOf(createMeal(1, "Fries", listOf("Potato")))
   every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
-  every { inputHandler.readInput() } returns "n"
+  every { inputReader.readLineOrNull() } returns "n"
 
   // When
   potatoMealUi.showPotatoLoversUI()
 
   // Then
-  verify { outputHandler.showMessage("Okay! Enjoy your potato meals! 🥔😋") }
+  verify { outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋") }
  }
 
  @Test
@@ -200,13 +199,13 @@ class PotatoLoversUITest {
   // Given
   val meals = listOf(createMeal(1, "Potato Pancakes", listOf("Potato")))
   every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
-  every { inputHandler.readInput() } returns "   "
+  every { inputReader.readLineOrNull() } returns "   "
 
   // When
   potatoMealUi.showPotatoLoversUI()
 
   // Then
-  verify { outputHandler.showMessage("Okay! Enjoy your potato meals! 🥔😋") }
+  verify { outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋") }
  }
 
  @Test
@@ -221,7 +220,7 @@ class PotatoLoversUITest {
   val inputCount = 10
   every { potatoMeals.getRandomPotatoMeals(inputCount) } returnsMany
           listOf(Result.success(meals1), Result.success(meals2), Result.success(meals3))
-  every { inputHandler.readInput() } returnsMany listOf("y", "yes", "n")
+  every { inputReader.readLineOrNull() } returnsMany listOf("y", "yes", "n")
 
   // When
   potatoMealUi.showPotatoLoversUI()
@@ -236,13 +235,13 @@ class PotatoLoversUITest {
   // Given
   val meals = listOf(createMeal(1, "Potato Wedges", listOf("Potato")))
   every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
-  every { inputHandler.readInput() } returns "1"
+  every { inputReader.readLineOrNull() } returns "1"
 
   // When
   potatoMealUi.showPotatoLoversUI()
 
   // Then
-  verify { outputHandler.showMessage("Okay! Enjoy your potato meals! 🥔😋") }
+  verify { outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋") }
  }
 
  @Test
@@ -251,13 +250,13 @@ class PotatoLoversUITest {
   // Given
   val meals = listOf(createMeal(1, "Potato Gratin", listOf("Potato")))
   every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
-  every { inputHandler.readInput() } throws IOException("Input error")
+  every { inputReader.readLineOrNull() } throws IOException("Input error")
 
   // When
   potatoMealUi.showPotatoLoversUI()
 
   // Then
-  verify { outputHandler.showMessage("❌ Error: Input error") }
+  verify { outputPrinter.printLine("❌ Error: Input error") }
  }
 
  @Test
@@ -269,7 +268,7 @@ class PotatoLoversUITest {
    Result.success(meals),
    Result.success(emptyList())
   )
-  every { inputHandler.readInput() } returnsMany listOf("  Y   ", "n")
+  every { inputReader.readLineOrNull() } returnsMany listOf("  Y   ", "n")
 
   // When
   potatoMealUi.showPotatoLoversUI()

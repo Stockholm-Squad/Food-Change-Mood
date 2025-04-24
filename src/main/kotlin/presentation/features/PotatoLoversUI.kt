@@ -2,17 +2,17 @@ package org.example.presentation.features
 
 import model.Meal
 import org.example.logic.usecases.GetPotatoMealsUseCase
-import org.example.utils.InputHandler
-import org.example.utils.OutputHandler
+import org.example.utils.InputReader
+import org.example.utils.OutputPrinter
 
 class PotatoLoversUI(
-private val getPotatoMealsUseCase: GetPotatoMealsUseCase,
-private val outputHandler: OutputHandler,
-private val inputHandler: InputHandler? = null
+    private val getPotatoMealsUseCase: GetPotatoMealsUseCase,
+    private val outputPrinter: OutputPrinter,
+    private val inputReader: InputReader? = null
 ) {
 
     fun showPotatoLoversUI(count: Int = 10) {
-        outputHandler.showMessage("🥔 I ❤️ Potato! Here are $count meals that include potatoes:\n")
+        outputPrinter.printLine("🥔 I ❤️ Potato! Here are $count meals that include potatoes:\n")
         getPotatoMealsUseCase.getRandomPotatoMeals(count).fold(
             onSuccess = { meals ->
                 handleSuccess(meals)
@@ -25,26 +25,26 @@ private val inputHandler: InputHandler? = null
 
     fun handleSuccess(meals: List<Meal>) {
         if (meals.isEmpty()) {
-            outputHandler.showMessage("😢 No potato meals found.")
+            outputPrinter.printLine("😢 No potato meals found.")
         } else {
-            outputHandler.showMessage("🥔 I ❤️ Potato Meals:")
+            outputPrinter.printLine("🥔 I ❤️ Potato Meals:")
             meals.forEachIndexed { index, meal ->
-                outputHandler.showMessage("🍽️ Meal #${index + 1}: ${meal.name}")
+                outputPrinter.printLine("🍽️ Meal #${index + 1}: ${meal.name}")
             }
             askIfWantsMore()
         }
     }
 
     fun handleFailure(exception: Throwable) {
-        outputHandler.showMessage("❌ Error: ${exception.message}")
+        outputPrinter.printLine("❌ Error: ${exception.message}")
     }
 
     private fun askIfWantsMore() {
-        outputHandler.showMessage("Would you like to see more? (y/n)")
+        outputPrinter.printLine("Would you like to see more? (y/n)")
         val input = try {
-            inputHandler?.readInput()
+            inputReader?.readLineOrNull()
         } catch (e: Exception) {
-            outputHandler.showMessage("❌ Error: ${e.message}")
+            outputPrinter.printLine("❌ Error: ${e.message}")
             return
         }
 
@@ -53,7 +53,7 @@ private val inputHandler: InputHandler? = null
         if (normalizedAnswer == "y") {
             showPotatoLoversUI()
         } else {
-            outputHandler.showMessage("Okay! Enjoy your potato meals! 🥔😋")
+            outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋")
         }
     }
 
