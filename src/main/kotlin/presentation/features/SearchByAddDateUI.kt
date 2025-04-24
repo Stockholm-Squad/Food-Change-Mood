@@ -4,6 +4,7 @@ import model.Meal
 import org.example.input_output.input.InputReader
 import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetMealsByDateUseCase
+import org.example.utils.Constants.NO_MEALS_FOUND_WITH_THIS_DATE
 import org.example.utils.DateValidator
 import org.example.utils.viewMealInListDetails
 
@@ -44,7 +45,7 @@ class SearchByAddDateUI(
 
     private fun printMealsIdName(mealsList: List<Meal>) {
         if (mealsList.isEmpty()) {
-            printer.printLine("No meals found.")
+            printer.printLine(NO_MEALS_FOUND_WITH_THIS_DATE)
         }
 
         mealsList.forEach { meal ->

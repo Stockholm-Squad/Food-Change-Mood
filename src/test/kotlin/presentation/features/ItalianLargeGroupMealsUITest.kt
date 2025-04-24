@@ -7,6 +7,7 @@ import org.example.input_output.input.InputReader
 import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetItalianMealsForLargeGroupUseCase
 import org.example.presentation.features.ItalianLargeGroupMealsUI
+import org.example.utils.Constants.NO_ITALIAN_MEALS_FOR_LARGE_GROUP_FOUND
 import org.example.utils.viewMealInListDetails
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -99,7 +100,7 @@ class ItalianLargeGroupMealsUITest {
         italianLargeGroupMealsUI.italianLargeGroupMealsUI()
 
         // Then
-        verify(exactly = 1) { printer.printLine("No Italian meals for large groups found.") }
+        verify(exactly = 1) { printer.printLine(NO_ITALIAN_MEALS_FOR_LARGE_GROUP_FOUND) }
     }
 
 

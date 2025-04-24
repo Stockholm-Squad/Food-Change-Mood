@@ -4,6 +4,7 @@ import model.Meal
 import org.example.input_output.input.InputReader
 import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetItalianMealsForLargeGroupUseCase
+import org.example.utils.Constants.NO_ITALIAN_MEALS_FOR_LARGE_GROUP_FOUND
 import org.example.utils.viewMealInListDetails
 
 class ItalianLargeGroupMealsUI(
@@ -29,7 +30,7 @@ class ItalianLargeGroupMealsUI(
 
     private fun printMealsIdName(mealsList: List<Meal>) {
         if (mealsList.isEmpty()) {
-            printer.printLine("No Italian meals for large groups found.")
+            printer.printLine(NO_ITALIAN_MEALS_FOR_LARGE_GROUP_FOUND)
             return
         }
         mealsList.forEach { meal ->

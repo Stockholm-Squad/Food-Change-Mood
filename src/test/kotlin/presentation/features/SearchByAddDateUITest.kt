@@ -1,14 +1,13 @@
 package presentation.features
 
-import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import model.Meal
 import org.example.input_output.input.InputReader
 import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetMealsByDateUseCase
 import org.example.presentation.features.SearchByAddDateUI
+import org.example.utils.Constants.NO_MEALS_FOUND_WITH_THIS_DATE
 import org.example.utils.DateValidator
 import org.example.utils.viewMealInListDetails
 import org.junit.jupiter.api.BeforeEach
@@ -92,7 +91,7 @@ class SearchByAddDateUITest {
 
         // Then
         verify(exactly = 1) { printer.printLine("Loading...") }
-        verify(exactly = 1) { printer.printLine("No meals found.") }
+        verify(exactly = 1) { printer.printLine(NO_MEALS_FOUND_WITH_THIS_DATE) }
     }
 
     @Test
