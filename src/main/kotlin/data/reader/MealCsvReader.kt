@@ -13,8 +13,6 @@ class MealCsvReader(
 
     override fun readLinesFromFile(): Result<List<String>> {
         val lines = mutableListOf<String>()
-) {
-    fun readLinesFromFile(): Result<List<String>> {
         return try {
             csvFile.bufferedReader().use { csvFileReader ->
                 csvFileReader.readLine()

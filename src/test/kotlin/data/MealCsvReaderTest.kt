@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase.assertTrue
+import org.example.data.reader.MealCsvReader
 import org.example.data.utils.CsvLineHandler
 import org.example.model.FoodChangeMoodExceptions
 import org.junit.jupiter.api.AfterEach
