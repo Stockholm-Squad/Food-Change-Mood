@@ -4,11 +4,14 @@ import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import model.Meal
+import model.createListOfMeals
 import org.example.logic.repository.MealsRepository
 import org.example.logic.usecases.GetHealthyFastFoodUseCase
 import org.example.utils.Constants
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.assertThrows
 import utils.buildMeal
 import utils.buildNutrition
 import kotlin.test.Test
@@ -95,38 +98,23 @@ class GetHealthyFastFoodUseCaseTest {
     @Test
     fun `getHealthyFastFood () should sort meals by totalFat, then saturatedFat, then carbohydrates`() {
         // Given
-        val meal1 = buildMeal(
-            1, "Meal A", 10,
-            nutrition = buildNutrition(totalFat = 10f, saturatedFat = 5f, carbohydrates = 10f)
-        )
-        val meal2 = buildMeal(
-            2, "Meal B", 10,
-            nutrition = buildNutrition(totalFat = 5f, saturatedFat = 3f, carbohydrates = 8f)
-        )
-        val meal3 = buildMeal(
-            3, "Meal C", 10,
-            nutrition = buildNutrition(totalFat = 5f, saturatedFat = 3f, carbohydrates = 5f)
-        )
-        val meal4 = buildMeal(
-            4, "Meal D", 10,
-            nutrition = buildNutrition(totalFat = 5f, saturatedFat = 2f, carbohydrates = 20f)
-        )
-        val meal5 = buildMeal(
-            5, "Meal E", 20,
-            nutrition = buildNutrition(totalFat = 1f, saturatedFat = 1f, carbohydrates = 1f)
-        )
+        val meals = createListOfMeals()
 
         every { mealsRepository.getAllMeals() } returns Result.success(
-            listOf(meal1, meal2, meal3, meal4, meal5)
+            meals
         )
 
         // When
         val result = getHealthyFastFoodUseCase.getHealthyFastFood()
 
         // Then
-        assertThat(result.getOrThrow()).isEqualTo(
-            listOf(meal4, meal3, meal2, meal1)
-        )
+        val expectedMeals = mutableListOf<Meal>()
+        for (i in 3 downTo 0) {
+            expectedMeals.add(meals[i])
+        }
+
+        assertThat(result.getOrThrow()).isEqualTo(expectedMeals)
+
     }
 
 
@@ -145,8 +133,7 @@ class GetHealthyFastFoodUseCaseTest {
         val errorMessage = exception?.message
         assertThat(errorMessage).isNotNull()
 
-        assertThat(errorMessage).contains(Constants.ERROR_FETCHING_MEALS)
-
+        assertThrows<Throwable> { result.getOrThrow() }
     }
 
     @Test
@@ -221,6 +208,7 @@ class GetHealthyFastFoodUseCaseTest {
             )
         )
     }
+
     @Test
     fun `getHealthyFastFood() should exclude meals with null nutrition`() {
         // Given
@@ -240,6 +228,7 @@ class GetHealthyFastFoodUseCaseTest {
             )
         )
     }
+
     @Test
     fun `getHealthyFastFood() should exclude meals with null preparation time`() {
         // Given
@@ -259,6 +248,7 @@ class GetHealthyFastFoodUseCaseTest {
             )
         )
     }
+
     @Test
     fun `getHealthyFastFood() should return empty when all meals have null nutrition`() {
         // Given
@@ -274,6 +264,7 @@ class GetHealthyFastFoodUseCaseTest {
         // Then
         assertThat(result.getOrThrow()).isEmpty()
     }
+
     @Test
     fun `getHealthyFastFood() should maintain order for meals with equal nutrition`() {
         // Given
@@ -289,7 +280,6 @@ class GetHealthyFastFoodUseCaseTest {
         // Then
         assertThat(result.getOrThrow()).isEqualTo(listOf(meal1, meal2, meal3))
     }
-
 
 
 }

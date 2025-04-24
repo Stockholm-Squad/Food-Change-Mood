@@ -24,9 +24,10 @@ class GetHealthyFastFoodUseCase(
 
     }
 
-    fun getFilteredMeals(allMeals: List<Meal>): List<Meal >{
-        return allMeals .filter { it.minutes != null && it.minutes <= 15 }
-            .filter { it.nutrition != null }
+    fun getFilteredMeals(allMeals: List<Meal>): List<Meal> {
+        return allMeals.filter { meal ->
+            meal.minutes != null && meal.minutes <= 15 && meal.nutrition != null
+        }
             .sortedWith(
                 compareBy<Meal> { it.nutrition?.totalFat }
                     .thenBy { it.nutrition?.saturatedFat }
