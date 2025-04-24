@@ -1,89 +1,56 @@
 package presentation.features
 
 
-import com.google.common.collect.Multimaps.index
-import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
-import model.Meal
-import model.Nutrition
+import io.mockk.verify
+import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetHealthyFastFoodUseCase
 import org.example.presentation.features.GetHealthyFastFoodMealsUI
+import org.example.utils.Constants
 import org.junit.jupiter.api.BeforeEach
+import utils.buildMeal
+import utils.buildNutrition
 import kotlin.test.Test
 
 class GetHealthyFastFoodMealsUITest {
     private lateinit var getHealthyFastFoodUseCase: GetHealthyFastFoodUseCase
     private lateinit var getHealthyFastFoodMealsUI: GetHealthyFastFoodMealsUI
-    private lateinit var outPutController:(String)->Unit
+    private lateinit var printer: OutputPrinter
 
     @BeforeEach
-    fun setUp(){
-        getHealthyFastFoodUseCase= mockk(relaxed = true)
-        outPutController=mockk(relaxed = true)
-        getHealthyFastFoodMealsUI= GetHealthyFastFoodMealsUI(getHealthyFastFoodUseCase,outPutController)
+    fun setUp() {
+        getHealthyFastFoodUseCase = mockk(relaxed = true)
+        printer = mockk(relaxed = true)
+        getHealthyFastFoodMealsUI = GetHealthyFastFoodMealsUI(getHealthyFastFoodUseCase, printer)
     }
 
     @Test
-    fun `showHealthyFastFoodMeals should print error message when use case fails`() {
+    fun `showHealthyFastFoodMeals () should print error message when use case fails`() {
         // Given
-        val errorMessage = "Check Internet"
-        every { getHealthyFastFoodUseCase.getHealthyFastFood() } returns Result.failure(Exception(errorMessage))
-
-        val result= mutableListOf<String>()
-        val getHealthyFastFoodMealsUI = GetHealthyFastFoodMealsUI(getHealthyFastFoodUseCase,{result.add(it)})
-
+        every { getHealthyFastFoodUseCase.getHealthyFastFood() } returns Result.failure(Throwable())
 
         // When
         getHealthyFastFoodMealsUI.showHealthyFastFoodMeals()
 
         // Then
-        assertThat(result).contains("❌ Failed to load meals: $errorMessage")
+        verify { printer.printLine("${Constants.NO_MEALS_FOUND_MATCHING}") }
     }
-@Test
-fun `showHealthyFastFoodMeals should print meal details when use case succeeds`() {
-    // Given
-    val meal = Meal(
-        name = "Healthy Salad",
-        id = 1,
-        minutes = 10,
-        contributorId = 123,
-        submitted =null,
-        tags = listOf("healthy", "quick"),
-        nutrition = Nutrition(totalFat = 5.0f, protein = null, sodium = null,
-            sugar = null, calories = null, saturatedFat = 1.0f, carbohydrates = 1.0f),
-        numberOfSteps = 3,
-        steps = listOf("Wash vegetables", "Chop vegetables", "Mix ingredients"),
-        description = "A healthy and quick salad",
-        ingredients = listOf("Lettuce", "Tomato", "Olive oil"),
-        numberOfIngredients = 3
-    )
-    every { getHealthyFastFoodUseCase.getHealthyFastFood() } returns Result.success(listOf(meal))
 
-    val result = mutableListOf<String>()
-    val getHealthyFastFoodMealsUI = GetHealthyFastFoodMealsUI(getHealthyFastFoodUseCase,{result.add(it)})
-   getHealthyFastFoodMealsUI
+    @Test
+    fun `showHealthyFastFoodMeals () should print meal details when use case succeeds`() {
+        // Given
+        val meal = buildMeal(
+            1,
+            "souper  easy sweet   sour meatballs",
+            100,
+            nutrition = buildNutrition(totalFat = 114.6f, saturatedFat = 6.0f, carbohydrates = 4.0f)
+        )
+        every { getHealthyFastFoodUseCase.getHealthyFastFood() } returns Result.success(listOf(meal))
+        // When
+        getHealthyFastFoodMealsUI.showHealthyFastFoodMeals()
 
-    // When
-   getHealthyFastFoodMealsUI.showHealthyFastFoodMeals()
-
-    // Then
-    assertThat(result).contains(
-        "Meal 1:\n" +
-                "Name='${meal.name}'\n" +
-                "ID=${meal.id}\n" +
-                "Minutes=${meal.minutes}\n" +
-                "ContributorID=${meal.contributorId}\n" +
-                "Submitted='${meal.submitted}'\n" +
-                "Tags=${meal.tags}\n" +
-                "Nutrition=${meal.nutrition}\n" +
-                "StepsCount=${meal.numberOfSteps}\n" +
-                "Steps=${meal.steps}\n" +
-                "Description='${meal.description?.take(30)}...'\n" +
-                "Ingredients=${meal.ingredients}\n" +
-                "IngredientsCount=${meal.numberOfIngredients}\n"
-    )
-}
-
-
+        // Then
+        verify { printer.printMeal(meal) }
+    }
 }
