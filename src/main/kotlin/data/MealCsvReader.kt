@@ -1,6 +1,8 @@
 package data
 
 import org.example.data.utils.CsvLineHandler
+import org.example.model.FoodChangeMoodExceptions
+import org.example.utils.Constants
 import java.io.File
 
 class MealCsvReader(
@@ -21,7 +23,7 @@ class MealCsvReader(
             }
             Result.success(lines)
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(FoodChangeMoodExceptions.IOException.ReadFailedException(Constants.NO_FILE_FOUND))
         }
 
     }
