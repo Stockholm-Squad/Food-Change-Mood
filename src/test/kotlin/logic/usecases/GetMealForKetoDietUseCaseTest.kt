@@ -2,12 +2,12 @@ package org.example.logic.usecases
 
 import io.mockk.every
 import io.mockk.mockk
-import model.Meal
-import model.Nutrition
 import org.example.logic.repository.MealsRepository
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import utils.buildMeal
+import utils.buildNutrition
 
 class GetMealForKetoDietUseCaseTest {
 
@@ -23,24 +23,15 @@ class GetMealForKetoDietUseCaseTest {
     @Test
     fun `getKetoMeal() should returns a keto meal when data of meal are valid for keto diet`() {
         // given
-        val ketoMeal = Meal(
-            name = "Spaghetti", ingredients = listOf("Tomato", "Basil", "Garlic"), id = 12, contributorId = 5,
-            minutes = null,
-            submitted = null,
-            tags = null,
-            nutrition = Nutrition(
+        val ketoMeal = buildMeal(
+            name = "Spaghetti", ingredients = listOf("Tomato", "Basil", "Garlic"),
+            id = 12,
+            contributorId = 5,
+            nutrition = buildNutrition(
                carbohydrates = 5f,
                totalFat = 20f,
                protein = 25f,
-               calories = null,
-               sugar = null,
-               sodium = null,
-               saturatedFat = null
             ),
-            numberOfSteps = null,
-            steps = null,
-            description = null,
-            numberOfIngredients = null
         )
 
 
@@ -57,24 +48,13 @@ class GetMealForKetoDietUseCaseTest {
 
     @Test
     fun `getAllMeals() should returns null when data of meal are not valid for keto diet`() {
-        val nonKetoMeal = Meal(
+        val nonKetoMeal = buildMeal(
           name = "Spaghetti", ingredients = listOf("Tomato", "Basil", "Garlic"), id = 12, contributorId = 5,
-          minutes = null,
-          submitted = null,
-          tags = null,
-          nutrition = Nutrition(
+          nutrition = buildNutrition(
               carbohydrates = 50f,
               totalFat = 10f,
               protein = 5f,
-              calories = null,
-              sugar = null,
-              sodium = null,
-              saturatedFat = null
           ),
-          numberOfSteps = null,
-          steps = null,
-          description = null,
-          numberOfIngredients = null
         )
 
         every { mealsRepository.getAllMeals() } returns Result.success(listOf(nonKetoMeal))
@@ -88,24 +68,13 @@ class GetMealForKetoDietUseCaseTest {
 
     @Test
     fun `getKetoMeal() should not return the same meal twice`() {
-        val ketoMeal = Meal(
+        val ketoMeal = buildMeal(
             name = "Spaghetti", ingredients = listOf("Tomato", "Basil", "Garlic"), id = 12, contributorId = 5,
-            minutes = null,
-            submitted = null,
-            tags = null,
-            nutrition = Nutrition(
+            nutrition = buildNutrition(
                 carbohydrates = 5f,
                 totalFat = 20f,
                 protein = 25f,
-                calories = null,
-                sugar = null,
-                sodium = null,
-                saturatedFat = null
             ),
-            numberOfSteps = null,
-            steps = null,
-            description = null,
-            numberOfIngredients = null
         )
 
         every { mealsRepository.getAllMeals() } returns Result.success(listOf(ketoMeal))
@@ -133,16 +102,11 @@ class GetMealForKetoDietUseCaseTest {
     @Test
     fun `getKetoMeal() should ignores meals with null nutrition`() {
         //given
-        val mealWithNullNutrition = Meal(
-            name = "Spaghetti", ingredients = listOf("Tomato", "Basil", "Garlic"), id = 12, contributorId = 5,
-            minutes = null,
-            submitted = null,
-            tags = null,
-            nutrition = null,
-            numberOfSteps = null,
-            steps = null,
-            description = null,
-            numberOfIngredients = null
+        val mealWithNullNutrition = buildMeal(
+            name = "Spaghetti",
+            ingredients = listOf("Tomato", "Basil", "Garlic"),
+            id = 12,
+            contributorId = 5,
         )
 
         every { mealsRepository.getAllMeals() } returns Result.success(listOf(mealWithNullNutrition))

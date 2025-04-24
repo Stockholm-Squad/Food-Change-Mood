@@ -1,17 +1,15 @@
 package logic.usecases
 
-import IngredientGameUI
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 import model.Meal
 import org.example.logic.repository.MealsRepository
 import org.example.logic.usecases.GetIngredientGameUseCase
-import org.example.logic.usecases.model.IngredientQuestionModel
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
+import utils.buildMeal
 import kotlin.test.Test
-import kotlin.test.assertFails
+
 
 class GetIngredientGameUseCaseTest {
   private lateinit var mealRepository: MealsRepository
@@ -22,16 +20,11 @@ class GetIngredientGameUseCaseTest {
     fun setUp() {
         mealRepository = mockk(relaxed = true)
         ingredientGameUseCase = GetIngredientGameUseCase(mealRepository)
-        meal = Meal(
-          name = "Spaghetti", ingredients = listOf("Tomato", "Basil", "Garlic"), id = 12, contributorId = 5,
-          minutes = null,
-          submitted = null,
-          tags = null,
-          nutrition = null,
-          numberOfSteps = null,
-          steps = null,
-          description = null,
-          numberOfIngredients = null
+        meal = buildMeal(
+            name = "Spaghetti",
+            ingredients = listOf("Tomato", "Basil", "Garlic"),
+            id = 12,
+            contributorId = 5,
         )
     }
 
@@ -105,16 +98,11 @@ class GetIngredientGameUseCaseTest {
     @Test
     fun `startIngredientGame() should return question has a correct ingredient`() {
         // given
-        val meal2 = Meal(
-           name = "Pizza", ingredients = listOf("Cheese", "Tomato", "Oregano"), id = 12, contributorId = 5,
-           minutes = null,
-           submitted = null,
-           tags = null,
-           nutrition = null,
-           numberOfSteps = null,
-           steps = null,
-           description = null,
-           numberOfIngredients = null
+        val meal2 = buildMeal(
+            name = "Pizza",
+            ingredients = listOf("Cheese", "Tomato", "Oregano"),
+            id = 12,
+            contributorId = 5,
         )
         every { mealRepository.getAllMeals() } returns Result.success(listOf(meal, meal2))
 

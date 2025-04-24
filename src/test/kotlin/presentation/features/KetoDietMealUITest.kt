@@ -1,14 +1,14 @@
 package presentation.features
 
 import io.mockk.*
-import model.Meal
-import model.Nutrition
 import org.example.input_output.input.InputReader
 import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetMealForKetoDietUseCase
 import org.example.presentation.features.KetoDietMealUI
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import utils.buildMeal
+import utils.buildNutrition
 
 class KetoDietMealUITest {
 
@@ -17,27 +17,17 @@ class KetoDietMealUITest {
     private lateinit var printer: OutputPrinter
     private lateinit var ui: KetoDietMealUI
 
-    private val ketoMeal = Meal(
+    private val ketoMeal = buildMeal(
         id = 1,
         name = "Keto Chicken",
         description = "High-fat, low-carb chicken meal.",
-        nutrition = Nutrition(
+        nutrition = buildNutrition(
             carbohydrates = 5f,
             totalFat = 20f,
             protein = 25f,
-            calories = null,
-            sugar = null,
-            sodium = null,
-            saturatedFat = null
         ),
         ingredients = listOf("Chicken", "Avocado Oil"),
         contributorId = 1,
-        minutes = null,
-        submitted = null,
-        tags = null,
-        numberOfSteps = null,
-        steps = null,
-        numberOfIngredients = null
     )
 
     @BeforeEach
