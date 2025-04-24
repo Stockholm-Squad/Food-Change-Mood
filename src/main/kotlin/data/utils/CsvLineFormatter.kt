@@ -3,11 +3,11 @@ package org.example.data.utils
 class CsvLineFormatter {
     private var insideQuotes = false
 
-    fun formatMealLine(str: String): List<String> {
+    fun formatMealLine(line: String): List<String> {
         val mealData = mutableListOf<String>()
         val mealColumnBuilder = StringBuilder()
 
-        str.forEach { char ->
+        line.forEach { char ->
             handleCharacter(char, mealColumnBuilder, mealData)
         }
         mealColumnBuilder.takeIf {

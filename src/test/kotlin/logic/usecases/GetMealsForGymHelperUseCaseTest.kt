@@ -83,7 +83,9 @@ class GetMealsForGymHelperUseCaseTest {
         )
 
         //Then
-        assertThrows<FoodChangeMoodExceptions.LogicException.NoMealsForGymHelperException> { gymHelperMeals.getOrThrow() }
+        assertThrows<FoodChangeMoodExceptions.LogicException.NoMealsForGymHelperException> {
+            gymHelperMeals.getOrThrow()
+        }
     }
 
     @Test
@@ -125,7 +127,33 @@ class GetMealsForGymHelperUseCaseTest {
         )
 
         //Then
-        assertThrows<FoodChangeMoodExceptions.LogicException.NoMealsForGymHelperException> { gymHelperMeals.getOrThrow() }
+        assertThrows<FoodChangeMoodExceptions.LogicException.NoMealsForGymHelperException> {
+            gymHelperMeals.getOrThrow()
+        }
+    }
+
+    @Test
+    fun `getGymHelperMeals() should return result failure with NoMealsForGymHelperException when nutrition in meals have nullable calories`() {
+        //Given
+        every { repository.getAllMeals() } returns Result.success(
+            listOf(
+                buildMeal(1, nutrition = buildNutrition(calories = null, protein = 40F)),
+            )
+        )
+
+        val desiredCalories = 10F
+        val desiredProteins = 40F
+
+        //When
+        val gymHelperMeals = getMealsForGymHelperUseCase.getGymHelperMeals(
+            desiredCalories = desiredCalories,
+            desiredProteins = desiredProteins
+        )
+
+        //Then
+        assertThrows<FoodChangeMoodExceptions.LogicException.NoMealsForGymHelperException> {
+            gymHelperMeals.getOrThrow()
+        }
     }
 
     @Test
@@ -133,7 +161,6 @@ class GetMealsForGymHelperUseCaseTest {
         //Given
         every { repository.getAllMeals() } returns Result.success(
             listOf(
-                buildMeal(1, nutrition = buildNutrition(calories = null, protein = 40F)),
                 buildMeal(2, nutrition = buildNutrition(calories = 10F, protein = null)),
             )
         )
@@ -148,17 +175,19 @@ class GetMealsForGymHelperUseCaseTest {
         )
 
         //Then
-        assertThrows<FoodChangeMoodExceptions.LogicException.NoMealsForGymHelperException> { gymHelperMeals.getOrThrow() }
+        assertThrows<FoodChangeMoodExceptions.LogicException.NoMealsForGymHelperException> {
+            gymHelperMeals.getOrThrow()
+        }
     }
 
     @ParameterizedTest
     @CsvSource(
-        "10, 20",
-        "20, 40",
-        "40, 100"
+        "10, 20, 40",
+        "20, 40, 20",
+        "40, 100, 30"
     )
     fun `getGymHelperMeals() should return result with list of meals when valid calories and proteins`(
-        calories: Float, proteins: Float
+        calories: Float, proteins: Float, approximateAmount: Float
     ) {
         //Given
         every { repository.getAllMeals() } returns Result.success(
@@ -168,7 +197,6 @@ class GetMealsForGymHelperUseCaseTest {
                 buildMeal(2, nutrition = buildNutrition(calories = 40F, protein = 100F)),
             )
         )
-        val approximateAmount = 20F
 
         //When
         val gymHelperMeals = getMealsForGymHelperUseCase.getGymHelperMeals(
