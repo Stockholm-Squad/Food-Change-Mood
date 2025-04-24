@@ -17,5 +17,6 @@ object Constants {
     const val NO_ITALIAN_MEALS_FOR_LARGE_GROUP_FOUND = "No Italian meals for large groups found."
     const val SEARCH_AGAIN_OR_BACK = "search again or back."
     const val ENTER_VALID_DATE = "Enter a valid Date or zero => 0"
-    
+
+    const val NO_SEA_FOOD_MEALS_FOUND ="No seafood meals found."
 }
