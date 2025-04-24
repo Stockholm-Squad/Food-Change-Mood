@@ -4,6 +4,7 @@ package presentation.features
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import model.createListOfMeals
 import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetHealthyFastFoodUseCase
 import org.example.presentation.features.GetHealthyFastFoodMealsUI
@@ -40,17 +41,12 @@ class GetHealthyFastFoodMealsUITest {
     @Test
     fun `showHealthyFastFoodMeals () should print meal details when use case succeeds`() {
         // Given
-        val meal = buildMeal(
-            1,
-            "souper  easy sweet   sour meatballs",
-            100,
-            nutrition = buildNutrition(totalFat = 114.6f, saturatedFat = 6.0f, carbohydrates = 4.0f)
-        )
-        every { getHealthyFastFoodUseCase.getHealthyFastFood() } returns Result.success(listOf(meal))
+        val meals = createListOfMeals()
+        every { getHealthyFastFoodUseCase.getHealthyFastFood() } returns Result.success(meals)
         // When
         getHealthyFastFoodMealsUI.showHealthyFastFoodMeals()
 
         // Then
-        verify { printer.printMeal(meal) }
+        verify {printer.printMeals(meals) }
     }
 }

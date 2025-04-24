@@ -11,11 +11,10 @@ class GetHealthyFastFoodMealsUI(
 ) {
 
 
-
     fun showHealthyFastFoodMeals() {
         getHealthyFastFoodUseCase.getHealthyFastFood().fold(
             onSuccess = { allMeals ->
-                showMeals(allMeals)
+                printer.printMeals(allMeals)
             },
             onFailure = { error ->
                 printer.printLine("${Constants.NO_MEALS_FOUND_MATCHING}")
@@ -23,12 +22,5 @@ class GetHealthyFastFoodMealsUI(
         )
     }
 
-    private fun showMeals(allMeals: List<Meal>) {
-        allMeals.forEachIndexed { index, meal ->
-           printer.printMeal(
-                meal
-            )
-        }
-    }
 }
 
