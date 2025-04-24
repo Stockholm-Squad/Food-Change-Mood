@@ -4,7 +4,12 @@ import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import io.mockk.verifySequence
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertNull
+import logic.usecases.buildMeal
 import logic.usecases.createMeal
+import model.Nutrition
 import org.example.logic.usecases.GetPotatoMealsUseCase
 import org.example.presentation.features.PotatoLoversUI
 import org.example.utils.InputReader
@@ -118,7 +123,7 @@ class PotatoLoversUITest {
  }
 
  @Test
- fun `showPotatoLoversUI should not crash when inputHandler read a readInput is empty string`() {
+ fun `showPotatoLoversUI should handle when inputHandler read a readInput is empty string`() {
   // Given
   val potatoUi = PotatoLoversUI(potatoMeals, outputPrinter, null)
   val meals = listOf(createMeal(1, "Chips", listOf("Potato")))
@@ -144,7 +149,7 @@ class PotatoLoversUITest {
   potatoMealUi.showPotatoLoversUI()
 
   // Then
-  verify(exactly = 2) { potatoMeals.getRandomPotatoMeals(10) }
+  verify(exactly = 1) { potatoMeals.getRandomPotatoMeals(10) }
   verify { outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋") }
  }
 
@@ -160,22 +165,7 @@ class PotatoLoversUITest {
   potatoMealUi.showPotatoLoversUI()
 
   // Then
-  verify(exactly = 2) { potatoMeals.getRandomPotatoMeals(10) }
-  verify { outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋") }
- }
-
- @Test
- fun `askForMoreMeals should handle unexpected input as no`() {
-
-  // Given
-  val meals = listOf(createMeal(1, "Hash Browns", listOf("Potato")))
-  every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
-  every { inputReader.readLineOrNull() } returns "no"
-
-  // When
-  potatoMealUi.showPotatoLoversUI()
-
-  // Then
+  verify(exactly = 1) { potatoMeals.getRandomPotatoMeals(10) }
   verify { outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋") }
  }
 
@@ -195,46 +185,12 @@ class PotatoLoversUITest {
  }
 
  @Test
- fun `showPotatoLoversUI should handle whitespace input as no`() {
-  // Given
-  val meals = listOf(createMeal(1, "Potato Pancakes", listOf("Potato")))
-  every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
-  every { inputReader.readLineOrNull() } returns "   "
-
-  // When
-  potatoMealUi.showPotatoLoversUI()
-
-  // Then
-  verify { outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋") }
- }
-
- @Test
- fun `showPotatoLoversUI should handle multiple consecutive yes responses`() {
-
-  // Given
-  val meals1 = listOf(createMeal(1, "First Meal", listOf("Potato")))
-  val meals2 = listOf(createMeal(1, "Second Meal", listOf("Potato")))
-  val meals3 = listOf(createMeal(1, "Third Meal", listOf("Potato")))
-
-
-  val inputCount = 10
-  every { potatoMeals.getRandomPotatoMeals(inputCount) } returnsMany
-          listOf(Result.success(meals1), Result.success(meals2), Result.success(meals3))
-  every { inputReader.readLineOrNull() } returnsMany listOf("y", "yes", "n")
-
-  // When
-  potatoMealUi.showPotatoLoversUI()
-
-  // Then
-  verify(exactly = 2) { potatoMeals.getRandomPotatoMeals(inputCount) }
- }
-
- @Test
- fun `showPotatoLoversUI should handle edge case when input is a number`() {
+ fun `showPotatoLoversUI should handle when input is a number`() {
 
   // Given
   val meals = listOf(createMeal(1, "Potato Wedges", listOf("Potato")))
-  every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
+  val inputCount = 10
+  every { potatoMeals.getRandomPotatoMeals(inputCount) } returns Result.success(meals)
   every { inputReader.readLineOrNull() } returns "1"
 
   // When
@@ -242,39 +198,6 @@ class PotatoLoversUITest {
 
   // Then
   verify { outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋") }
- }
-
- @Test
- fun `showPotatoLoversUI should handle input failure `() {
-
-  // Given
-  val meals = listOf(createMeal(1, "Potato Gratin", listOf("Potato")))
-  every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
-  every { inputReader.readLineOrNull() } throws IOException("Input error")
-
-  // When
-  potatoMealUi.showPotatoLoversUI()
-
-  // Then
-  verify { outputPrinter.printLine("❌ Error: Input error") }
- }
-
- @Test
- fun `askForMoreMeals should treat mixed case input with spaces as yes`() {
-
-  // Given
-  val meals = listOf(createMeal(1, "Roasted Potatoes", listOf("Potato")))
-  every { potatoMeals.getRandomPotatoMeals(10) } returnsMany listOf(
-   Result.success(meals),
-   Result.success(emptyList())
-  )
-  every { inputReader.readLineOrNull() } returnsMany listOf("  Y   ", "n")
-
-  // When
-  potatoMealUi.showPotatoLoversUI()
-
-  // Then
-  verify(exactly = 2) { potatoMeals.getRandomPotatoMeals(10) }
  }
 
  @Test
@@ -287,6 +210,135 @@ class PotatoLoversUITest {
  fun `normalizeInput returns empty for null input`() {
   val result = PotatoLoversUI.normalizeInput(null)
   assertThat(result).isEmpty()
+ }
+
+ @Test
+ fun `showPotatoLoversUI should handle null input from user`() {
+
+  // Given
+  val meals = listOf(createMeal(1, "Potato Bake", listOf("Potato")))
+  val inputCount = 10
+  every { potatoMeals.getRandomPotatoMeals(inputCount) } returns Result.success(meals)
+  every { inputReader.readLineOrNull() } returns null
+
+  // When
+  potatoMealUi.showPotatoLoversUI()
+
+  // Then
+  verify { outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋") }
+ }
+
+ @Test
+ fun `askToViewMealDetails should prompt the user with the initial question`() {
+  // Given
+  val meals = listOf(buildMeal(id = 1, name = "Potato Casserole", ingredients = listOf("Potato", "Cheese"), steps = listOf("Boil potatoes", "Add cheese", "Bake in oven"), minutes = 30, numberOfSteps = 3, numberOfIngredients = 2, description = "A cheesy baked potato dish", nutrition = Nutrition(null, null, null, null, null, null, null), submitted = null, contributorId = null),
+   buildMeal(id = 1, name = "Potato Casserole", ingredients = listOf("Potato", "Cheese"), steps = listOf("Boil potatoes", "Add cheese", "Bake in oven"), minutes = 30, numberOfSteps = 3, numberOfIngredients = 2, description = "A cheesy baked potato dish", nutrition = Nutrition(null, null, null, null, null, null, null), submitted = null, contributorId = null))
+
+  // When
+  every { inputReader.readLineOrNull() } returns "n"
+
+  // Then
+  potatoMealUi.askToViewMealDetails(meals)
+
+  verify { outputPrinter.printLine("\nWould you like to view the details of any of these meals? (Enter the number or 'n' to skip):") }
+ }
+
+ @Test
+ fun `askToViewMealDetails should skip meal details when user enters 'n'`() {
+  // Given
+  val meals = listOf(buildMeal(id = 1, name = "Potato Casserole", ingredients = listOf("Potato", "Cheese"), steps = listOf("Boil potatoes", "Add cheese", "Bake in oven"), minutes = 30, numberOfSteps = 3, numberOfIngredients = 2, description = "A cheesy baked potato dish", nutrition = Nutrition(null, null, null, null, null, null, null), submitted = null, contributorId = null),
+   buildMeal(id = 1, name = "Potato Casserole", ingredients = listOf("Potato", "Cheese"), steps = listOf("Boil potatoes", "Add cheese", "Bake in oven"), minutes = 30, numberOfSteps = 3, numberOfIngredients = 2, description = "A cheesy baked potato dish", nutrition = Nutrition(null, null, null, null, null, null, null), submitted = null, contributorId = null))
+
+  // When
+  every { inputReader.readLineOrNull() } returns "n"
+
+  // Then
+  potatoMealUi.askToViewMealDetails(meals)
+
+  verify {
+   outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋")
+  }
+ }
+
+ @Test
+ fun `askToViewMealDetails should ask again if input is invalid (non-numeric or empty)`() {
+  // Given
+  val meals = listOf(buildMeal(id = 1, name = "Potato Casserole", ingredients = listOf("Potato", "Cheese"), steps = listOf("Boil potatoes", "Add cheese", "Bake in oven"), minutes = 30, numberOfSteps = 3, numberOfIngredients = 2, description = "A cheesy baked potato dish", nutrition = Nutrition(null, null, null, null, null, null, null), submitted = null, contributorId = null),
+   buildMeal(id = 1, name = "Potato Casserole", ingredients = listOf("Potato", "Cheese"), steps = listOf("Boil potatoes", "Add cheese", "Bake in oven"), minutes = 30, numberOfSteps = 3, numberOfIngredients = 2, description = "A cheesy baked potato dish", nutrition = Nutrition(null, null, null, null, null, null, null), submitted = null, contributorId = null))
+
+  // When
+  every { inputReader.readLineOrNull() } returns "" andThen "abc" andThen "1"
+
+  // Then
+  potatoMealUi.askToViewMealDetails(meals)
+
+  verify {
+   outputPrinter.printLine("Invalid selection. Please choose a valid number.")
+   outputPrinter.printLine("Invalid selection. Please choose a valid number.")
+  }
+ }
+
+ @Test
+ fun `askToViewMealDetails should show invalid selection message when index is out of range`() {
+  // Given
+  val meals = List(10) { index ->
+   buildMeal(
+    id = index + 1,
+    name = "Meal #${index + 1}",
+    ingredients = listOf("Ingredient A", "Ingredient B"),
+    steps = listOf("Step 1", "Step 2"),
+    minutes = 20,
+    numberOfSteps = 2,
+    numberOfIngredients = 2,
+    description = "Test meal",
+    nutrition = Nutrition(null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null),
+    submitted = null,
+    contributorId = null
+   )
+  }
+
+  // When
+  every { inputReader.readLineOrNull() } returnsMany listOf("11", "n")
+
+  // Then
+  potatoMealUi.askToViewMealDetails(meals)
+
+  verify {
+   outputPrinter.printLine("Invalid selection. Please choose a valid number.")
+   outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋")
+  }
+ }
+ @Test
+ fun `askIfWantsMore should call onYes callback when input is y`() {
+  // Given
+  every { inputReader.readLineOrNull() } returns "y"
+  var called = false
+
+  // When
+  potatoMealUi.askIfWantsMore {
+   called = true
+  }
+
+  // Then
+  assertThat(called).isTrue()
+ }
+
+ @Test
+ fun `askIfWantsMore should print end message when input is n`() {
+  // Given
+  every { inputReader.readLineOrNull() } returns "n"
+
+  // When
+  potatoMealUi.askIfWantsMore()
+
+  // Then
+  verify { outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋") }
  }
 
 

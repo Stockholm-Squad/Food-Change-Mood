@@ -36,28 +36,31 @@ class PotatoLoversUI(
         }
     }
 
-    private fun askToViewMealDetails(meals: List<Meal>) {
-        outputPrinter.printLine("\nWould you like to view the details of any of these meals? (Enter the number or 'n' to skip):")
+    fun askToViewMealDetails(meals: List<Meal?>) {
+        var validInput = false
+        do {
+            outputPrinter.printLine("\nWould you like to view the details of any of these meals? (Enter the number or 'n' to skip):")
 
-        val input = try {
-            inputReader?.readLineOrNull()?.trim()?.lowercase()
-        } catch (e: Exception) {
-            outputPrinter.printLine("❌ Error reading input: ${e.message}")
-            return
-        }
+            val input = try {
+                inputReader?.readLineOrNull()?.trim()?.lowercase()
+            } catch (e: Exception) {
+                outputPrinter.printLine("Error reading input: ${e.message}")
+                return
+            }
 
-        if (input == null || input == "n") {
-            outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋")
-            return
-        }
+            if (input == null || input == "n") {
+                outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋")
+                return
+            }
 
-        val selectedIndex = input.toIntOrNull()
-        if (selectedIndex != null && selectedIndex in 1..meals.size) {
-            showMealDetails(meals[selectedIndex - 1])
-        } else {
-            outputPrinter.printLine("❌ Invalid selection. Please choose a valid number.")
-            askToViewMealDetails(meals)
-        }
+            val selectedIndex = input.toIntOrNull()
+            if (selectedIndex != null && selectedIndex in 1..meals.size) {
+                meals[selectedIndex - 1]?.let { showMealDetails(it) }
+                validInput = true  // Set the flag to true to exit the loop
+            } else {
+                outputPrinter.printLine("Invalid selection. Please choose a valid number.")
+            }
+        } while (!validInput)
     }
 
     private fun showMealDetails(meal: Meal) {
@@ -84,7 +87,8 @@ class PotatoLoversUI(
         outputPrinter.printLine("❌ Error: ${exception.message}")
     }
 
-    private fun askIfWantsMore() {
+
+    fun askIfWantsMore(onYes: () -> Unit = { showPotatoLoversUI() }) {
         outputPrinter.printLine("Would you like to see more? (y/n)")
         val input = try {
             inputReader?.readLineOrNull()
@@ -96,11 +100,12 @@ class PotatoLoversUI(
         val normalizedAnswer = normalizeInput(input)
 
         if (normalizedAnswer == "y") {
-            showPotatoLoversUI()
+            onYes()
         } else {
             outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋")
         }
     }
+
 
     companion object {
         fun normalizeInput(input: String?): String {
