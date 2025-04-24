@@ -58,5 +58,13 @@ class CsvLineHandlerTest {
         assertThat(result).isEqualTo(line)
     }
 
+    @Test
+    fun `should handle mixed quoted and unquoted content`() {
+        val line1 = "Text,\"Quoted"
+        val line2 = "Value\",More"
+
+        assertThat(csvLineHandler.handleLine(line1)).isNull()
+        assertThat(csvLineHandler.handleLine(line2)).isEqualTo("Text,\"Quoted\nValue\",More")
+    }
 
 }
