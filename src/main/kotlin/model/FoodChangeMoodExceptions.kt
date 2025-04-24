@@ -3,8 +3,8 @@ package org.example.model
 import org.example.utils.Constants
 
 sealed class FoodChangeMoodExceptions(message: String) : Throwable(message) {
-    sealed class ValidationException(override val message: String) : FoodChangeMoodExceptions(message){
-        data class RowParsingException(override val message: String): ValidationException(message)
+    sealed class ValidationException(override val message: String) : FoodChangeMoodExceptions(message) {
+        data class RowParsingException(override val message: String) : ValidationException(message)
     }
 
     sealed class IOException(override val message: String) : FoodChangeMoodExceptions(message) {
@@ -14,7 +14,11 @@ sealed class FoodChangeMoodExceptions(message: String) : Throwable(message) {
     }
 
     sealed class LogicException(message: String) : FoodChangeMoodExceptions(message) {
+
         data class NoMealsForGymHelperException(override val message: String = Constants.NO_MEALS_FOR_GYM_HELPER) :
+            LogicException(message)
+
+        data class CanNotParseDateFromString(override val message: String = Constants.CAN_NOT_PARSE_DATE_FROM_STRING) :
             LogicException(message)
     }
 }

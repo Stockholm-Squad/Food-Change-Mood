@@ -7,7 +7,7 @@ class GetItalianMealsForLargeGroupUseCase(
     private val mealsRepository: MealsRepository
 ) {
 
-    fun getMeals(): Result<List<Meal>> {
+    fun getItalianMealsForLargeGroup(): Result<List<Meal>> {
         return mealsRepository.getAllMeals().fold(
             onSuccess = { meals ->
                 Result.success(filterItalianMealsForLargeGroup(meals))

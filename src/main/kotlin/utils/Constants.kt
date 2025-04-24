@@ -12,4 +12,10 @@ object Constants {
     const val ERROR_FETCHING_MEALS = "Error fetching meals: "
     const val ERROR_WHILE_READING_FROM_FILE = "Error while reading from the file!!"
     const val INSUFFICIANT_DATA_IN_ROW = "Insufficient data in row while parsing!!"
+    const val CAN_NOT_PARSE_DATE_FROM_STRING = "Can't parse date from string"
+    const val NO_MEALS_FOUND_WITH_THIS_DATE = "No meals found with this Date."
+    const val NO_ITALIAN_MEALS_FOR_LARGE_GROUP_FOUND = "No Italian meals for large groups found."
+    const val SEARCH_AGAIN_OR_BACK = "search again or back."
+    const val ENTER_VALID_DATE = "Enter a valid Date or zero => 0"
+    
 }
