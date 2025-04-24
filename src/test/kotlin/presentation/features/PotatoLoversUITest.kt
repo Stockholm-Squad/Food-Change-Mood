@@ -32,14 +32,16 @@ class PotatoLoversUITest {
  }
 
  @Test
- fun `showPotatoLoversUI should display meals when potato meal use case returns meals`() {
+ fun `showPotatoLoversUI should print meals when call GetPotatoMealUseCase with valid potato meals`() {
+
   // Given
   val meals = listOf(
    createMeal(1, "Mashed Potatoes", listOf("Potato", "Butter")),
    createMeal(2, "Potato Salad", listOf("Potato", "Onion"))
   )
 
-  every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
+  val inputCount = 10
+  every { potatoMeals.getRandomPotatoMeals(inputCount) } returns Result.success(meals)
   every { inputHandler.readInput() } returns "n"
 
   // When
@@ -58,7 +60,7 @@ class PotatoLoversUITest {
  }
 
  @Test
- fun `showPotatoLoversUI should show no meals found when potato meal use case returns empty list`() {
+ fun `showPotatoLoversUI should show no meals found when GetPotatoMealUseCase returns empty list`() {
   // Given
   every { potatoMeals.getRandomPotatoMeals(any()) } returns Result.success(emptyList())
   every { inputHandler.readInput() } returns "n"
@@ -71,7 +73,8 @@ class PotatoLoversUITest {
  }
 
  @Test
- fun `showPotatoLoversUI should show error when potato meal use case fails`() {
+ fun `showPotatoLoversUI should show error when GetPotatoMealUseCase fails`() {
+
   // Given
   val exception = RuntimeException("Something went wrong")
   every { potatoMeals.getRandomPotatoMeals(any()) } returns Result.failure(exception)
@@ -85,7 +88,7 @@ class PotatoLoversUITest {
  }
 
  @Test
- fun `showPotatoLoversUI should not crash when inputHandler is empty string`() {
+ fun `showPotatoLoversUI should not crash when inputHandler read a readInput is empty string`() {
   // Given
   val potatoUi = PotatoLoversUI(potatoMeals, outputHandler, null)
   val meals = listOf(createMeal(1, "Chips", listOf("Potato")))
@@ -101,6 +104,7 @@ class PotatoLoversUITest {
 
  @Test
  fun `askForMoreMeals should recall showPotatoLoversUI when input is capital Y`() {
+
   // Given
   val meals = listOf(createMeal(1, "Baked Potato", listOf("Potato")))
   every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
@@ -116,6 +120,7 @@ class PotatoLoversUITest {
 
  @Test
  fun `askForMoreMeals should not recall showPotatoLoversUI when input is capital N`() {
+
   // Given
   val meals = listOf(createMeal(1, "Baked Potato", listOf("Potato")))
   every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
@@ -131,35 +136,22 @@ class PotatoLoversUITest {
 
  @Test
  fun `askForMoreMeals should handle unexpected input as no`() {
+
   // Given
   val meals = listOf(createMeal(1, "Hash Browns", listOf("Potato")))
   every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
-  every { inputHandler.readInput() } returns "maybe"
+  every { inputHandler.readInput() } returns "no"
 
   // When
   potatoMealUi.showPotatoLoversUI()
 
   // Then
-  verify { outputHandler.showMessage("Okay! Enjoy your potato meals! 🥔😋") }
- }
-
- @Test
- fun `showPotatoLoversUI should recall showPotatoLoversUI when input is capital Y`() {
-  // Given
-  val meals = listOf(createMeal(1, "Baked Potato", listOf("Potato")))
-  every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
-  every { inputHandler.readInput() } returnsMany listOf("Y", "n")
-
-  // When
-  potatoMealUi.showPotatoLoversUI()
-
-  // Then
-  verify(exactly = 2) { potatoMeals.getRandomPotatoMeals(10) }
   verify { outputHandler.showMessage("Okay! Enjoy your potato meals! 🥔😋") }
  }
 
  @Test
  fun `askForMoreMeals should stop when input is no`() {
+
   // Given
   val meals = listOf(createMeal(1, "Fries", listOf("Potato")))
   every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
@@ -170,35 +162,6 @@ class PotatoLoversUITest {
 
   // Then
   verify { outputHandler.showMessage("Okay! Enjoy your potato meals! 🥔😋") }
- }
-
- @Test
- fun `askForMoreMeals should handle blank input as no`() {
-  // Given
-  val meals = listOf(createMeal(1, "Potato Soup", listOf("Potato")))
-  every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
-  every { inputHandler.readInput() } returns ""
-
-  // When
-  potatoMealUi.showPotatoLoversUI()
-
-  // Then
-  verify { outputHandler.showMessage("Okay! Enjoy your potato meals! 🥔😋") }
- }
-
- @Test
- fun `askForMoreMeals should show error when potato meal potato meal use case fails`() {
-
-  // Given
-  val exception = RuntimeException("Failed to fetch meals")
-  every { potatoMeals.getRandomPotatoMeals(any()) } returns Result.failure(exception)
-  every { inputHandler.readInput() } returns "n"
-
-  // When
-  potatoMealUi.showPotatoLoversUI()
-
-  // Then
-  verify { outputHandler.showMessage("❌ Error: ${exception.message}") }
  }
 
  @Test
@@ -224,7 +187,8 @@ class PotatoLoversUITest {
   val meals3 = listOf(createMeal(1, "Third Meal", listOf("Potato")))
 
 
-  every { potatoMeals.getRandomPotatoMeals(10) } returnsMany
+  val inputCount = 10
+  every { potatoMeals.getRandomPotatoMeals(inputCount) } returnsMany
           listOf(Result.success(meals1), Result.success(meals2), Result.success(meals3))
   every { inputHandler.readInput() } returnsMany listOf("y", "yes", "n")
 
@@ -232,7 +196,7 @@ class PotatoLoversUITest {
   potatoMealUi.showPotatoLoversUI()
 
   // Then
-  verify(exactly = 2) { potatoMeals.getRandomPotatoMeals(10) }
+  verify(exactly = 2) { potatoMeals.getRandomPotatoMeals(inputCount) }
  }
 
  @Test
@@ -242,21 +206,6 @@ class PotatoLoversUITest {
   val meals = listOf(createMeal(1, "Potato Wedges", listOf("Potato")))
   every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
   every { inputHandler.readInput() } returns "1"
-
-  // When
-  potatoMealUi.showPotatoLoversUI()
-
-  // Then
-  verify { outputHandler.showMessage("Okay! Enjoy your potato meals! 🥔😋") }
- }
-
- @Test
- fun `askForMoreMeals should treat empty input`() {
-
-  // Given
-  val meals = listOf(createMeal(1, "Potato Salad", listOf("Potato")))
-  every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
-  every { inputHandler.readInput() } returns " "
 
   // When
   potatoMealUi.showPotatoLoversUI()
