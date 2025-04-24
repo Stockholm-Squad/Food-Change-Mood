@@ -28,6 +28,6 @@ class GetMealByNameUseCase(
             ?: handleFailure(Throwable(Constants.NO_MEALS_FOUND_MATCHING))
 
     private fun handleFailure(error: Throwable): Result<List<Meal>> =
-        Result.failure(Throwable("${Constants.ERROR_FETCHING_MEALS} ${error.message}"))
+        Result.failure(Throwable("${Constants.ERROR_FETCHING_MEALS}${error.message}"))
 
 }
