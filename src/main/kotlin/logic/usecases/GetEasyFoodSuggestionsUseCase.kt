@@ -20,8 +20,8 @@ class GetEasyFoodSuggestionsUseCase(
         return allMeals.filter {
             isEasyMeal(it)
         }.shuffled()
-            .take(10)
             .takeIf { it.isNotEmpty() }
+            ?.take(10)
             ?.let { Result.success(it) }
             ?: getFailureResult(NoSuchElementException("No easy meals found."))
 
