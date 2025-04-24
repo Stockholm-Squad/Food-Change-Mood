@@ -31,8 +31,53 @@ class PotatoLoversUI(
             meals.forEachIndexed { index, meal ->
                 outputPrinter.printLine("🍽️ Meal #${index + 1}: ${meal.name}")
             }
+            askToViewMealDetails(meals)
             askIfWantsMore()
         }
+    }
+
+    private fun askToViewMealDetails(meals: List<Meal>) {
+        outputPrinter.printLine("\nWould you like to view the details of any of these meals? (Enter the number or 'n' to skip):")
+
+        val input = try {
+            inputReader?.readLineOrNull()?.trim()?.lowercase()
+        } catch (e: Exception) {
+            outputPrinter.printLine("❌ Error reading input: ${e.message}")
+            return
+        }
+
+        if (input == null || input == "n") {
+            outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋")
+            return
+        }
+
+        val selectedIndex = input.toIntOrNull()
+        if (selectedIndex != null && selectedIndex in 1..meals.size) {
+            showMealDetails(meals[selectedIndex - 1])
+        } else {
+            outputPrinter.printLine("❌ Invalid selection. Please choose a valid number.")
+            askToViewMealDetails(meals)
+        }
+    }
+
+    private fun showMealDetails(meal: Meal) {
+        outputPrinter.printLine("\n🍽️ Details of '${meal.name}':")
+        outputPrinter.printLine("🕒 Minutes to prepare: ${meal.minutes}")
+        outputPrinter.printLine("📖 Number of steps: ${meal.numberOfSteps}")
+
+        outputPrinter.printLine("📝 Steps:")
+        meal.steps?.forEachIndexed { index, step ->
+            outputPrinter.printLine("   ${index + 1}. $step")
+        }
+
+        outputPrinter.printLine("📃 Description: ${meal.description}")
+        outputPrinter.printLine("🍎 Nutrition: ${meal.nutrition}")
+        outputPrinter.printLine("🥣 Number of ingredients: ${meal.numberOfIngredients}")
+
+        outputPrinter.printLine("🧂 Ingredients:")
+        meal.ingredients?.forEachIndexed { index, ingredient ->
+            outputPrinter.printLine("   ${index + 1}. $ingredient")
+        } ?: outputPrinter.printLine("   N/A")
     }
 
     fun handleFailure(exception: Throwable) {
