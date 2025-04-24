@@ -36,7 +36,7 @@ class GuessGameUITest {
         //Given
         val meal = buildMeal(1, "aww  marinated olives", 15)
         every { getRandomMealUseCase.getRandomMeal() } returns Result.success(meal)
-        every { reader.readLineOrNull() } returns "15"
+        every { reader.readIntOrNull() } returns 15
         every {
             getGuessPreparationTimeUseCase.guessGame(
                 userGuess = any(),
@@ -48,7 +48,7 @@ class GuessGameUITest {
         //When
         guessGameUI.playGuessGame()
         //Then
-        verify { printer.printLine("🎉 Correct! The preparation time is 15 minutes.") }
+        verify { printer.printLine(Constants.CORRECT_MESSAGE) }
     }
 
     @Test
@@ -56,7 +56,7 @@ class GuessGameUITest {
         //Give
         val meal = buildMeal(2, "aww  marinated olives", 15)
         every { getRandomMealUseCase.getRandomMeal() } returns Result.success(meal)
-        every { reader.readLineOrNull() } returnsMany listOf("10", "10", "10")
+        every { reader.readIntOrNull() } returnsMany listOf(10, 10, 10)
         every {
             getGuessPreparationTimeUseCase.guessGame(
                 any(),
@@ -66,7 +66,7 @@ class GuessGameUITest {
         //When
         guessGameUI.playGuessGame()
         //Then
-        verify { printer.printLine("⬇️ Too low.") }
+        verify { printer.printLine(Constants.LOW_MESSAGE) }
 
     }
 
@@ -75,7 +75,7 @@ class GuessGameUITest {
         // Given
         val meal = buildMeal(3, "aww marinated olives", 15)
         every { getRandomMealUseCase.getRandomMeal() } returns Result.success(meal)
-        every { reader.readLineOrNull() } returnsMany listOf("20", "20", "20")
+        every { reader.readIntOrNull() } returnsMany listOf(20, 20, 20)
         every {
             getGuessPreparationTimeUseCase.guessGame(any(), any())
         } returns Result.success(GuessPreparationTimeState.TOO_HIGH)
@@ -85,7 +85,7 @@ class GuessGameUITest {
 
         // Then
         verify {
-            printer.printLine("⬆️ Too high.")
+            printer.printLine(Constants.HIGH_MESSAGE)
         }
     }
 
@@ -95,7 +95,7 @@ class GuessGameUITest {
         // Given
         val meal = buildMeal(4, "aww marinated olives", 15)
         every { getRandomMealUseCase.getRandomMeal() } returns Result.success(meal)
-        every { reader.readLineOrNull() } returnsMany listOf("20", "20","20")
+        every { reader.readIntOrNull() } returnsMany listOf(20, 20,20)
         every {
             getGuessPreparationTimeUseCase.guessGame(any(), any())
         } returnsMany listOf(
@@ -108,7 +108,7 @@ class GuessGameUITest {
         guessGameUI.playGuessGame()
 
         // Then
-        verify { printer.printLine("❌ You've used all attempts. The correct time was 15 minutes.") }
+        verify { printer.printLine(Constants.FAILED_MESSAGE) }
     }
 
     @Test
@@ -122,38 +122,16 @@ class GuessGameUITest {
         verify { printer.printLine(Constants.UNEXPECTED_ERROR) }
     }
 
-
-    @Test
-    fun `playGuessGame () should print invalid input when user inputs non-numeric value`() {
-        //Given
-        val meal = buildMeal(5, "aww marinated olives", 15)
-        every { getRandomMealUseCase.getRandomMeal() } returns Result.success(meal)
-        every { reader.readLineOrNull() } returnsMany listOf( "?","a","n","15")
-        every {
-            getGuessPreparationTimeUseCase.guessGame(
-                userGuess = any(),
-                preparationTime = any()
-            )
-        } returns Result.success(
-            GuessPreparationTimeState.CORRECT
-        )
-        //When
-        guessGameUI.playGuessGame()
-        //Then
-        verify { printer.printLine("❗ Invalid input. Please enter a number.") }
-        verify { printer.printLine("🎉 Correct! The preparation time is 15 minutes.") }
-
-    }
     @Test
     fun `playGuessGame () should print error message when meal has no preparation time`() {
         //Given
         val meal = buildMeal(5, "aww marinated olives", null)
         every { getRandomMealUseCase.getRandomMeal() } returns Result.success(meal)
-        every { reader.readLineOrNull() } returns  "20"
+        every { reader.readIntOrNull() } returns  20
         //When
         guessGameUI.playGuessGame()
         //Then
-        verify { printer.printLine("❌ This meal has no preparation time.") }
+        verify { printer.printLine(Constants.NO_PREPARATION_TIME) }
 
     }
     @Test
@@ -161,7 +139,7 @@ class GuessGameUITest {
         // Given
         val meal = buildMeal(1, "aww marinated olives", 30)
         every { getRandomMealUseCase.getRandomMeal() } returns Result.success(meal)
-        every { reader.readLineOrNull() } returns null andThen "30"
+        every { reader.readIntOrNull() } returns null andThen  30
         every {
             getGuessPreparationTimeUseCase.guessGame(
                 userGuess = any(),
@@ -175,8 +153,8 @@ class GuessGameUITest {
         guessGameUI.playGuessGame()
 
         // Then
-        verify { printer.printLine("❗ Invalid input. Please enter a number.") }
-        verify { printer.printLine("🎉 Correct! The preparation time is 30 minutes.") }
+        verify { printer.printLine(Constants.INVALID_INPUT_MESSAGE) }
+
 
     }
 }

@@ -12,11 +12,10 @@ class GetRandomMealUseCase(
     fun getRandomMeal(): Result<Meal> {
         return mealsRepository.getAllMeals().fold(
             onSuccess = { meals ->
-                if (meals.isNotEmpty()) {
-                    Result.success(meals.random())
-                } else {
-                    Result.failure(Throwable(Constants.NO_MEALS_FOUND))
-                }
+                meals.takeIf { it.isNotEmpty() }
+                    ?.random()
+                    ?.let { Result.success(it) }
+                    ?: Result.failure(Throwable(Constants.NO_MEALS_FOUND))
             },
             onFailure = { error ->
                 Result.failure(Throwable("${Constants.ERROR_FETCHING_MEALS} ${error.message}"))

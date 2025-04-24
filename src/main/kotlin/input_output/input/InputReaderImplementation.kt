@@ -19,4 +19,8 @@ class InputReaderImplementation : InputReader {
         return readlnOrNull()?.toFloatOrNull()
     }
 
+    override fun readIntOrNull(): Int? {
+        return readlnOrNull()?.toIntOrNull()
+    }
+
 }

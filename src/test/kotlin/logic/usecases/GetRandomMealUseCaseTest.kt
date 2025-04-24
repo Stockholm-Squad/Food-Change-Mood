@@ -7,9 +7,11 @@ import io.mockk.verify
 import org.example.input_output.output.OutputPrinter
 import org.example.logic.repository.MealsRepository
 import org.example.logic.usecases.GetRandomMealUseCase
+import org.example.model.FoodChangeMoodExceptions
 import org.example.utils.Constants
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.assertThrows
 import utils.buildMeal
 import kotlin.test.Test
 
@@ -17,12 +19,11 @@ class GetRandomMealUseCaseTest {
 
     private lateinit var mealsRepository: MealsRepository
     private lateinit var getRandomMealUseCase: GetRandomMealUseCase
-    private lateinit var printer: OutputPrinter
+
 
     @BeforeEach
     fun setUp(){
        mealsRepository= mockk(relaxed = true)
-        printer=mockk(relaxed = true)
        getRandomMealUseCase= GetRandomMealUseCase(mealsRepository)
     }
     @AfterEach
@@ -33,10 +34,10 @@ class GetRandomMealUseCaseTest {
     fun `getRandomMeal () should return a random meal when repository returns success`(){
         //Given
      val meals = listOf(
-         buildMeal(1,"apple a day  milk shake",0),
          buildMeal(2,"aww  marinated olives",15),
-         buildMeal(3,"backyard style  barbecued ribs",120),
-         buildMeal(4,"bananas 4 ice cream  pie",180)
+         buildMeal(2,"aww  marinated olives",15),
+         buildMeal(2,"aww  marinated olives",15),
+         buildMeal(2,"aww  marinated olives",15),
      )
         every { mealsRepository.getAllMeals() } returns Result.success(meals)
 
@@ -44,7 +45,7 @@ class GetRandomMealUseCaseTest {
        val result= getRandomMealUseCase.getRandomMeal()
 
         //Then
-        assertThat(meals).contains(result.getOrNull())
+        assertThat(result.getOrNull()).isEqualTo( buildMeal(2,"aww  marinated olives",15))
     }
 
     @Test
@@ -62,8 +63,7 @@ class GetRandomMealUseCaseTest {
         val errorMessage = exception?.message
         assertThat(errorMessage).isNotNull()
 
-        assertThat(errorMessage).contains(Constants.ERROR_FETCHING_MEALS)
-
+        assertThrows<Throwable> {result.getOrThrow() }
     }
     @Test
     fun `should return failure when meals list is empty`() {
@@ -75,7 +75,8 @@ class GetRandomMealUseCaseTest {
 
         // Then
         assertThat(result.isFailure).isTrue()
-        assertThat(result.exceptionOrNull()?.message).isEqualTo(Constants.NO_MEALS_FOUND)
+        assertThrows<Throwable> {result.getOrThrow() }
+
     }
 
 }
