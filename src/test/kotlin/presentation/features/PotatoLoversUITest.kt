@@ -2,8 +2,6 @@ package presentation.features
 
 import com.google.common.truth.Truth.assertThat
 import io.mockk.*
-import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertNull
 import logic.usecases.buildMeal
 import logic.usecases.createMeal
 import model.Meal
@@ -14,7 +12,6 @@ import org.example.utils.InputReader
 import org.example.utils.OutputPrinter
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.io.IOException
 
 class PotatoLoversUITest {
 
