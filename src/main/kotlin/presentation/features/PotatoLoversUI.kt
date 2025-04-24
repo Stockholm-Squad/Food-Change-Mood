@@ -36,6 +36,10 @@ class PotatoLoversUI(
         }
     }
 
+    fun handleFailure(exception: Throwable) {
+        outputPrinter.printLine("❌ Error: ${exception.message}")
+    }
+
     fun askToViewMealDetails(meals: List<Meal?>) {
         var validInput = false
         do {
@@ -63,7 +67,7 @@ class PotatoLoversUI(
         } while (!validInput)
     }
 
-    private fun showMealDetails(meal: Meal) {
+    fun showMealDetails(meal: Meal) {
         outputPrinter.printLine("\n🍽️ Details of '${meal.name}':")
         outputPrinter.printLine("🕒 Minutes to prepare: ${meal.minutes}")
         outputPrinter.printLine("📖 Number of steps: ${meal.numberOfSteps}")
@@ -82,11 +86,6 @@ class PotatoLoversUI(
             outputPrinter.printLine("   ${index + 1}. $ingredient")
         } ?: outputPrinter.printLine("   N/A")
     }
-
-    fun handleFailure(exception: Throwable) {
-        outputPrinter.printLine("❌ Error: ${exception.message}")
-    }
-
 
     fun askIfWantsMore(onYes: () -> Unit = { showPotatoLoversUI() }) {
         outputPrinter.printLine("Would you like to see more? (y/n)")

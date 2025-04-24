@@ -9,6 +9,7 @@ import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
 import logic.usecases.buildMeal
 import logic.usecases.createMeal
+import model.Meal
 import model.Nutrition
 import org.example.logic.usecases.GetPotatoMealsUseCase
 import org.example.presentation.features.PotatoLoversUI
@@ -234,11 +235,13 @@ class PotatoLoversUITest {
   val meals = listOf(buildMeal(id = 1, name = "Potato Casserole", ingredients = listOf("Potato", "Cheese"), steps = listOf("Boil potatoes", "Add cheese", "Bake in oven"), minutes = 30, numberOfSteps = 3, numberOfIngredients = 2, description = "A cheesy baked potato dish", nutrition = Nutrition(null, null, null, null, null, null, null), submitted = null, contributorId = null),
    buildMeal(id = 1, name = "Potato Casserole", ingredients = listOf("Potato", "Cheese"), steps = listOf("Boil potatoes", "Add cheese", "Bake in oven"), minutes = 30, numberOfSteps = 3, numberOfIngredients = 2, description = "A cheesy baked potato dish", nutrition = Nutrition(null, null, null, null, null, null, null), submitted = null, contributorId = null))
 
-  // When
   every { inputReader.readLineOrNull() } returns "n"
 
-  // Then
+  // When
+
   potatoMealUi.askToViewMealDetails(meals)
+
+  // Then
 
   verify { outputPrinter.printLine("\nWould you like to view the details of any of these meals? (Enter the number or 'n' to skip):") }
  }
@@ -248,12 +251,13 @@ class PotatoLoversUITest {
   // Given
   val meals = listOf(buildMeal(id = 1, name = "Potato Casserole", ingredients = listOf("Potato", "Cheese"), steps = listOf("Boil potatoes", "Add cheese", "Bake in oven"), minutes = 30, numberOfSteps = 3, numberOfIngredients = 2, description = "A cheesy baked potato dish", nutrition = Nutrition(null, null, null, null, null, null, null), submitted = null, contributorId = null),
    buildMeal(id = 1, name = "Potato Casserole", ingredients = listOf("Potato", "Cheese"), steps = listOf("Boil potatoes", "Add cheese", "Bake in oven"), minutes = 30, numberOfSteps = 3, numberOfIngredients = 2, description = "A cheesy baked potato dish", nutrition = Nutrition(null, null, null, null, null, null, null), submitted = null, contributorId = null))
-
+   every { inputReader.readLineOrNull() } returns "n"
   // When
-  every { inputReader.readLineOrNull() } returns "n"
+
+  potatoMealUi.askToViewMealDetails(meals)
 
   // Then
-  potatoMealUi.askToViewMealDetails(meals)
+
 
   verify {
    outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋")
@@ -314,6 +318,8 @@ class PotatoLoversUITest {
    outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋")
   }
  }
+
+
  @Test
  fun `askIfWantsMore should call onYes callback when input is y`() {
   // Given
