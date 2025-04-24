@@ -1,15 +1,15 @@
 package org.example.data.dataSource
 
-import org.example.data.parser.MealCsvParser
-import org.example.data.reader.MealCsvReader
 import model.Meal
+import org.example.data.parser.MealParser
+import org.example.data.reader.MealReader
 
 class MealCsvDataSource(
-    private val mealCsvReader: MealCsvReader,
-    private val mealCsvParser: MealCsvParser
+    private val mealReader: MealReader,
+    private val mealParser: MealParser
 ) : MealDataSource {
     override fun getAllMeals(): Result<List<Meal>> {
-        return mealCsvReader.readLinesFromFile().fold(
+        return mealReader.readLinesFromFile().fold(
             onSuccess = { readResult ->
                 val meals = readResult.mapNotNull { line ->
                     parseLine(line)
@@ -21,7 +21,7 @@ class MealCsvDataSource(
     }
 
     private fun parseLine(line: String): Meal? {
-        return mealCsvParser.parseLine(line).fold(
+        return mealParser.parseLine(line).fold(
             onSuccess = { result -> result },
             onFailure = { exception ->
                 exception.printStackTrace()
