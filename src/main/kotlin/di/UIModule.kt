@@ -22,7 +22,6 @@ import org.koin.dsl.module
 
 val uiModule = module {
     singleOf(::FoodConsoleUI)
-    single<(String) -> Unit> { ::println }
 
     factory { ExploreCountryFoodUI(get()) }
     factory { GetHealthyFastFoodMealsUI(get(),get()) }
