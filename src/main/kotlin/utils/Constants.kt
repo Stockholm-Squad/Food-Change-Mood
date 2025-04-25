@@ -7,9 +7,17 @@ object Constants {
     const val NO_MEALS_FOR_POTATO = "No potato meals found."
     const val POTATO = "potato"
     const val SEARCH_QUERY_CAN_NOT_BE_EMPTY = "Search query cannot be empty or null"
+    const val FOUND_MEALS = "Found %d meal(s):"
+    const val MEAL_DETAILS_HEADER = "Here are the details for '%s':"
+    const val SEARCH_AGAIN_PROMPT = "Would you like to search again? (y or n)"
+    const val GOODBYE_MESSAGE = "Okay! Enjoy your meals!"
     const val NO_MEALS_FOUND_MATCHING = "No meals found matching"
     const val UNEXPECTED_ERROR = "Unexpected error occurred"
     const val ERROR_FETCHING_MEALS = "Error fetching meals: "
+    const val INVALID_SELECTION_MESSAGE = "Invalid selection. Please choose a valid number."
+    const val ENTER_MEAL_KEYWORD_TO_SEARCH = "Enter a meal keyword to search: "
+    const val MEAL_DETAILS_PROMPT = "Would you like to view the details of any of these meals? (Enter the number or 'n' to skip):"
+
     const val ERROR_WHILE_READING_FROM_FILE = "Error while reading from the file!!"
     const val INSUFFICIANT_DATA_IN_ROW = "Insufficient data in row while parsing!!"
     const val CAN_NOT_PARSE_DATE_FROM_STRING = "Can't parse date from string"
@@ -19,4 +27,6 @@ object Constants {
     const val ENTER_VALID_DATE = "Enter a valid Date or zero => 0"
 
     const val NO_SEA_FOOD_MEALS_FOUND ="No seafood meals found."
+    const val Y = "y"
+    const val N = "n"
 }
