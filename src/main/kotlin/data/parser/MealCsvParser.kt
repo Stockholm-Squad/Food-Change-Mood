@@ -1,8 +1,10 @@
-package data
+package org.example.data.parser
 
 import model.Meal
 import model.Nutrition
 import org.example.data.utils.CsvLineFormatter
+import org.example.model.FoodChangeMoodExceptions.ValidationException
+import org.example.utils.Constants
 import org.example.utils.MealColumnIndex
 import org.example.utils.NutritionIndex
 import org.example.utils.getDateFromString
@@ -10,8 +12,9 @@ import java.util.Date
 
 class MealCsvParser(
     private val csvLineFormatter: CsvLineFormatter
-) {
-    fun parseLine(row: String): Result<Meal> {
+): MealParser {
+
+    override fun parseLine(row: String): Result<Meal> {
         return try {
             val mealRow = csvLineFormatter.formatMealLine(row)
             validateMealRow(mealRow = mealRow)
@@ -36,8 +39,8 @@ class MealCsvParser(
     }
 
     private fun validateMealRow(mealRow: List<String>): Result<Unit> {
-        if (mealRow.size < MealColumnIndex.entries.size) {
-            return Result.failure(Throwable("Insufficient data in row: $mealRow"))
+        if (mealRow.isEmpty() || mealRow.size < MealColumnIndex.entries.size) {
+            return Result.failure(ValidationException.RowParsingException(Constants.INSUFFICIANT_DATA_IN_ROW))
         }
         return Result.success(Unit)
     }
