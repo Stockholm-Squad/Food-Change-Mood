@@ -78,22 +78,6 @@ class ItalianLargeGroupMealsUITest {
         verify(exactly = 1) { printer.printLine("Error: Unknown Error") }
     }
 
-//    @Test
-//    fun `italianLargeGroupMealsUI should show meal details when valid meal ID is entered`() {
-//        // Given
-//        val meal = buildMeal(id = 1, name = "Lasagna", tags = listOf("italian", "for-large-groups"))
-//
-//        every { getItalianMealsForLargeGroupUseCase.getItalianMealsForLargeGroup() } returns Result.success(listOf(meal))
-//        every { reader.readStringOrNull() } returnsMany listOf("1", "-1")
-//
-//
-//        // When
-//        italianLargeGroupMealsUI.italianLargeGroupMealsUI()
-//
-//        // Then
-//        verify(exactly = 1) { listOf(meal).viewMealInListDetails(1, printer) }
-//    }
-
     @Test
     fun `italianLargeGroupMealsUI should show error when invalid meal ID is entered`() {
         // Given
