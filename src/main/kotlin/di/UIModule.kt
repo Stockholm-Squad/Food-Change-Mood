@@ -9,7 +9,7 @@ import org.koin.dsl.module
 val uiModule = module {
     singleOf(::FoodConsoleUI)
 
-    factory { ExploreCountryFoodUI(get()) }
+    factory { ExploreCountryMealsUI(get(),get(),get()) }
     factory { GetHealthyFastFoodMealsUI(get()) }
     factory { GetIraqiMealsUI(get(),get()) }
     factory { GuessGameUI(get(),get(),get (),get()) }
@@ -22,6 +22,6 @@ val uiModule = module {
     factory { SearchMealByNameUI(get(), get(), get()) }
     factory { SearchByAddDateUI(get(), get(), get(), get()) }
     factory { SuggestEasyMealsUI(get()) }
-    factory { SuggestSweetNoEggsUI(get()) }
-    factory { SuggestMealForSoThinPeopleUI(get(),get(),get()) }
+    factory { SuggestSweetNoEggsUI(get(),get(),get()) }
+    factory { SuggestMealForSoThinPeopleUI(get()) }
 }
