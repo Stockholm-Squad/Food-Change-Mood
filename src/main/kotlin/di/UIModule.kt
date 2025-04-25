@@ -10,7 +10,7 @@ val uiModule = module {
     singleOf(::FoodConsoleUI)
 
     factory { ExploreCountryMealsUI(get(), get(), get()) }
-    factory { GetHealthyFastFoodMealsUI(get()) }
+    factory { GetHealthyFastFoodMealsUI(get(), get()) }
     factory { GetIraqiMealsUI(get(), get()) }
     factory { GuessGameUI(get(), get(), get(), get()) }
     factory { GymHelperUI(get(), get(), get()) }
