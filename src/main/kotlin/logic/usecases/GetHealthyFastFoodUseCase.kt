@@ -2,6 +2,7 @@ package org.example.logic.usecases
 
 import model.Meal
 import org.example.logic.repository.MealsRepository
+import org.example.utils.Constants
 
 
 class GetHealthyFastFoodUseCase(
@@ -16,16 +17,16 @@ class GetHealthyFastFoodUseCase(
                 )
             },
             onFailure = { error ->
-                Result.failure(error)
+                Result.failure(Throwable("${Constants.ERROR_FETCHING_MEALS} ${error.message}"))
             }
 
         )
 
     }
 
-    fun getFilteredMeals(allMeals: List<Meal>): List<Meal >{
+    fun getFilteredMeals(allMeals: List<Meal>): List<Meal> {
         return allMeals.filter { meal ->
-            meal.minutes != null && meal.minutes <= 15
+            meal.minutes != null && meal.minutes <= 15 && meal.nutrition != null
         }
             .sortedWith(
                 compareBy<Meal> { it.nutrition?.totalFat }
