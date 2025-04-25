@@ -29,4 +29,6 @@ object Constants {
     const val NO_SEA_FOOD_MEALS_FOUND ="No seafood meals found."
     const val Y = "y"
     const val N = "n"
+    const val NO_MEAL_FOR_SO_THIN_PEOPLE = "no meal found with high calories."
+
 }

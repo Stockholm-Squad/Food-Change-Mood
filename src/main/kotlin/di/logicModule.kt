@@ -1,6 +1,5 @@
 package org.example.di
 
-import org.example.logic.usecases.SearchingByKmpUseCase
 import org.example.logic.usecases.*
 import org.koin.dsl.module
 
@@ -15,10 +14,10 @@ val logicModule = module {
     single { GetIngredientGameUseCase(get()) }
     single { GetMealsByDateUseCase(get()) }
     single { GetItalianMealsForLargeGroupUseCase(get()) }
-    single { GetMealsForSoThinProblemUseCase(get()) }
+    single { GetMealForSoThinPeopleUseCase(get()) }
 
     single<SearchingByKmpUseCase> { SearchingByKmpUseCase() }
-    single { GetMealByNameUseCase(get(), get())}
+    single { GetMealByNameUseCase(get(), get()) }
     single { GetIraqiMealsUseCase(get()) }
 
     single { GetSeaFoodByProteinRankUseCase(get()) }
