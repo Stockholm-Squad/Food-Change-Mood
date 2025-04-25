@@ -1,9 +1,10 @@
 package org.example.input_output.input
 
-import java.util.Date
+import kotlinx.datetime.LocalDate
 
 interface InputReader {
     fun readStringOrNull(): String?
-    fun readDateOrNull(): Date?
+    fun readDateOrNull(): LocalDate?
     fun readFloatOrNull(): Float?
+    fun readIntOrNull():Int?
 }
