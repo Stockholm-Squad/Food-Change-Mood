@@ -14,7 +14,7 @@ val dataModule = module {
     single { CsvLineFormatter() }
     single { CsvLineHandler() }
 
-    single<MealParser> { MealCsvParser(get()) }
+    single<MealParser> { MealCsvParser(get(), get()) }
     single<MealReader> { MealCsvReader(get(), get()) }
     single<MealDataSource> { MealCsvDataSource(get(), get()) }
 
