@@ -49,34 +49,12 @@ class PotatoLoversUITest {
  fun `askIfWantsMore should recall showPotatoLoversUI when input is capital Y`() {
 
   // Given
-  val meals = listOf(Meal(
-   name = "Mashed Potatoes",
-   minutes = 20,
-   numberOfSteps = 0,
-   steps = null,
-   description = "Just plain white rice",
-   nutrition = Nutrition(12.0f, 12.0f,12.0f,12.0f,12.0f,12.0f,12.0f),
-   numberOfIngredients = 0,
-   ingredients = null,
-   submitted = null,
-   contributorId = 12,
-   id = 1,
-   tags = null
-  ),
-   Meal(
-    name = "Potato Salad",
-    minutes = 20,
-    numberOfSteps = 0,
-    steps = null,
-    description = "Just plain white rice",
-    nutrition = Nutrition(12.0f, 12.0f,12.0f,12.0f,12.0f,12.0f,12.0f),
-    numberOfIngredients = 0,
-    ingredients = null,
-    submitted = null,
-    contributorId = 12,
-    id = 2,
-    tags = null
-   ))
+  val meals = listOfNotNull(
+   buildMeal(1, "Potato Salad", ingredients = listOf("Potato", "Mayonnaise", "Onion")),
+   buildMeal(2, "Mashed Potatoes", ingredients = listOf("Potato", "Butter", "Milk")),
+   buildMeal(3, "French Fries", ingredients = listOf("Potato", "Oil", "Salt")),
+   buildMeal(4, "Tomato Soup", ingredients = listOf("Tomato", "Water", "Salt"))
+  )
 
   every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
   every { inputReader.readLineOrNull() } returnsMany listOf("Y", "n")
@@ -93,34 +71,12 @@ class PotatoLoversUITest {
  fun `askIfWantsMore should not recall showPotatoLoversUI when input is capital N`() {
 
   // Given
-  val meals = listOf(Meal(
-   name = "Mashed Potatoes",
-   minutes = 20,
-   numberOfSteps = 0,
-   steps = null,
-   description = "Just plain white rice",
-   nutrition = Nutrition(12.0f, 12.0f,12.0f,12.0f,12.0f,12.0f,12.0f),
-   numberOfIngredients = 0,
-   ingredients = null,
-   submitted = null,
-   contributorId = 12,
-   id = 1,
-   tags = null
-  ),
-   Meal(
-    name = "Potato Salad",
-    minutes = 20,
-    numberOfSteps = 0,
-    steps = null,
-    description = "Just plain white rice",
-    nutrition = Nutrition(12.0f, 12.0f,12.0f,12.0f,12.0f,12.0f,12.0f),
-    numberOfIngredients = 0,
-    ingredients = null,
-    submitted = null,
-    contributorId = 12,
-    id = 2,
-    tags = null
-   ))
+  val meals = listOfNotNull(
+   buildMeal(1, "Potato Salad", ingredients = listOf("Potato", "Mayonnaise", "Onion")),
+   buildMeal(2, "Mashed Potatoes", ingredients = listOf("Potato", "Butter", "Milk")),
+   buildMeal(3, "French Fries", ingredients = listOf("Potato", "Oil", "Salt")),
+   buildMeal(4, "Tomato Soup", ingredients = listOf("Tomato", "Water", "Salt"))
+  )
 
   every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
   every { inputReader.readLineOrNull() } returnsMany listOf("y", "N")
@@ -137,34 +93,12 @@ class PotatoLoversUITest {
  fun `askForMoreMeals should stop when input is no`() {
 
   // Given
-  val meals = listOf(Meal(
-   name = "Mashed Potatoes",
-   minutes = 20,
-   numberOfSteps = 0,
-   steps = null,
-   description = "Just plain white rice",
-   nutrition = Nutrition(12.0f, 12.0f,12.0f,12.0f,12.0f,12.0f,12.0f),
-   numberOfIngredients = 0,
-   ingredients = null,
-   submitted = null,
-   contributorId = 12,
-   id = 1,
-   tags = null
-  ),
-  Meal(
-   name = "Potato Salad",
-   minutes = 20,
-   numberOfSteps = 0,
-   steps = null,
-   description = "Just plain white rice",
-   nutrition = Nutrition(12.0f, 12.0f,12.0f,12.0f,12.0f,12.0f,12.0f),
-   numberOfIngredients = 0,
-   ingredients = null,
-   submitted = null,
-   contributorId = 12,
-   id = 2,
-   tags = null
-  ))
+  val meals = listOfNotNull(
+   buildMeal(1, "Potato Salad", ingredients = listOf("Potato", "Mayonnaise", "Onion")),
+   buildMeal(2, "Mashed Potatoes", ingredients = listOf("Potato", "Butter", "Milk")),
+   buildMeal(3, "French Fries", ingredients = listOf("Potato", "Oil", "Salt")),
+   buildMeal(4, "Tomato Soup", ingredients = listOf("Tomato", "Water", "Salt"))
+  )
 
   every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
   every { inputReader.readLineOrNull() } returns "n"
@@ -307,9 +241,9 @@ class PotatoLoversUITest {
 
  @Test
  fun `showMealDetails prints all meal details when all fields are present`() {
+
   // Given
-  val meal = Meal(
-   name = "Grilled Chicken",
+  val meal = buildMeal( name = "Grilled Chicken",
    minutes = 45,
    numberOfSteps = 2,
    steps = listOf("Season the chicken"),
@@ -323,9 +257,10 @@ class PotatoLoversUITest {
    tags = null
   )
 
+
   // When
   every { outputPrinter.printLine(any()) } returns Unit
-  potatoMealUi.showMealDetails(meal)
+  potatoMealUi.showMealDetails(meal!!)
 
   // Then
   verifyOrder {
@@ -346,15 +281,14 @@ class PotatoLoversUITest {
  @Test
  fun `showMealDetails handles null steps and null ingredients`() {
   // Given
-  val meal = Meal(
-   name = "Plain Rice",
-   minutes = 20,
-   numberOfSteps = 0,
-   steps = null,
-   description = "Just plain white rice",
-   nutrition = Nutrition(12.0f, 12.0f,12.0f,12.0f,12.0f,12.0f,12.0f),
-   numberOfIngredients = 0,
-   ingredients = null,
+  val meal = buildMeal( name = "Grilled Chicken",
+   minutes = 45,
+   numberOfSteps = 2,
+   steps = listOf("Season the chicken"),
+   description = "Delicious grilled chicken with herbs",
+   nutrition = Nutrition(12.0f,12.0f,12.0f,12.0f,12.0f,12.0f,12.0f),
+   numberOfIngredients = 3,
+   ingredients = listOf("Chicken", "Salt"),
    submitted = null,
    contributorId = 12,
    id = 1,
@@ -363,7 +297,7 @@ class PotatoLoversUITest {
 
   // When
   every { outputPrinter.printLine(any()) } returns Unit
-  potatoMealUi.showMealDetails(meal)
+  potatoMealUi.showMealDetails(meal!!)
 
   // Then
   verifyOrder {
