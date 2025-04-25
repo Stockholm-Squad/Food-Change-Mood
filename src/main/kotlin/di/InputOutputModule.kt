@@ -7,5 +7,5 @@ import org.koin.dsl.module
 
 val inputOutputModule = module {
     factory<OutputPrinter> { OutputPrinterImplementation() }
-    factory<InputReader> { InputReaderImplementation() }
+    factory<InputReader> { InputReaderImplementation(get()) }
 }
