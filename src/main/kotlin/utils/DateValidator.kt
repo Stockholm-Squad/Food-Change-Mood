@@ -1,16 +1,11 @@
 package org.example.utils
 
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
-
 class DateValidator {
     fun isValidDate(date: String): Boolean {
-        val formatter = DateTimeFormatter.ISO_LOCAL_DATE // Default format: yyyy-MM-dd
         return try {
-            LocalDate.parse(date, formatter) // Try to parse the date
+            kotlinx.datetime.LocalDate.parse(date)
             true
-        } catch (e: DateTimeParseException) {
+        } catch (e: Exception) {
             false
         }
     }

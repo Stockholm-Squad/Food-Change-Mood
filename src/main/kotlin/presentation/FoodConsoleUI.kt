@@ -60,7 +60,7 @@ class FoodConsoleUI(
             MenuOption.COUNTRY_FOOD -> exploreCountryFoodUI.exploreCountryFoodCulture()
             MenuOption.INGREDIENT_GAME -> ingredientGameUI.start()
             MenuOption.POTATO_LOVERS -> potatoLoversUI.showPotatoLoversUI()
-            MenuOption.HIGH_CALORIE_MEAL -> suggestMealForSoThinPeopleUI.getMaleWithHighCalorie()
+            MenuOption.HIGH_CALORIE_MEAL -> suggestMealForSoThinPeopleUI.showMealWithHighCalorie()
             MenuOption.SEAFOOD_RANKING -> proteinSeafoodRankingUI.proteinSeafoodRanking()
             MenuOption.ITALIAN_GROUP_MEALS -> italianLargeGroupMealsUI.italianLargeGroupMealsUI()
             MenuOption.EXIT -> {
