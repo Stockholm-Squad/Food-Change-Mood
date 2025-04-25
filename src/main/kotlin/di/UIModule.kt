@@ -4,6 +4,7 @@ package org.example.di
 import org.example.presentation.FoodConsoleUI
 import org.example.presentation.features.*
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.scope.get
 import org.koin.dsl.module
 
 val uiModule = module {
@@ -21,7 +22,7 @@ val uiModule = module {
     factory { ProteinSeafoodRankingUI(get(), get()) }
     factory { SearchMealByNameUI(get(), get(), get()) }
     factory { SearchByAddDateUI(get(), get(), get(), get()) }
-    factory { SuggestEasyMealsUI(get()) }
+    factory { SuggestEasyMealsUI(get(),get()) }
     factory { SuggestSweetNoEggsUI(get(), get(), get()) }
     factory { SuggestMealForSoThinPeopleUI(get(), get(), get()) }
 }
