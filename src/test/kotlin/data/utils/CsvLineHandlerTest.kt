@@ -1,4 +1,4 @@
-package utils
+package data.utils
 
 import com.google.common.truth.Truth.assertThat
 import org.example.data.utils.CsvLineHandler
