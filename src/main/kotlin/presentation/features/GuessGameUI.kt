@@ -17,16 +17,17 @@ class GuessGameUI(
     fun playGuessGame() {
         getRandomMealUseCase.getRandomMeal().fold(
             onSuccess = ::startGame,
-            onFailure = { printer.printLine(Constants.UNEXPECTED_ERROR) }
+            onFailure = {error-> printer.printLine(error.message) }
         )
     }
-
+      val attempts=3
     private fun startGame(meal: Meal) {
+
         meal.minutes?.let { correctTime ->
             printer.printLine("🎮 Guess the preparation time of: ${meal.name}")
 
-            (1..MAX_ATTEMPTS).forEach { attempt ->
-                printer.printLine("Enter your guess:")
+            (1..attempts).forEach { attempt ->
+                printer.printLine(Constants.ENTER_INPUT)
                 val userGuess = inputReader.readIntOrNull()
 
                 userGuess
@@ -36,7 +37,7 @@ class GuessGameUI(
                         return
                     }
 
-                if (attempt == MAX_ATTEMPTS) {
+                if (attempt == attempts) {
                     printer.printLine("❌ You've used all attempts. The correct time was $correctTime minutes.")
                 }
             }
@@ -53,19 +54,17 @@ class GuessGameUI(
                 GuessPreparationTimeState.CORRECT -> "🎉 Correct! The preparation time is $correctTime minutes."
                 GuessPreparationTimeState.TOO_LOW -> Constants.LOW_MESSAGE
                 GuessPreparationTimeState.TOO_HIGH -> Constants.HIGH_MESSAGE
-                else -> "❗ Unexpected state."
+                else -> Constants.UN_EXPECTED_STATE
             }
         }.onSuccess { message ->
             printer.printLine(message)
-        }.onFailure {
-            printer.printLine("❗ Failed to evaluate guess: ${it.message}")
+        }.onFailure {error->
+            printer.printLine(Constants.FAILED_MESSAGE)
         }
     }
 
 
-    companion object {
-        const val MAX_ATTEMPTS = 3
-    }
+
 }
 
 

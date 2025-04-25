@@ -31,7 +31,7 @@ class GetRandomMealUseCaseTest {
         verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
     @Test
-    fun `getRandomMeal () should return a random meal when repository returns success`(){
+    fun `getRandomMeal() should return a random meal when repository returns success`(){
         //Given
      val meals = listOf(
          buildMeal(2,"aww  marinated olives",15),
@@ -49,33 +49,23 @@ class GetRandomMealUseCaseTest {
     }
 
     @Test
-    fun `getRandomMeal () should return failure when mealRepository return failure`(){
+    fun `getRandomMeal() should return failure when mealRepository return failure`(){
         // Given
-        every { mealsRepository.getAllMeals() } returns Result.failure(Throwable())
+        every { mealsRepository.getAllMeals() } returns Result.failure(FoodChangeMoodExceptions.LogicException.NoMealsFound())
 
         //When
         val result=getRandomMealUseCase.getRandomMeal()
 
         // Then
-        val exception = result.exceptionOrNull()
-        assertThat(exception).isNotNull()
-
-        val errorMessage = exception?.message
-        assertThat(errorMessage).isNotNull()
-
-        assertThrows<Throwable> {result.getOrThrow() }
+        assertThrows<FoodChangeMoodExceptions.LogicException.NoMealsFound> {result.getOrThrow() }
     }
     @Test
-    fun `should return failure when meals list is empty`() {
+    fun `getRandomMeal() should return failure when meals list is empty`() {
         // Given
         every { mealsRepository.getAllMeals() } returns Result.success(emptyList())
 
-        // When
-        val result = getRandomMealUseCase.getRandomMeal()
-
-        // Then
-        assertThat(result.isFailure).isTrue()
-        assertThrows<Throwable> {result.getOrThrow() }
+        // Then & Then
+        assertThrows<FoodChangeMoodExceptions.LogicException.NoMealsFound> {getRandomMealUseCase.getRandomMeal() }
 
     }
 

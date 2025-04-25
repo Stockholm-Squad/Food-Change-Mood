@@ -75,5 +75,17 @@ class GetGuessPreparationTimeUseCaseTest {
         assertThat(result.getOrNull()).isEqualTo(GuessPreparationTimeState.FAILED)
     }
 
+    @Test
+    fun `guessGame() should return failed when all attempts have`() {
+        // Given
+        val userGuess: Int? = 10
+        val preparationTime: Int? = null
+
+        // When
+        val result = getGuessPreparationTimeUseCase.guessGame(userGuess, preparationTime)
+
+        // Then
+        assertThat(result.getOrNull()).isEqualTo(GuessPreparationTimeState.FAILED)
+    }
 
 }

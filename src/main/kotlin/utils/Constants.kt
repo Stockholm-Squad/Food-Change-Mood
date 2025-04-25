@@ -1,6 +1,7 @@
 package org.example.utils
 
 object Constants {
+    const val NO_EVALUATE_GUESS="❗no evaluate to guess "
     const val NO_PREPARATION_TIME="❌ This meal has no preparation time."
     const val INVALID_INPUT_MESSAGE="❗ Invalid input. Please enter a number."
     const val FAILED_MESSAGE="❌ You've used all attempts. The correct time was 15 minutes."
@@ -17,4 +18,6 @@ object Constants {
     const val UNEXPECTED_ERROR = "Unexpected error occurred"
     const val ERROR_FETCHING_MEALS = "Error fetching meals: "
     const val NO_MEALS_FOUND="Error There is no meals Found"
+    const val UN_EXPECTED_STATE ="❗ Unexpected state."
+    const val ENTER_INPUT="Enter your guess:"
 }

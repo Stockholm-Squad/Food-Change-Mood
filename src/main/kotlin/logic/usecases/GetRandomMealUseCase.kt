@@ -2,6 +2,7 @@ package org.example.logic.usecases
 
 import model.Meal
 import org.example.logic.repository.MealsRepository
+import org.example.model.FoodChangeMoodExceptions
 import org.example.utils.Constants
 
 
@@ -12,15 +13,16 @@ class GetRandomMealUseCase(
     fun getRandomMeal(): Result<Meal> {
         return mealsRepository.getAllMeals().fold(
             onSuccess = { meals ->
-                meals.takeIf { it.isNotEmpty() }
-                    ?.random()
-                    ?.let { Result.success(it) }
-                    ?: Result.failure(Throwable(Constants.NO_MEALS_FOUND))
+                Result.success(randomMeal(meals))
             },
             onFailure = { error ->
-                Result.failure(Throwable("${Constants.ERROR_FETCHING_MEALS} ${error.message}"))
+                Result.failure(error)
             }
         )
     }
 
+    private fun randomMeal(meals: List<Meal>): Meal {
+        return meals.takeIf { it.isNotEmpty() }
+            ?.random() ?: throw FoodChangeMoodExceptions.LogicException.NoMealsFound()
+    }
 }
