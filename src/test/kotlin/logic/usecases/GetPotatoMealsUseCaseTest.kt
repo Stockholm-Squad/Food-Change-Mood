@@ -9,6 +9,7 @@ import org.example.logic.usecases.GetPotatoMealsUseCase
 import org.example.utils.Constants
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import utils.buildMeal
 
 class GetPotatoMealsUseCaseTest{
 
