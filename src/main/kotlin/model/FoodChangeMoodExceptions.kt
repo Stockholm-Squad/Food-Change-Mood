@@ -33,7 +33,7 @@ sealed class FoodChangeMoodExceptions(message: String) : Throwable(message) {
         data class NoSeaFoodMealsFound(override val message: String = Constants.NO_SEA_FOOD_MEALS_FOUND) :
             LogicException(message)
 
-        data class NoIraqiMeals(override val message: String = Constants.NO_MEALS_FOR_GYM_HELPER) :
+        data class NoIraqiMeals(override val message: String = Constants.NO_IRAQI_MEALS) :
             LogicException(message)
 
         data class NoDessertFound(override val message: String = Constants.NO_DESSERT_FOUND) : LogicException(message)
