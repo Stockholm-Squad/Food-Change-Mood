@@ -2,7 +2,7 @@ package org.example.logic.usecases
 
 import model.Meal
 import org.example.logic.repository.MealsRepository
-import org.example.utils.Constants
+import org.example.model.FoodChangeMoodExceptions
 
 
 class GetHealthyFastFoodUseCase(
@@ -17,22 +17,28 @@ class GetHealthyFastFoodUseCase(
                 )
             },
             onFailure = { error ->
-                Result.failure(Throwable("${Constants.ERROR_FETCHING_MEALS} ${error.message}"))
+                Result.failure(error)
             }
 
         )
 
     }
 
-    fun getFilteredMeals(allMeals: List<Meal>): List<Meal> {
-        return allMeals.filter { meal ->
-            meal.minutes != null && meal.minutes <= 15 && meal.nutrition != null
-        }
+    private fun getFilteredMeals(allMeals: List<Meal>): List<Meal> {
+        return allMeals
+            .filter { meal ->
+                meal.minutes != null &&
+                        meal.minutes <= 15 &&
+                        meal.nutrition != null &&
+                        meal.tags?.contains("healthy") == true
+            }
             .sortedWith(
-                compareBy<Meal> { it.nutrition?.totalFat }
-                    .thenBy { it.nutrition?.saturatedFat }
-                    .thenBy { it.nutrition?.carbohydrates }
+                compareBy<Meal> { it.nutrition!!.totalFat }
+                    .thenBy { it.nutrition!!.saturatedFat }
+                    .thenBy { it.nutrition!!.carbohydrates }
             )
+            .takeIf { it.isNotEmpty() }
+            ?: throw FoodChangeMoodExceptions.LogicException.NoMealsFound()
     }
 }
 
