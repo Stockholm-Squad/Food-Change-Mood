@@ -6,6 +6,7 @@ import org.example.utils.DateValidator
 import org.koin.dsl.module
 
 val utilsModule = module {
-    single{ DateValidator() }
     single<DateParser> { DateParserImpl() }
+    single { DateValidator(get()) }
+
 }
