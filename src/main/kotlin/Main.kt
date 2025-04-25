@@ -1,6 +1,6 @@
 package org.example
 
-import di.appModule
+import org.example.di.appModule
 import org.example.presentation.FoodConsoleUI
 import org.example.utils.Constants
 import org.koin.core.context.startKoin
