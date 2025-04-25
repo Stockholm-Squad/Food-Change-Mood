@@ -36,7 +36,7 @@ class FoodConsoleUI(
         when (getEnteredOption(option)) {
             MenuOption.HEALTHY_FAST_FOOD -> healthyFastFoodMealsUI.showHealthyFastFoodMeals()
             MenuOption.SEARCH_BY_NAME -> searchMealByNameUI.handleSearchByName()
-            MenuOption.IRAQI_MEALS -> getIraqiMealsUI.getIraqiMeals()
+            MenuOption.IRAQI_MEALS -> getIraqiMealsUI.showIraqiMeals()
             MenuOption.EASY_MEALS -> suggestEasyMealsUI.showEasySuggestions()
             MenuOption.GUESS_GAME -> guessGameUI.playGuessGame()
             MenuOption.SWEETS_NO_EGGS -> suggestSweetNoEggsUI.showSweetsNoEggs()

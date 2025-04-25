@@ -59,4 +59,6 @@ object Constants {
     const val N = "n"
     const val NO_MEAL_FOR_SO_THIN_PEOPLE = "no meal found with high calories."
 
+    const val NO_IRAQI_MEALS = "no found any iraqi meals"
+
 }
