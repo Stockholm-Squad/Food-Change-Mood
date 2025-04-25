@@ -1,7 +1,7 @@
 package utils
 
 import model.Nutrition
-import org.example.utils.getDateFromString
+import org.example.utils.DateParserImpl
 
 val listOfRows = listOf(
     "\"mixecan meal,137739,55,47892,2005-09-16," +
@@ -26,7 +26,7 @@ val listOfMeal = listOf(
         id = 137739,
         minutes = 55,
         contributorId = 47892,
-        submitted = getDateFromString("2005-09-16").getOrNull(),
+        submitted = DateParserImpl().getDateFromString("2005-09-16").getOrNull(),
         tags = listOf(
             "60-minutes-or-less",
             "time-to-make",
@@ -89,7 +89,7 @@ val listOfMeal = listOf(
         id = 137739,
         minutes = 55,
         contributorId = 47892,
-        submitted = getDateFromString("2005-09-16").getOrNull(),
+        submitted = DateParserImpl().getDateFromString("2005-09-16").getOrNull(),
         tags = listOf(
             "60-minutes-or-less",
             "time-to-make",
