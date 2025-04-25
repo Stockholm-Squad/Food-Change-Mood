@@ -38,7 +38,7 @@ class SearchMealByNameUI(
     private fun askToViewMealDetails(meals: List<Meal>) {
         printer.printLine(Constants.MEAL_DETAILS_PROMPT)
         reader.readStringOrNull()?.trim()?.lowercase()
-            ?.takeIf { it != "n" }
+            ?.takeIf { it != Constants.N }
             ?.let { input ->
                 input.toIntOrNull()
                     ?.takeIf { it in 1..meals.size }
@@ -55,7 +55,7 @@ class SearchMealByNameUI(
     private fun askForMoreMeals() {
         printer.printLine(Constants.SEARCH_AGAIN_PROMPT)
         val response = reader.readStringOrNull()?.trim()?.lowercase()
-        if (response == "y") {
+        if (response == Constants.Y) {
             handleSearchByName()
         } else {
             printer.printLine(Constants.GOODBYE_MESSAGE)

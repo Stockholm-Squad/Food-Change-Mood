@@ -27,4 +27,6 @@ object Constants {
     const val ENTER_VALID_DATE = "Enter a valid Date or zero => 0"
 
     const val NO_SEA_FOOD_MEALS_FOUND ="No seafood meals found."
+    const val Y = "y"
+    const val N = "n"
 }
