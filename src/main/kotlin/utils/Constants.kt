@@ -21,6 +21,24 @@ object Constants {
     const val NO_MEALS_FOUND_MATCHING = "No meals found matching"
     const val UNEXPECTED_ERROR = "Unexpected error occurred"
     const val ERROR_FETCHING_MEALS = "Error fetching meals: "
+    const val ASK_YES_NO = "Do you like it ? (yes/no)"
+    const val YES_ANSWER = "Great, enjoy"
+
+
+    // ingredient game constants
+    const val WELCOME_INGREDIENTS_GAME_MESSAGE = "Ingredient Game is starting! Let's see how well you know your meals!" +
+                                                "\nGuess the correct ingredient for each meal." +
+                                                "\nGet 15 right to win! One wrong answer ends the game."+
+                                                "\n--------------------------------------------------"
+
+    const val WINNING_MESSAGE = "Congratulations! You reached the winning score: "
+    const val CORRECT_CHOICE = "✅ Correct! Your current score: "
+    const val INCORRECT_MESSAGE = "Game Over! Final Score: "
+
+    // keto diet messages
+    const val START_MESSAGE = "Finding a keto-friendly meal for you..."
+    const val FINISH_MEALS = "✔You've seen all available keto meals!"
+
     const val NO_MEALS_FOUND="Error There is no meals Found"
     const val UN_EXPECTED_STATE ="❗ Unexpected state."
     const val ENTER_INPUT="Enter your guess:"
@@ -39,6 +57,8 @@ object Constants {
     const val NO_SEA_FOOD_MEALS_FOUND ="No seafood meals found."
     const val Y = "y"
     const val N = "n"
+    const val NO_MEAL_FOR_SO_THIN_PEOPLE = "no meal found with high calories."
+
     const val NO_IRAQI_MEALS = "no found any iraqi meals"
 
 }

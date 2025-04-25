@@ -3,7 +3,9 @@ package org.example.model
 import org.example.utils.Constants
 
 sealed class FoodChangeMoodExceptions(message: String) : Throwable(message) {
-    sealed class ValidationException(override val message: String) : FoodChangeMoodExceptions(message) {
+
+    sealed class ValidationException(override val message: String = Constants.INVALID_INPUT_MESSAGE) :
+        FoodChangeMoodExceptions(message) {
         data class RowParsingException(override val message: String) : ValidationException(message)
     }
 
@@ -25,7 +27,8 @@ sealed class FoodChangeMoodExceptions(message: String) : Throwable(message) {
             LogicException(message)
 
         data class NoMealsFound(override val message: String = Constants.NO_MEALS_FOUND) : LogicException(message)
-
+        data class NoMealsForSoThinPeopleException(override val message: String = Constants.NO_MEAL_FOR_SO_THIN_PEOPLE) :
+            LogicException(message)
 
         data class NoSeaFoodMealsFound(override val message: String = Constants.NO_SEA_FOOD_MEALS_FOUND) :
             LogicException(message)
