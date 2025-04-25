@@ -1,3 +1,5 @@
+package org.example.di
+
 import org.example.data.parser.MealCsvParser
 import org.example.data.reader.MealCsvReader
 import org.example.data.dataSource.MealCsvDataSource

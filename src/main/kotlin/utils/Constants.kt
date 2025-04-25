@@ -67,4 +67,24 @@ object Constants {
 
 
 
+    const val NO_POTATO_MEALS_FOUND = "😢 No potato meals found."
+    const val I_LOVE_POTATO = "🥔 I 💛 Potato Meals:"
+    const val MEAL = "🍽️ Meal #"
+    const val I_LOVE_POTATO_HERE = "🥔 I 💛 Potato! Here are "
+    const val MEAL_INCLUDE_POTATO = "meals that include potatoes:"
+    const val ERROR = "❌ Error: "
+    const val VIEW_MEAL_DETAILS = "Would you like to view the details of any of these meals? (Enter the number or 'n' to skip):"
+    const val ENJOY_YOUR_MEAL = "Okay! Enjoy your potato meals! 🥔😋"
+    const val INVALID_SELECTION = "Invalid selection. Please choose a valid number."
+    const val DETAILS_MEAL = "🍽️ Details of"
+    const val MINUTE_TO_PREPARE = "🕒 Minutes to prepare:"
+    const val NUMBER_OF_STEP = "📖 Number of steps:"
+    const val STEPS = "📝 Steps:"
+    const val DESCRIPTION = "📃 Description:"
+    const val NUTRITION = "🍎 Nutrition"
+    const val NUMBER_OF_INGREDIENT = "🥣 Number of ingredients:"
+    const val INGREDIENT = "🧂 Ingredients:"
+    const val NA = "   N/A"
+    const val SEE_MORE_MEALS = "Would you like to see more? (y/n)"
+    const val YES = "y"
 }

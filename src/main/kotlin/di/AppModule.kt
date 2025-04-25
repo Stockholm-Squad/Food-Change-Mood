@@ -1,6 +1,5 @@
-import org.example.di.logicModule
-import org.example.di.uiModule
-import org.example.di.utilsModule
+package org.example.di
+
 import org.example.utils.Constants
 import org.koin.dsl.module
 import java.io.File
