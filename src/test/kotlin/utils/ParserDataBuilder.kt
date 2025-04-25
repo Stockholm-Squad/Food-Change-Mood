@@ -1,6 +1,5 @@
 package utils
 
-import model.Meal
 import model.Nutrition
 import org.example.utils.getDateFromString
 
@@ -22,7 +21,7 @@ val listOfRows = listOf(
 )
 
 val listOfMeal = listOf(
-    Meal(
+    buildMeal(
         name = "mixecan meal",
         id = 137739,
         minutes = 55,
@@ -85,7 +84,7 @@ val listOfMeal = listOf(
         ),
         numberOfIngredients = 7
     ),
-    Meal(
+    buildMeal(
         name = "mixecan meal",
         id = 137739,
         minutes = 55,
