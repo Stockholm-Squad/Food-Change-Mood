@@ -1,20 +1,6 @@
 package org.example.presentation
 
-import org.example.presentation.features.ExploreCountryFoodUI
-import org.example.presentation.features.GetHealthyFastFoodMealsUI
-import org.example.presentation.features.GetIraqiMealsUI
-import org.example.presentation.features.GuessGameUI
-import org.example.presentation.features.GymHelperUI
-import org.example.presentation.features.IngredientGameUI
-import org.example.presentation.features.ItalianLargeGroupMealsUI
-import org.example.presentation.features.KetoDietMealUI
-import org.example.presentation.features.PotatoLoversUI
-import org.example.presentation.features.ProteinSeafoodRankingUI
-import org.example.presentation.features.SearchByAddDateUI
-import org.example.presentation.features.SearchMealByNameUI
-import org.example.presentation.features.SuggestEasyMealsUI
-import org.example.presentation.features.SuggestMealForSoThinPeopleUI
-import org.example.presentation.features.SuggestSweetNoEggsUI
+import org.example.presentation.features.*
 import org.example.utils.MenuOption
 
 
