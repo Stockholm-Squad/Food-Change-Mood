@@ -18,73 +18,107 @@ class SearchingByKmpUseCaseTest {
 
     @ParameterizedTest
     @CsvSource(
-        "'5 minute bread pizza', 'piz', true",
-        "'5 minute bread pizza', 'MIN', true",
-        "'5 minute bread pizza', 'min', true",
-        "'pizza wrap', 'Pizza', true",
-        "'two 12 inch good and easy pepperoni pizzas', '12', true",
-        "'5 minute bread pizza', 'minute bread', true",
-        "'ww core polenta crust pizza', 'pizza', true",
-        "'v i pizza', 'i', true",
-        "'pizza wrap', '  wrap  ', true",
-        "'two 12 inch good and easy pepperoni pizzas', '  pepperoni', true",
-        "'bread   butter pickle deviled eggs', 'butter pickle', true",
-        "'abcxabcdabcdabcy', 'abcxabcd', true",
-        "'abacababc', 'abac', true",
-        "'aaaaab', 'aaab', true",
-        "'abcabcabcabc', 'abcabcab', true",
-        "'abcdabcabcd', 'abcabcd', true",
-        "'abcabcabcd', 'abcabcd', true",
-        "'abcabcabcabcx', 'abcabcx', true",
-        "'abababcabababcabababc', 'abababc', true",
-        "'abcabcabcabcabcabc', 'abcabcabc', true",
-        "'aabaabaaa', 'aabaabaa', true",
-        "'abacababc', 'abac', true",
-        "'  FooBarBaz  ', 'bar', true"
+        "'5 minute bread pizza', 'piz'",
+        "'5 minute bread pizza', 'MIN'",
+        "'5 minute bread pizza', 'min'",
+        "'pizza wrap', 'Pizza'",
+        "'two 12 inch good and easy pepperoni pizzas', '12'",
+        "'5 minute bread pizza', 'minute bread'",
+        "'ww core polenta crust pizza', 'pizza'",
+        "'v i pizza', 'i'",
+        "'bread   butter pickle deviled eggs', 'butter pickle'",
+        "'abcxabcdabcdabcy', 'abcxabcd'",
+        "'abacababc', 'abac'",
+        "'aaaaab', 'aaab'",
+        "'abcabcabcabc', 'abcabcab'",
+        "'abcdabcabcd', 'abcabcd'",
+        "'abcabcabcd', 'abcabcd'",
+        "'abcabcabcabcx', 'abcabcx'",
+        "'abababcabababcabababc', 'abababc'",
+        "'abcabcabcabcabcabc', 'abcabcabc'",
+        "'aabaabaaa', 'aabaabaa'",
+        "'  FooBarBaz  ', 'bar'",
+        "'abababababab', 'abab'",
+        "'abababababab', 'ababa'",
+        "'abababababab', 'ababab'",
+        "'abababababab', 'abababa'",
+        "'abcabcabc', 'abcabcabc'",
+        "'abc@def', '@'",
+        "'abc@def', 'def'",
+        "'abc@def', 'abc'",
+        "'abcde', 'a'",
+        "'abcde', 'b'",
+        "'abcde', 'c'",
+        "'abcde', 'd'",
+        "'abcde', 'e'",
+        "'abc', 'abc'",
+        "'abcdef', 'abc'",
+        "'abcdef', 'def'",
+        "'123abc456', 'abc'",
+        "'same', 'same'",
+        "'aabaaabaaac', 'aabaaac'",
+        "'aabaaabaaac', 'aabaaa'",
+        "'aabaaabaaac', 'aabaaab'",
+        "'aabaabaaa', 'aabaabaa'",
+        "'aabaabaaa', 'aabaabaaa'",
+        "'abcdef', 'abc'",
+        "'abcdef', 'def'",
+        "'123abc456', 'abc'",
+        "'abcdef', 'abc'",
+        "'abcdef', 'def'"
     )
-    fun `searchByKmp() should return true when pattern is found in meal name`(
+    fun `searchByKmp() should return true for valid pattern matches`(
         nameMeal: String,
-        pattern: String,
-        expect: Boolean
+        pattern: String
     ) {
-        // When
         val result = searchingByKmpUseCase.searchByKmp(nameMeal, pattern)
-
-        // Then
-        assertThat(result).isEqualTo(expect)
+        assertThat(result).isTrue()
     }
-
 
     @ParameterizedTest
     @CsvSource(
-        "'pizza wrap', '   ', false",
-        "'5 minute bread pizza', 'burg', false",
-        "'5 minute bread pizza', '', false",
-        "'null', 'piz', false",
-        "'5 minute bread pizza', 'minute pizza', false",
-        "'white spinach pizza oamc', 'b', false",
-        "'pizza wrap', 'wrap!', false",
-        "'pizza wrap', '@', false",
-        "null, abc, false",
-        "'bread pizza', null, false",
-        "'bread pizza', '', false",
-        "'bread pizza', '   ', false",
-        "'abcxabcdabcdabcy', 'abcdabca', false",
-        "'abacababc', 'abacabac', false",
-        "'xyzxyzxyzxyz', 'abc', false",
-        "'aaaaaaa', 'aaab', false",
-        "'  FooBarBaz  ', '  ', false"
+        "null, 'piz'",
+        "'bread pizza', null",
+        "'bread pizza', ''",
+        "null, ''",
+        "'', 'piz'",
+        "'pizza wrap', 'burg'",
+        "'white spinach pizza oamc', 'b'",
+        "'pizza wrap', 'wrap!'",
+        "'pizza wrap', '@'",
+        "'abcxabcdabcdabcy', 'abcdabca'",
+        "'abacababc', 'abacabac'",
+        "'xyzxyzxyzxyz', 'abc'",
+        "'aaaaaaa', 'aaab'",
+        "'  FooBarBaz  ', '  '",
+        "'pizza wrap', '   '",
+        "'5 minute bread pizza', 'minute pizza'",
+        "'bread pizza', '   '",
+        "'abcabcabc', 'abcabcabcd'",
+        "'abc@def', 'ghi'",
+        "'abc', 'abcd'",
+        "'abc', 'abcdef'",
+        "'abcde', 'f'",
+        "'abc', ''",
+        "'', 'abc'",
+        "'', ''",
+        "'abc def', '   '",
+        "'abcdef', 'ghi'",
+        "'aabaaabaaac', 'aabaaad'",
+        "'aabaabaaa', 'aabaabaaaa'",
+        "'   ', 'abc'",
+        "'abacababaa', 'ababac'",
+        "'abc', 'abcd'",
+        "'abcdef', 'xyz'",
+        "'abc', 'abcd'",
+        "'abc', ''",
+        "'abc def', '   '"
     )
-    fun `searchByKmp() should return false for pattern is not found in meal name`(
-        nameMeal: String,
-        pattern: String,
-        expected: Boolean
+    fun `searchByKmp() should return false for non-matching or invalid patterns`(
+        nameMeal: String?,
+        pattern: String?
     ) {
-        // when
         val result = searchingByKmpUseCase.searchByKmp(nameMeal, pattern)
-
-        // Then
-        assertThat(result).isEqualTo(expected)
+        assertThat(result).isFalse()
     }
-
 }

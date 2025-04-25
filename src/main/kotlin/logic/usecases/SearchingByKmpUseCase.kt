@@ -6,8 +6,6 @@ package org.example.logic.usecases
  * of character comparisons during the search phase.
  */
 class SearchingByKmpUseCase {
-
-
     fun searchByKmp(mealName: String?, pattern: String?): Boolean {
         val normalizedMeal = normalizeString(mealName)
         val normalizedPattern = normalizeString(pattern)
@@ -23,7 +21,6 @@ class SearchingByKmpUseCase {
 
     private fun findPatternInText(mealName: String, pattern: String, lps: IntArray): Boolean =
         findPatternRecursive(mealName, pattern, lps, textIndex = 0, patternIndex = 0)
-
 
     private tailrec fun findPatternRecursive(
         mealName: String,
@@ -46,7 +43,6 @@ class SearchingByKmpUseCase {
 
     private fun createLpsTable(pattern: String): IntArray =
         buildLpsTableRecursive(pattern, IntArray(pattern.length), prefixLength = 0, currentIndex = 1)
-
 
     private tailrec fun buildLpsTableRecursive(
         pattern: String,

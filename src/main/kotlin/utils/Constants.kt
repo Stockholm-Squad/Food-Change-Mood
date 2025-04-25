@@ -15,5 +15,7 @@ object Constants {
     const val UNEXPECTED_ERROR = "Unexpected error occurred"
     const val ERROR_FETCHING_MEALS = "Error fetching meals: "
     const val INVALID_SELECTION_MESSAGE = "Invalid selection. Please choose a valid number."
+    const val ENTER_MEAL_KEYWORD_TO_SEARCH = "Enter a meal keyword to search: "
+    const val MEAL_DETAILS_PROMPT = "Would you like to view the details of any of these meals? (Enter the number or 'n' to skip):"
 
 }

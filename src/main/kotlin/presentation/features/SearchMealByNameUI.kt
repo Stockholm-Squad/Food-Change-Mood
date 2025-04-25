@@ -13,7 +13,7 @@ class SearchMealByNameUI(
 ) {
 
     fun handleSearchByName() {
-        printer.printLine("🔍 Enter a meal keyword to search: ")
+        printer.printLine(Constants.ENTER_MEAL_KEYWORD_TO_SEARCH)
         reader.readLineOrNull()?.trim()
             ?.takeIf { it.isNotBlank() }
             ?.let { pattern ->
@@ -22,21 +22,21 @@ class SearchMealByNameUI(
                     .onFailure { printer.printLine(it.message) }
             }
             ?: printer.printLine(Constants.SEARCH_QUERY_CAN_NOT_BE_EMPTY)
-
         askForMoreMeals()
     }
 
     private fun displayMeals(meals: List<Meal>) {
         meals.takeIf { it.isNotEmpty() }?.let {
             printer.printLine(Constants.FOUND_MEALS.format(it.size))
-            it.forEachIndexed { index, meal -> println("${index + 1}. ${meal.name}") }
+            it.forEachIndexed { index, meal ->
+                printer.printLine("${index + 1}. ${meal.name}")
+            }
             askToViewMealDetails(it)
         } ?: printer.printLine(Constants.NO_MEALS_FOUND_MATCHING)
     }
 
-
     private fun askToViewMealDetails(meals: List<Meal>) {
-        printer.printLine("\nWould you like to view the details of any of these meals? (Enter the number or 'n' to skip):")
+        printer.printLine(Constants.MEAL_DETAILS_PROMPT)
         reader.readLineOrNull()?.trim()?.lowercase()
             ?.takeIf { it != "n" }
             ?.let { input ->
@@ -54,11 +54,11 @@ class SearchMealByNameUI(
 
     private fun askForMoreMeals() {
         printer.printLine(Constants.SEARCH_AGAIN_PROMPT)
-        reader.readLineOrNull()?.trim()?.lowercase()
-            ?.takeIf { it == "y" }
-            ?.let {
-                handleSearchByName()
-            }
-            ?: printer.printLine(Constants.GOODBYE_MESSAGE)
+        val response = reader.readLineOrNull()?.trim()?.lowercase()
+        if (response == "y") {
+            handleSearchByName()
+        } else {
+            printer.printLine(Constants.GOODBYE_MESSAGE)
+        }
     }
 }
