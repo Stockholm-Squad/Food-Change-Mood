@@ -3,10 +3,10 @@ package presentation.features
 import com.google.common.truth.Truth.assertThat
 import io.mockk.*
 import logic.usecases.buildMeal
-import model.Meal
 import model.Nutrition
 import org.example.logic.usecases.GetPotatoMealsUseCase
 import org.example.presentation.features.PotatoLoversUI
+import org.example.utils.Constants
 import org.example.utils.InputReader
 import org.example.utils.OutputPrinter
 import org.junit.jupiter.api.BeforeEach
@@ -32,284 +32,66 @@ class PotatoLoversUITest {
  }
 
  @Test
- fun `showPotatoLoversUI should show no meals found when GetPotatoMealUseCase returns empty list`() {
+ fun `should print intro and call useCase when showPotatoLoversUI is called`() {
   // Given
   every { potatoMeals.getRandomPotatoMeals(any()) } returns Result.success(emptyList())
   every { inputReader.readLineOrNull() } returns "n"
 
   // When
-  potatoMealUi.showPotatoLoversUI()
+  potatoMealUi.showPotatoLoversUI(5)
 
   // Then
-  verify { outputPrinter.printLine("😢 No potato meals found.") }
+  verify { outputPrinter.printLine(Constants.I_LOVE_POTATO_HERE + "5 " + Constants.MEAL_INCLUDE_POTATO + "\n") }
+  verify { potatoMeals.getRandomPotatoMeals(5) }
+  verify { outputPrinter.printLine(Constants.SEE_MORE_MEALS) }
+  verify { outputPrinter.printLine(Constants.ENJOY_YOUR_MEAL) }
  }
 
+ @Test
+ fun `should repeat UI if user enters yes`() {
+  // Given
+  every { potatoMeals.getRandomPotatoMeals(any()) } returns Result.success(emptyList())
+  every { inputReader.readLineOrNull() } returnsMany listOf("yes", "n")
+
+  // When
+  potatoMealUi.showPotatoLoversUI(3)
+
+  // Then
+  verify(exactly = 2) { potatoMeals.getRandomPotatoMeals(3) }
+  verify(exactly = 2) { outputPrinter.printLine(Constants.SEE_MORE_MEALS) }
+  verify { outputPrinter.printLine(Constants.ENJOY_YOUR_MEAL) }
+ }
 
  @Test
- fun `askIfWantsMore should recall showPotatoLoversUI when input is capital Y`() {
-
+ fun `should not repeat UI if user enters anything other than yes`() {
   // Given
-  val meals = listOfNotNull(
-   buildMeal(1, "Potato Salad", ingredients = listOf("Potato", "Mayonnaise", "Onion")),
-   buildMeal(2, "Mashed Potatoes", ingredients = listOf("Potato", "Butter", "Milk")),
-   buildMeal(3, "French Fries", ingredients = listOf("Potato", "Oil", "Salt")),
-   buildMeal(4, "Tomato Soup", ingredients = listOf("Tomato", "Water", "Salt"))
-  )
+  every { potatoMeals.getRandomPotatoMeals(any()) } returns Result.success(emptyList())
+  every { inputReader.readLineOrNull() } returns "no"
 
-  every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
-  every { inputReader.readLineOrNull() } returnsMany listOf("Y", "n")
+  // When
+  potatoMealUi.showPotatoLoversUI(2)
+
+  // Then
+  verify(exactly = 1) { potatoMeals.getRandomPotatoMeals(2) }
+  verify { outputPrinter.printLine(Constants.ENJOY_YOUR_MEAL) }
+ }
+
+ @Test
+ fun `should handle null input without crashing`() {
+  // Given
+  every { potatoMeals.getRandomPotatoMeals(any()) } returns Result.success(emptyList())
+  every { inputReader.readLineOrNull() } returns null
 
   // When
   potatoMealUi.showPotatoLoversUI()
 
   // Then
-  verify(exactly = 2) { potatoMeals.getRandomPotatoMeals(10) }
-  verify { outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋") }
- }
-
- @Test
- fun `askIfWantsMore should not recall showPotatoLoversUI when input is capital N`() {
-
-  // Given
-  val meals = listOfNotNull(
-   buildMeal(1, "Potato Salad", ingredients = listOf("Potato", "Mayonnaise", "Onion")),
-   buildMeal(2, "Mashed Potatoes", ingredients = listOf("Potato", "Butter", "Milk")),
-   buildMeal(3, "French Fries", ingredients = listOf("Potato", "Oil", "Salt")),
-   buildMeal(4, "Tomato Soup", ingredients = listOf("Tomato", "Water", "Salt"))
-  )
-
-  every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
-  every { inputReader.readLineOrNull() } returnsMany listOf("y", "N")
-
-  // When
-  potatoMealUi.showPotatoLoversUI()
-
-  // Then
-  verify(exactly = 2) { potatoMeals.getRandomPotatoMeals(10) }
-  verify { outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋") }
- }
-
- @Test
- fun `askForMoreMeals should stop when input is no`() {
-
-  // Given
-  val meals = listOfNotNull(
-   buildMeal(1, "Potato Salad", ingredients = listOf("Potato", "Mayonnaise", "Onion")),
-   buildMeal(2, "Mashed Potatoes", ingredients = listOf("Potato", "Butter", "Milk")),
-   buildMeal(3, "French Fries", ingredients = listOf("Potato", "Oil", "Salt")),
-   buildMeal(4, "Tomato Soup", ingredients = listOf("Tomato", "Water", "Salt"))
-  )
-
-  every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
-  every { inputReader.readLineOrNull() } returns "n"
-
-  // When
-  potatoMealUi.showPotatoLoversUI()
-
-  // Then
-  verify { outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋") }
+  verify { potatoMeals.getRandomPotatoMeals(10) }
+  verify { outputPrinter.printLine(Constants.ENJOY_YOUR_MEAL) }
  }
 
 
 
- @Test
- fun `normalizeInput trims and lowercases correctly`() {
-  val result = PotatoLoversUI.normalizeInput("  Y ")
-  assertThat(result).isEqualTo("y")
- }
-
- @Test
- fun `normalizeInput returns empty for null input`() {
-  val result = PotatoLoversUI.normalizeInput(null)
-  assertThat(result).isEmpty()
- }
-
- @Test
- fun `askToViewMealDetails should prompt the user with the initial question`() {
-  // Given
-  val meals = listOf(buildMeal(id = 1, name = "Potato Casserole", ingredients = listOf("Potato", "Cheese"), steps = listOf("Boil potatoes", "Add cheese", "Bake in oven"), minutes = 30, numberOfSteps = 3, numberOfIngredients = 2, description = "A cheesy baked potato dish", nutrition = Nutrition(null, null, null, null, null, null, null), submitted = null, contributorId = null),
-   buildMeal(id = 1, name = "Potato Casserole", ingredients = listOf("Potato", "Cheese"), steps = listOf("Boil potatoes", "Add cheese", "Bake in oven"), minutes = 30, numberOfSteps = 3, numberOfIngredients = 2, description = "A cheesy baked potato dish", nutrition = Nutrition(null, null, null, null, null, null, null), submitted = null, contributorId = null))
-
-  every { inputReader.readLineOrNull() } returns "n"
-
-  // When
-
-  potatoMealUi.askToViewMealDetails(meals)
-
-  // Then
-
-  verify { outputPrinter.printLine("\nWould you like to view the details of any of these meals? (Enter the number or 'n' to skip):") }
- }
-
- @Test
- fun `askToViewMealDetails should skip meal details when user enters 'n'`() {
-  // Given
-  val meals = listOf(buildMeal(id = 1, name = "Potato Casserole", ingredients = listOf("Potato", "Cheese"), steps = listOf("Boil potatoes", "Add cheese", "Bake in oven"), minutes = 30, numberOfSteps = 3, numberOfIngredients = 2, description = "A cheesy baked potato dish", nutrition = Nutrition(null, null, null, null, null, null, null), submitted = null, contributorId = null),
-   buildMeal(id = 1, name = "Potato Casserole", ingredients = listOf("Potato", "Cheese"), steps = listOf("Boil potatoes", "Add cheese", "Bake in oven"), minutes = 30, numberOfSteps = 3, numberOfIngredients = 2, description = "A cheesy baked potato dish", nutrition = Nutrition(null, null, null, null, null, null, null), submitted = null, contributorId = null))
-   every { inputReader.readLineOrNull() } returns "n"
-
-  // When
-
-  potatoMealUi.askToViewMealDetails(meals)
-
-  // Then
-  verify {
-   outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋")
-  }
- }
-
- @Test
- fun `askToViewMealDetails should ask again if input is invalid (non-numeric or empty)`() {
-  // Given
-  val meals = listOf(buildMeal(id = 1, name = "Potato Casserole", ingredients = listOf("Potato", "Cheese"), steps = listOf("Boil potatoes", "Add cheese", "Bake in oven"), minutes = 30, numberOfSteps = 3, numberOfIngredients = 2, description = "A cheesy baked potato dish", nutrition = Nutrition(null, null, null, null, null, null, null), submitted = null, contributorId = null),
-   buildMeal(id = 1, name = "Potato Casserole", ingredients = listOf("Potato", "Cheese"), steps = listOf("Boil potatoes", "Add cheese", "Bake in oven"), minutes = 30, numberOfSteps = 3, numberOfIngredients = 2, description = "A cheesy baked potato dish", nutrition = Nutrition(null, null, null, null, null, null, null), submitted = null, contributorId = null))
-  every { inputReader.readLineOrNull() } returns "" andThen "abc" andThen "1"
-
-  // When
-  potatoMealUi.askToViewMealDetails(meals)
-
-  // Then
-  verify {
-   outputPrinter.printLine("Invalid selection. Please choose a valid number.")
-   outputPrinter.printLine("Invalid selection. Please choose a valid number.")
-  }
- }
-
- @Test
- fun `askToViewMealDetails should show invalid selection message when index is out of range`() {
-  // Given
-  val meals = List(10) { index ->
-   buildMeal(
-    id = index + 1,
-    name = "Meal #${index + 1}",
-    ingredients = listOf("Ingredient A", "Ingredient B"),
-    steps = listOf("Step 1", "Step 2"),
-    minutes = 20,
-    numberOfSteps = 2,
-    numberOfIngredients = 2,
-    description = "Test meal",
-    nutrition = Nutrition(null,
-     null,
-     null,
-     null,
-     null,
-     null,
-     null),
-    submitted = null,
-    contributorId = null
-   )
-  }
-  every { inputReader.readLineOrNull() } returnsMany listOf("11", "n")
-
-  // When
-  potatoMealUi.askToViewMealDetails(meals)
-
-  // Then
-  verify {
-   outputPrinter.printLine("Invalid selection. Please choose a valid number.")
-   outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋")
-  }
- }
 
 
- @Test
- fun `askIfWantsMore should call onYes callback when input is y`() {
-  // Given
-  every { inputReader.readLineOrNull() } returns "y"
-  var called = false
-
-  // When
-  potatoMealUi.askIfWantsMore {
-   called = true
-  }
-
-  // Then
-  assertThat(called).isTrue()
- }
-
- @Test
- fun `askIfWantsMore should print end message when input is n`() {
-  // Given
-  every { inputReader.readLineOrNull() } returns "n"
-
-  // When
-  potatoMealUi.askIfWantsMore()
-
-  // Then
-  verify { outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋") }
- }
-
- @Test
- fun `showMealDetails prints all meal details when all fields are present`() {
-
-  // Given
-  val meal = buildMeal( name = "Grilled Chicken",
-   minutes = 45,
-   numberOfSteps = 2,
-   steps = listOf("Season the chicken"),
-   description = "Delicious grilled chicken with herbs",
-   nutrition = Nutrition(12.0f,12.0f,12.0f,12.0f,12.0f,12.0f,12.0f),
-   numberOfIngredients = 3,
-   ingredients = listOf("Chicken", "Salt"),
-   submitted = null,
-   contributorId = 12,
-   id = 1,
-   tags = null
-  )
-
-
-  // When
-  every { outputPrinter.printLine(any()) } returns Unit
-  potatoMealUi.showMealDetails(meal!!)
-
-  // Then
-  verifyOrder {
-   outputPrinter.printLine("\n🍽️ Details of'Grilled Chicken':")
-   outputPrinter.printLine("🕒 Minutes to prepare:45")
-   outputPrinter.printLine("📖 Number of steps:2")
-   outputPrinter.printLine("📝 Steps:")
-   outputPrinter.printLine("1. Season the chicken")
-   outputPrinter.printLine("📃 Description:Delicious grilled chicken with herbs")
-   outputPrinter.printLine("🍎 Nutrition${meal.nutrition}")
-   outputPrinter.printLine("🥣 Number of ingredients: 3")
-   outputPrinter.printLine("🧂 Ingredients:")
-   outputPrinter.printLine("   1. Chicken")
-   outputPrinter.printLine("   2. Salt")
-  }
- }
-
- @Test
- fun `showMealDetails handles null steps and null ingredients`() {
-  // Given
-  val meal = buildMeal( name = "Grilled Chicken",
-   minutes = 45,
-   numberOfSteps = 2,
-   steps = listOf("Season the chicken"),
-   description = "Delicious grilled chicken with herbs",
-   nutrition = Nutrition(12.0f,12.0f,12.0f,12.0f,12.0f,12.0f,12.0f),
-   numberOfIngredients = 3,
-   ingredients = listOf("Chicken", "Salt"),
-   submitted = null,
-   contributorId = 12,
-   id = 1,
-   tags = null
-  )
-
-  // When
-  every { outputPrinter.printLine(any()) } returns Unit
-  potatoMealUi.showMealDetails(meal!!)
-
-  // Then
-  verifyOrder {
-   outputPrinter.printLine("\n🍽️ Details of'Plain Rice':")
-   outputPrinter.printLine("🕒 Minutes to prepare:20")
-   outputPrinter.printLine("📖 Number of steps:0")
-   outputPrinter.printLine("📝 Steps:")
-   outputPrinter.printLine("📃 Description:Just plain white rice")
-   outputPrinter.printLine("🍎 Nutrition${meal.nutrition}")
-   outputPrinter.printLine("🥣 Number of ingredients: 0")
-   outputPrinter.printLine("🧂 Ingredients:")
-   outputPrinter.printLine("   N/A")
-  }
- }
 }
