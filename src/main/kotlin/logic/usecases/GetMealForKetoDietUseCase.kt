@@ -7,10 +7,11 @@ import org.example.logic.repository.MealsRepository
 class GetMealForKetoDietUseCase(private val mealRepository: MealsRepository) {
 
     private val suggestedMeals = mutableSetOf<Int>()
-    fun getKetoMeal(): Meal? =
-        mealRepository.getAllMeals().fold(
+
+    fun getKetoMeal(): Result<Meal?> {
+        return mealRepository.getAllMeals().fold(
             onSuccess = { meals ->
-                meals.asSequence()
+                val meal = meals.asSequence()
                     .filter { meal ->
                         meal.nutrition?.let { isValidNutritionForKetoMeal(it) } == true
                     }
@@ -18,18 +19,20 @@ class GetMealForKetoDietUseCase(private val mealRepository: MealsRepository) {
                     .shuffled()
                     .firstOrNull()
                     ?.also { suggestedMeals.add(it.id) }
+
+                Result.success(meal)
             },
-            onFailure = {
-                null
+            onFailure = { error ->
+                Result.failure(error)
             }
         )
+    }
 
     private fun isValidNutritionForKetoMeal(nutrition: Nutrition): Boolean =
-        if (nutrition.carbohydrates != null && nutrition.totalFat != null && nutrition.protein != null) {
-            nutrition.carbohydrates < 10 &&
-                    nutrition.totalFat > 15 &&
-                    nutrition.protein in 10f..30f
-        } else {
-            false
-        }
+        nutrition.carbohydrates != null &&
+                nutrition.totalFat != null &&
+                nutrition.protein != null &&
+                nutrition.carbohydrates < 10 &&
+                nutrition.totalFat > 15 &&
+                nutrition.protein in 10f..30f
 }
