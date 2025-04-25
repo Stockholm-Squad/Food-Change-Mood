@@ -1,5 +1,6 @@
 package org.example.di
 
+import inputOutputModule
 import org.example.utils.Constants
 import org.koin.dsl.module
 import java.io.File
