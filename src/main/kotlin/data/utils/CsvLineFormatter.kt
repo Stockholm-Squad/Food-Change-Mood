@@ -1,9 +1,9 @@
 package org.example.data.utils
 
-class CsvLineFormatter {
+class CsvLineFormatter: LineFormater {
     private var insideQuotes = false
 
-    fun formatMealLine(line: String): List<String> {
+    override fun formatMealLine(line: String): List<String> {
         val mealData = mutableListOf<String>()
         val mealColumnBuilder = StringBuilder()
 

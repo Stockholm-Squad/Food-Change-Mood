@@ -14,7 +14,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import utils.listOfMeal
-import utils.listOfRows
+import utils.listOfMealsAsString
 
 class MealCsvDataSourceTest {
 
@@ -40,11 +40,11 @@ class MealCsvDataSourceTest {
         val meal1 = listOfMeal[0]
         val meal2 = listOfMeal[1]
         every { mealReader.readLinesFromFile() } returns Result.success(
-            listOfRows
+            listOfMealsAsString
         )
 
-        every { mealParser.parseLine(listOfRows[0]) } returns Result.success(meal1)
-        every { mealParser.parseLine(listOfRows[1]) } returns Result.success(meal2)
+        every { mealParser.parseLine(listOfMealsAsString[0]) } returns Result.success(meal1)
+        every { mealParser.parseLine(listOfMealsAsString[1]) } returns Result.success(meal2)
 
         //When
         val result = mealDataSource.getAllMeals()
@@ -68,10 +68,10 @@ class MealCsvDataSourceTest {
     @Test
     fun `getAllMeals() should return success result with empty list when reader returns success result and parser returns failure result with exception`() {
         //Given
-        every { mealReader.readLinesFromFile() } returns Result.success(listOfRows)
+        every { mealReader.readLinesFromFile() } returns Result.success(listOfMealsAsString)
 
-        every { mealParser.parseLine(listOfRows[0]) } returns Result.failure(Throwable())
-        every { mealParser.parseLine(listOfRows[1]) } returns Result.failure(Throwable())
+        every { mealParser.parseLine(listOfMealsAsString[0]) } returns Result.failure(Throwable())
+        every { mealParser.parseLine(listOfMealsAsString[1]) } returns Result.failure(Throwable())
 
         //When
         val result = mealDataSource.getAllMeals()

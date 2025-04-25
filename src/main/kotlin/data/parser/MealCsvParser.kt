@@ -3,14 +3,17 @@ package org.example.data.parser
 import kotlinx.datetime.LocalDate
 import model.Meal
 import model.Nutrition
-import org.example.data.utils.CsvLineFormatter
+import org.example.data.utils.LineFormater
 import org.example.model.FoodChangeMoodExceptions.ValidationException
-import org.example.utils.*
+import org.example.utils.Constants
+import org.example.utils.DateParser
+import org.example.utils.MealColumnIndex
+import org.example.utils.NutritionIndex
 
 class MealCsvParser(
-    private val csvLineFormatter: CsvLineFormatter,
+    private val csvLineFormatter: LineFormater,
     private val dateParser: DateParser
-): MealParser {
+) : MealParser {
 
     override fun parseLine(row: String): Result<Meal> {
         return try {
