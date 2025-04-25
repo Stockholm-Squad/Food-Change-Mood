@@ -1,5 +1,6 @@
 package org.example.utils
 
+import org.example.model.FoodChangeMoodExceptions
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.*
@@ -10,6 +11,6 @@ fun getDateFromString(stringDate: String): Result<Date> {
         val date = Date.from(LocalDate.parse(stringDate).atStartOfDay(ZoneId.systemDefault()).toInstant())
         Result.success(date)
     } catch (e: Exception) {
-        return Result.failure(e)
+        return Result.failure(FoodChangeMoodExceptions.LogicException.CanNotParseDateFromString())
     }
 }
