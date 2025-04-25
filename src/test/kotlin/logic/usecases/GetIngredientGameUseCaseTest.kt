@@ -1,17 +1,14 @@
 package logic.usecases
 
-import IngredientGameUI
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 import model.Meal
 import org.example.logic.repository.MealsRepository
 import org.example.logic.usecases.GetIngredientGameUseCase
-import org.example.logic.usecases.model.IngredientQuestionModel
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import kotlin.test.Test
-import kotlin.test.assertFails
+import com.google.common.truth.Truth
 
 class GetIngredientGameUseCaseTest {
   private lateinit var mealRepository: MealsRepository
@@ -47,9 +44,9 @@ class GetIngredientGameUseCaseTest {
         assertTrue(result.isSuccess, "Expected result to be successful")
         val question = result.getOrNull()
         requireNotNull(question)
-        assertEquals("Spaghetti", question.mealName)
-        assertTrue(question.options.contains(question.correctIngredient))
-        assertEquals(3, question.options.size, "There should be exactly 3 options")
+        Truth.assertThat(question.mealName).isEqualTo("Spaghetti")
+        Truth.assertThat(question.options.contains(question.correctIngredient))
+        Truth.assertThat(question.options.size).isEqualTo(3)
     }
 
 
@@ -65,8 +62,9 @@ class GetIngredientGameUseCaseTest {
         val result = ingredientGameUseCase.submitAnswer(question.correctIngredient)
 
         // Then
-        assertTrue(result)
+        Truth.assertThat(result)
     }
+
 
 
     @Test
@@ -79,7 +77,7 @@ class GetIngredientGameUseCaseTest {
         val result = ingredientGameUseCase.submitAnswer("NotFound")
 
         // then
-        assert(!result)
+        Truth.assertThat(!result)
     }
 
     @Test
@@ -89,7 +87,7 @@ class GetIngredientGameUseCaseTest {
         //when
         val result = ingredientGameUseCase.startIngredientGame()
         // then
-        assert(result.isFailure)
+        Truth.assertThat(result.isFailure)
     }
 
     @Test
@@ -99,7 +97,7 @@ class GetIngredientGameUseCaseTest {
         //when
         val result = ingredientGameUseCase.startIngredientGame()
         //  then
-        assert(result.isFailure)
+        Truth.assertThat(result.isFailure)
     }
 
     @Test
@@ -116,15 +114,100 @@ class GetIngredientGameUseCaseTest {
            description = null,
            numberOfIngredients = null
         )
+
         every { mealRepository.getAllMeals() } returns Result.success(listOf(meal, meal2))
 
         // when
         val result = ingredientGameUseCase.startIngredientGame()
 
         // then
-        assertTrue(result.isSuccess, "Expected result to be successful")
+        Truth.assertThat(result.isSuccess)
         val question = result.getOrNull()
-        requireNotNull(question)
-        assert(question.options.contains(question.correctIngredient))
+        Truth.assertThat(question).isNotNull()
+        Truth.assertThat(question?.options?.contains(question.correctIngredient))
     }
+
+    @Test
+    fun `startIngredientGame should fail when all meals have no ingredients`() {
+        //given
+        val badMeal = meal.copy(ingredients = null)
+        every { mealRepository.getAllMeals() } returns Result.success(listOf(badMeal))
+        //when
+        val result = ingredientGameUseCase.startIngredientGame()
+        //then
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun `startIngredientGame should fail when all meals have empty names`() {
+        // given
+        val badMeal = meal.copy(name = "")
+        every { mealRepository.getAllMeals() } returns Result.success(listOf(badMeal))
+        //when
+        val result = ingredientGameUseCase.startIngredientGame()
+        //then
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun `startIngredientGame should still succeed with less than 3 unique ingredients`() {
+        // given
+        val minimalMeal = meal.copy(ingredients = listOf("Tomato"))
+        every { mealRepository.getAllMeals() } returns Result.success(listOf(minimalMeal))
+        // when
+        val result = ingredientGameUseCase.startIngredientGame()
+        // then
+        Truth.assertThat(result.isSuccess).isTrue()
+        val question = result.getOrNull()
+        Truth.assertThat(question).isNotNull()
+        Truth.assertThat(question?.options?.size).isAtMost(3)
+    }
+
+    @Test
+    fun `startIngredientGame should fail if generateOptions fails`() {
+        // given
+        every { mealRepository.getAllMeals() } returnsMany listOf(
+            Result.success(listOf(meal)),
+            Result.failure(Exception("Options generation failed"))
+        )
+        // when
+        val result = ingredientGameUseCase.startIngredientGame()
+        // then
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+
+    @Test
+    fun `startIngredientGame should work even if some meals have null ingredients`() {
+        //given
+        val incompleteMeal = meal.copy(ingredients = null)
+        val validMeal = meal.copy(name = "Valid", ingredients = listOf("Salt", "Pepper"))
+        every { mealRepository.getAllMeals() } returns Result.success(listOf(incompleteMeal, validMeal))
+        //when
+        val result = ingredientGameUseCase.startIngredientGame()
+        //given
+        Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun `startIngredientGame should fail when all meals are invalid after filtering`() {
+        //given
+        val meal3 = meal.copy(name = null)
+        val meal4 = meal.copy(ingredients = emptyList())
+
+        every { mealRepository.getAllMeals() } returns Result.success(listOf( meal3,meal4))
+        //when
+        val result = ingredientGameUseCase.startIngredientGame()
+        //then
+        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.exceptionOrNull()).isInstanceOf(IllegalStateException::class.java)
+        Truth.assertThat(result.exceptionOrNull()).hasMessageThat().contains("no meals")
+    }
+
+
+
+
+
+
+
 }

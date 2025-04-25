@@ -7,7 +7,7 @@ import org.example.logic.usecases.model.IngredientQuestionModel
 class GetIngredientGameUseCase(
     private val repository: MealsRepository
 ) {
-    private var currentQuestion: IngredientQuestionModel? = null
+    private lateinit var currentQuestion: IngredientQuestionModel
 
     fun startIngredientGame(): Result<IngredientQuestionModel> {
         generateGameQuestion().fold(
@@ -22,7 +22,7 @@ class GetIngredientGameUseCase(
     }
 
     fun submitAnswer(selectedIngredient: String): Boolean {
-        return selectedIngredient == currentQuestion?.correctIngredient
+        return selectedIngredient == currentQuestion.correctIngredient
     }
 
     private fun generateGameQuestion(): Result<IngredientQuestionModel> {
@@ -47,9 +47,12 @@ class GetIngredientGameUseCase(
     private fun getRandomValidMeal(): Result<Meal> =
         repository.getAllMeals().fold(
             onSuccess = { meals ->
-                meals.filter { !it.ingredients.isNullOrEmpty() && !it.name.isNullOrEmpty() }
-                    .takeIf { it.isNotEmpty() }
-                    ?.random()?.let { Result.success(it) } ?: Result.failure(IllegalStateException("no meals"))
+                val validMeals = meals.filter { !it.ingredients.isNullOrEmpty() && !it.name.isNullOrEmpty() }
+                return if (validMeals.isEmpty()) {
+                    Result.failure(IllegalStateException("no meals"))
+                } else {
+                    Result.success(validMeals.random())
+                }
             },
             onFailure = { exception ->
                 Result.failure(exception)
@@ -58,11 +61,17 @@ class GetIngredientGameUseCase(
 
 
 
-    private fun generateOptions(correctIngredient: String): Result<List<String>> {
-        return repository.getAllMeals().mapCatching { meals ->
-            getGeneratedOptions(meals, correctIngredient)
-        }
-    }
+    private fun generateOptions(correctIngredient: String): Result<List<String>> =
+        repository.getAllMeals().fold(
+            onSuccess = { meals->
+                Result.success(getGeneratedOptions(meals, correctIngredient))
+            },
+            onFailure = {error->
+                Result.failure(error)
+            }
+        )
+
+
 
     private fun getGeneratedOptions(
         meals: List<Meal>,
@@ -76,4 +85,6 @@ class GetIngredientGameUseCase(
             .take(2) + correctIngredient)
             .shuffled().toList()
     }
+
+
 }

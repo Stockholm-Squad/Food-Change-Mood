@@ -3,6 +3,7 @@ package org.example.presentation.features
 import org.example.input_output.input.InputReader
 import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetMealForKetoDietUseCase
+import org.example.utils.Constants
 
 class KetoDietMealUI(
     private val getMealForKetoDietUseCase: GetMealForKetoDietUseCase,
@@ -11,12 +12,12 @@ class KetoDietMealUI(
 ) {
 
     fun showKetoMeal() {
-        printer.printLine("🥑 Finding a keto-friendly meal for you...")
+        printer.printLine(Constants.START_MESSAGE)
 
         getMealForKetoDietUseCase.getKetoMeal().fold(
             onSuccess = { meal ->
                 if (meal == null) {
-                    printer.printLine("✔️ You've seen all available keto meals!")
+                    printer.printLine(Constants.FINISH_MEALS)
                     return
                 }
 
@@ -27,20 +28,27 @@ class KetoDietMealUI(
                 meal.name?.let { handleUserFeedback(it) }
             },
             onFailure = {
-                printer.printLine("❌ Failed to load meals. Please try again later.")
+                printer.printLine(Constants.ERROR_FETCHING_MEALS)
             }
         )
     }
 
     private fun handleUserFeedback(mealName: String) {
-        printer.printLine("\nDo you like this meal? (yes/no)")
-        when (reader.readLineOrNull()?.trim()?.lowercase()) {
-            "yes" -> printer.printLine("👍 Great, enjoy your meal: $mealName")
-            "no" -> showKetoMeal()
+        printer.printLine(Constants.ASK_YES_NO)
+        val input = reader.readLineOrNull()?.trim()?.lowercase()
+        when {
+            input == "yes" -> printer.printLine("${Constants.YES_ANSWER}$mealName")
+            input == "no" -> showKetoMeal()
+            input.isNullOrBlank() -> {
+                printer.printLine(Constants.INVALID_INPUT)
+                handleUserFeedback(mealName)
+            }
             else -> {
-                printer.printLine("⚠️ Invalid input. Please answer with 'yes' or 'no'.")
+                printer.printLine(Constants.INVALID_INPUT)
                 handleUserFeedback(mealName)
             }
         }
     }
+
+
 }

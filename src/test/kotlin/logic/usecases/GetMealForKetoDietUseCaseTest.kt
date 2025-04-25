@@ -2,12 +2,13 @@ package org.example.logic.usecases
 
 import io.mockk.every
 import io.mockk.mockk
-import model.Meal
-import model.Nutrition
 import org.example.logic.repository.MealsRepository
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import utils.buildMeal
+import utils.buildNutrition
+import com.google.common.truth.Truth
 
 class GetMealForKetoDietUseCaseTest {
 
@@ -23,26 +24,17 @@ class GetMealForKetoDietUseCaseTest {
     @Test
     fun `getKetoMeal() should returns a keto meal when data of meal are valid for keto diet`() {
         // given
-        val ketoMeal = Meal(
-            name = "Spaghetti", ingredients = listOf("Tomato", "Basil", "Garlic"), id = 12, contributorId = 5,
-            minutes = null,
-            submitted = null,
-            tags = null,
-            nutrition = Nutrition(
-               carbohydrates = 5f,
-               totalFat = 20f,
-               protein = 25f,
-               calories = null,
-               sugar = null,
-               sodium = null,
-               saturatedFat = null
-            ),
-            numberOfSteps = null,
-            steps = null,
-            description = null,
-            numberOfIngredients = null
+        val ketoMeal = buildMeal(
+            id = 12,
+            name = "Spaghetti",
+            ingredients = listOf("Tomato", "Basil", "Garlic"),
+            contributorId = 5,
+            nutrition = buildNutrition(
+                carbohydrates = 5f,
+                totalFat = 20f,
+                protein = 25f
+            )
         )
-
 
         every { mealsRepository.getAllMeals() } returns Result.success(listOf(ketoMeal))
 
@@ -51,62 +43,68 @@ class GetMealForKetoDietUseCaseTest {
 
 
         // then
-        assertNotNull(result.getOrNull())
-        assertEquals(ketoMeal, result.getOrNull())
+        Truth.assertThat(result.getOrNull()).isNotNull()
+        Truth.assertThat(ketoMeal).isEqualTo(result.getOrNull())
     }
 
     @Test
     fun `getAllMeals() should returns null when data of meal are not valid for keto diet`() {
-        val nonKetoMeal = Meal(
-          name = "Spaghetti", ingredients = listOf("Tomato", "Basil", "Garlic"), id = 12, contributorId = 5,
-          minutes = null,
-          submitted = null,
-          tags = null,
-          nutrition = Nutrition(
-              carbohydrates = 50f,
-              totalFat = 10f,
-              protein = 5f,
-              calories = null,
-              sugar = null,
-              sodium = null,
-              saturatedFat = null
-          ),
-          numberOfSteps = null,
-          steps = null,
-          description = null,
-          numberOfIngredients = null
+        val nonKetoMeal = buildMeal(
+            id = 12,
+            name = "Pasta Primavera",
+            ingredients = listOf("Tomato", "Basil", "Garlic"),
+            nutrition = buildNutrition(
+                carbohydrates = 50f,
+                totalFat = 10f,
+                protein = 5f
+            )
         )
 
-        every { mealsRepository.getAllMeals() } returns Result.success(listOf(nonKetoMeal))
+        val secondNonKetoMeal = nonKetoMeal.copy(
+            name = "Vegetable Stir Fry",
+            nutrition = buildNutrition(
+                carbohydrates = 5f,
+                totalFat = 10f,
+                protein = 5f
+            )
+        )
+
+        val thirdNonKetoMeal = nonKetoMeal.copy(
+            name = "Grilled Chicken Salad",
+            nutrition = buildNutrition(
+                carbohydrates = 5f,
+                totalFat = 16f,
+                protein = 5f
+            )
+        )
+
+        every { mealsRepository.getAllMeals() } returns Result.success(listOf(nonKetoMeal, secondNonKetoMeal, thirdNonKetoMeal))
 
         //when
         val result = useCase.getKetoMeal()
+        val result2 = useCase.getKetoMeal()
+        val result3 = useCase.getKetoMeal()
 
         //then
-        assertNull(result.getOrNull())
+        Truth.assertThat(result.getOrNull()).isNull()
+        Truth.assertThat(result2.getOrNull()).isNull()
+        Truth.assertThat(result3.getOrNull()).isNull()
     }
 
     @Test
     fun `getKetoMeal() should not return the same meal twice`() {
-        val ketoMeal = Meal(
-            name = "Spaghetti", ingredients = listOf("Tomato", "Basil", "Garlic"), id = 12, contributorId = 5,
-            minutes = null,
-            submitted = null,
-            tags = null,
-            nutrition = Nutrition(
+        val ketoMeal = buildMeal(
+            id = 12,
+            name = "Spaghetti",
+            ingredients = listOf("Tomato", "Basil", "Garlic"),
+            contributorId = 5,
+            nutrition = buildNutrition(
                 carbohydrates = 5f,
                 totalFat = 20f,
-                protein = 25f,
-                calories = null,
-                sugar = null,
-                sodium = null,
-                saturatedFat = null
-            ),
-            numberOfSteps = null,
-            steps = null,
-            description = null,
-            numberOfIngredients = null
+                protein = 25f
+            )
         )
+
 
         every { mealsRepository.getAllMeals() } returns Result.success(listOf(ketoMeal))
 
@@ -115,8 +113,8 @@ class GetMealForKetoDietUseCaseTest {
         val secondResult = useCase.getKetoMeal()
 
         //then
-        assertEquals(ketoMeal, firstResult.getOrNull())
-        assertNull(secondResult.getOrNull())
+        Truth.assertThat(firstResult.getOrNull()).isEqualTo(ketoMeal)
+        Truth.assertThat(secondResult.getOrNull()).isNull()
     }
 //
     @Test
@@ -127,23 +125,20 @@ class GetMealForKetoDietUseCaseTest {
         //when
         val result = useCase.getKetoMeal()
         //then
-        assertNull(result.getOrNull())
+        Truth.assertThat(result.getOrNull()).isNull()
     }
 
     @Test
     fun `getKetoMeal() should ignores meals with null nutrition`() {
         //given
-        val mealWithNullNutrition = Meal(
-            name = "Spaghetti", ingredients = listOf("Tomato", "Basil", "Garlic"), id = 12, contributorId = 5,
-            minutes = null,
-            submitted = null,
-            tags = null,
-            nutrition = null,
-            numberOfSteps = null,
-            steps = null,
-            description = null,
-            numberOfIngredients = null
+        val mealWithNullNutrition = buildMeal(
+            id = 12,
+            name = "Spaghetti",
+            ingredients = listOf("Tomato", "Basil", "Garlic"),
+            contributorId = 5,
+            nutrition = null
         )
+
 
         every { mealsRepository.getAllMeals() } returns Result.success(listOf(mealWithNullNutrition))
 
@@ -151,6 +146,52 @@ class GetMealForKetoDietUseCaseTest {
         val result = useCase.getKetoMeal()
 
         //then
-        assertNull(result.getOrNull())
+        Truth.assertThat(result.getOrNull()).isNull()
     }
+
+    @Test
+    fun `getKetoMeal() should not return the same meal twice when nutrition values are null`() {
+        // Given
+        val ketoMealWithNullCarbo = buildMeal(
+            id = 12,
+            name = "Spaghetti",
+            ingredients = listOf("Tomato", "Basil", "Garlic"),
+            contributorId = 5,
+            nutrition = buildNutrition(
+                carbohydrates = null,
+                totalFat = 16f,
+                protein = 20f
+            )
+        )
+
+        val ketoMealWithNullFat = ketoMealWithNullCarbo.copy(
+            nutrition = buildNutrition(
+                carbohydrates = 5f,
+                totalFat = null,
+                protein = 20f
+            )
+        )
+
+        val ketoMealWithNullProtein = ketoMealWithNullCarbo.copy(
+            nutrition = buildNutrition(
+                carbohydrates = 5f,
+                totalFat = 16f,
+                protein = null
+            )
+        )
+
+
+        every { mealsRepository.getAllMeals() } returns Result.success(listOf(ketoMealWithNullCarbo , ketoMealWithNullFat, ketoMealWithNullProtein))
+
+        // When
+        val result = useCase.getKetoMeal()
+        val result2 = useCase.getKetoMeal()
+        val result3 = useCase.getKetoMeal()
+
+        // Then
+        Truth.assertThat(result.getOrNull()).isNull()
+        Truth.assertThat(result2.getOrNull()).isNull()
+        Truth.assertThat(result3.getOrNull()).isNull()
+    }
+
 }

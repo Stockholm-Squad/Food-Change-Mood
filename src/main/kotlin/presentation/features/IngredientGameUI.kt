@@ -1,7 +1,11 @@
+package org.example.presentation.features
+
+
 import org.example.input_output.input.InputReader
 import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetIngredientGameUseCase
 import org.example.logic.usecases.model.IngredientQuestionModel
+import org.example.utils.Constants
 
 class IngredientGameUI(
     private val game: GetIngredientGameUseCase,
@@ -14,19 +18,12 @@ class IngredientGameUI(
 
 
     fun start() {
-        printIntro()
+        printer.printLine(Constants.WELCOME_INGREDIENTS_GAME_MESSAGE)
 
         while (true) {
             val result = handleAction()
             if (!result) break
         }
-    }
-
-    private fun printIntro() {
-        printer.printLine("🧠 Ingredient Game is starting! Let's see how well you know your meals!")
-        printer.printLine("Guess the correct ingredient for each meal.")
-        printer.printLine("Get 15 right to win! One wrong answer ends the game.")
-        printer.printLine("--------------------------------------------------")
     }
 
     private fun handleAction(): Boolean {
@@ -35,18 +32,22 @@ class IngredientGameUI(
         return questionResult.fold(
             onSuccess = { question ->
                 displayQuestion(question)
-                val userChoice = handleInput(question)
-                if (userChoice == null) {
-                    printer.printLine("⚠️ Could not get valid input. Exiting game.")
-                    return false
-                }
-
-                val selected = question.options[userChoice - 1]
-                val isCorrect = game.submitAnswer(selected)
-                handleResult(isCorrect)
+                handleInput(question)
+                    ?.takeIf { it in 1..question.options.size }
+                    ?.let { question.options[it - 1] }
+                    ?.let { selected ->
+                        game.submitAnswer(selected)
+                    }
+                    ?.let { isCorrect ->
+                        handleResult(isCorrect)
+                    }
+                    ?: run {
+                        printer.printLine(Constants.INVALID_INPUT)
+                        false
+                    }
             },
             onFailure = {
-                printer.printLine("❌ Error loading question: ${it.message}")
+                printer.printLine(Constants.UNEXPECTED_ERROR)
                 false
             }
         )
@@ -54,29 +55,29 @@ class IngredientGameUI(
 
     private fun handleInput(question: IngredientQuestionModel): Int? {
         while (true) {
-            printer.printLine("Enter your choice (1-${question.options.size}): ")
+            printer.printLine("Enter your choice (1-${question.options.size}) or 'q' to quit: ")
             val input = reader.readLineOrNull()
+            if (input == "q") return null
             val choice = input?.toIntOrNull()
             if (choice != null && choice in 1..question.options.size) {
                 return choice
             }
-            printer.printLine("❗ Invalid input. Please enter a number between 1 and ${question.options.size}.")
+            printer.printLine(Constants.INVALID_INPUT)
         }
     }
 
     private fun handleResult(isCorrect: Boolean): Boolean {
         return if (isCorrect) {
             score += pointsPerScore
-            printer.printLine("✅ Correct! Your current score: $score")
-            printer.printLine("--------------------------------------------------")
+            printer.printLine(Constants.CORRECT_CHOICE + "$score")
             if (score >= winningPoints) {
-                printer.printLine("\n🏁 Congratulations! You reached the winning score: $score")
+                printer.printLine(Constants.WINNING_MESSAGE + score)
                 false
             } else {
                 true
             }
         } else {
-            printer.printLine("🏁 Game Over! Final Score: $score")
+            printer.printLine(Constants.INCORRECT_MESSAGE + "$score")
             false
         }
     }
