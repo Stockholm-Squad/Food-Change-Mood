@@ -1,12 +1,11 @@
 package org.example.utils
 
-class DateValidator {
+
+class DateValidator(private val dateParser: DateParser) {
     fun isValidDate(date: String): Boolean {
-        return try {
-            kotlinx.datetime.LocalDate.parse(date)
-            true
-        } catch (e: Exception) {
-            false
-        }
+        return dateParser.getDateFromString(date).fold(
+            onSuccess = { true },
+            onFailure = { false }
+        )
     }
 }
