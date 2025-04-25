@@ -1,9 +1,9 @@
 package org.example.presentation.features
-
 import model.Meal
 import org.example.logic.usecases.GetPotatoMealsUseCase
 import org.example.utils.InputReader
 import org.example.utils.OutputPrinter
+
 
 class PotatoLoversUI(
     private val getPotatoMealsUseCase: GetPotatoMealsUseCase,
@@ -13,32 +13,10 @@ class PotatoLoversUI(
 
     fun showPotatoLoversUI(count: Int = 10) {
         outputPrinter.printLine(I_LOVE_POTATO_HERE+"$count "+ MEAL_INCLUDE_POTATO+"\n")
-        getPotatoMealsUseCase.getRandomPotatoMeals(count).fold(
-            onSuccess = { meals ->
-                handleSuccess(meals)
-            },
-            onFailure = { exception ->
-                handleFailure(exception)
-            }
-        )
+        getPotatoMealsUseCase.getRandomPotatoMeals(count)
+        askIfWantsMore()
     }
 
-    fun handleSuccess(meals: List<Meal>) {
-        if (meals.isEmpty()) {
-            outputPrinter.printLine(NO_POTATO_MEALS_FOUND)
-        } else {
-            outputPrinter.printLine(I_LOVE_POTATO)
-            meals.forEachIndexed { index, meal ->
-                outputPrinter.printLine(MEAL + "${index + 1}: ${meal.name}")
-            }
-            askToViewMealDetails(meals)
-            askIfWantsMore()
-        }
-    }
-
-    fun handleFailure(exception: Throwable) {
-        outputPrinter.printLine(ERROR+"${exception.message}")
-    }
 
     fun askToViewMealDetails(meals: List<Meal?>) {
         var validInput = false
@@ -56,12 +34,13 @@ class PotatoLoversUI(
             val selectedIndex = input.toIntOrNull()
             if (selectedIndex != null && selectedIndex in 1..meals.size) {
                 meals[selectedIndex - 1]?.let { showMealDetails(it) }
-                validInput = true  // Set the flag to true to exit the loop
+                validInput = true
             } else {
                 outputPrinter.printLine(INVALID_SELECTION)
             }
         } while (!validInput)
     }
+
 
     fun showMealDetails(meal: Meal) {
         outputPrinter.printLine("\n" + DETAILS_MEAL+ "'${meal.name}':")
@@ -86,7 +65,6 @@ class PotatoLoversUI(
     fun askIfWantsMore(onYes: () -> Unit = { showPotatoLoversUI() }) {
         outputPrinter.printLine(SEE_MORE_MEALS)
         val input = inputReader.readLineOrNull()
-
 
         val normalizedAnswer = normalizeInput(input)
 
@@ -124,5 +102,6 @@ class PotatoLoversUI(
         const val SEE_MORE_MEALS = "Would you like to see more? (y/n)"
         const val YES = "y"
     }
+
 
 }

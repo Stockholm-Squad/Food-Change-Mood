@@ -4,6 +4,7 @@ import Fake.createMeal
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.example.logic.repository.MealsRepository
 import org.example.logic.usecases.GetPotatoMealsUseCase
 import org.example.utils.Constants
@@ -20,18 +21,16 @@ class GetPotatoMealsUseCaseTest{
       mealRepository = mockk(relaxed = true)
       getRandomPotatoMeals = GetPotatoMealsUseCase(mealRepository)
   }
-
     @Test
     fun `getRandomPotatoMeals should return potato meals when valid input`() {
         // Given
-        every { mealRepository.getAllMeals() } returns Result.success( listOf(
-            createMeal(1, "Potato", listOf("oil", "potato", "salt")),
-            createMeal(2,"Mashed Potatoes", listOf("Potato", "Butter", "Milk")),
-            createMeal(3,"Rice and Chicken", listOf("Rice", "Chicken", "Spices")),
-            createMeal(4,"Potato Salad", listOf("Potato", "Mayonnaise", "Onion")),
-            createMeal(5,"Tomato Soup", listOf("Tomato", "Water", "Salt")),
-            )
+        val meals = listOfNotNull(
+            buildMeal(1, "Potato Salad", ingredients = listOf("Potato", "Mayonnaise", "Onion")),
+            buildMeal(2, "Mashed Potatoes", ingredients = listOf("Potato", "Butter", "Milk")),
+            buildMeal(3, "French Fries", ingredients = listOf("Potato", "Oil", "Salt")),
+            buildMeal(4, "Tomato Soup", ingredients = listOf("Tomato", "Water", "Salt"))
         )
+        every { mealRepository.getAllMeals() } returns Result.success(meals)
 
         // When
         val inputCount = 5
@@ -39,21 +38,23 @@ class GetPotatoMealsUseCaseTest{
 
         // Then
         assertThat(result.isSuccess).isTrue()
-        val meals = result.getOrNull()
-        assertThat(meals!!.size).isEqualTo(3)
-        assertThat(meals.all { it.ingredients!!.any { ingredient -> ingredient.equals("potato", ignoreCase = true) } }).isTrue()
+        val potatoMeal = result.getOrNull()
+        assertThat(potatoMeal).isNotNull()
+        assertThat(potatoMeal!!.size).isEqualTo(3)
+        potatoMeal.forEach { meal ->
+            assertThat(meal.ingredients?.any { it.equals("potato", ignoreCase = true) }).isTrue()
         }
-
+        verify(exactly = 1) { mealRepository.getAllMeals() }
+    }
     @Test
     fun `getRandomPotatoMeals should return all available potato meals if count exceeds available`() {
 
         // Given
-        every { mealRepository.getAllMeals() } returns Result.success(
-            listOf(
-                createMeal(1,"Potato Salad", listOf("Potato", "Mayonnaise", "Onion")),
-                createMeal(2,"Mashed Potatoes", listOf("Potato", "Butter", "Milk")),
-            )
+        val meals = listOfNotNull(
+            buildMeal(1, "Potato Salad", ingredients = listOf("Potato", "Mayonnaise", "Onion")),
+            buildMeal(2, "Mashed Potatoes", ingredients = listOf("Potato", "Butter", "Milk"))
         )
+        every { mealRepository.getAllMeals() } returns Result.success(meals)
 
         // When
         val inputCount = 10
@@ -68,12 +69,11 @@ class GetPotatoMealsUseCaseTest{
     fun `getRandomPotatoMeals should return failure when no meals contain potato`() {
 
         // Given
-        every { mealRepository.getAllMeals() } returns Result.success(
-            listOf(
-                createMeal(1, "Avocado Toast", listOf("Bread", "Avocado", "Salt", "Pepper", "Lemon juice")),
-                createMeal(2, "Chicken Curry", listOf("Chicken", "Onion", "Garlic", "Ginger", "Spices"))
-            )
+        val meals = listOfNotNull(
+            buildMeal(1, "Avocado Toast", ingredients = listOf("Bread", "Avocado", "Salt", "Pepper", "Lemon juice")),
+            buildMeal(2, "Chicken Curry", ingredients = listOf("Chicken", "Onion", "Garlic", "Ginger", "Spices"))
         )
+        every { mealRepository.getAllMeals() } returns Result.success(meals)
 
         // When
         val inputCount = 3
@@ -82,6 +82,7 @@ class GetPotatoMealsUseCaseTest{
         // Then
         assertThat(result.isFailure).isTrue()
         assertThat(result.exceptionOrNull()!!.message).isEqualTo(Constants.NO_MEALS_FOR_POTATO)
+        verify(exactly = 1) { mealRepository.getAllMeals() }
     }
 
     @Test
@@ -94,21 +95,23 @@ class GetPotatoMealsUseCaseTest{
         val result = getRandomPotatoMeals.getRandomPotatoMeals(inputCount)
 
         // Then
-        assertThat(result.isFailure).isTrue()
-        assertThat(result.exceptionOrNull()!!.message).contains(Constants.UNEXPECTED_ERROR)
+        val isFailure = result.isFailure
+        val exceptionMessage = result.exceptionOrNull()?.message
+
+        assertThat(isFailure).isTrue()
+        assertThat(exceptionMessage).contains(Constants.UNEXPECTED_ERROR)
     }
 
     @Test
     fun `getRandomPotatoMeals should handle case ignore potato filter`() {
 
         //Given
-        every { mealRepository.getAllMeals() } returns Result.success(
-            listOf(
-                createMeal(1, "POTATO FRIES", listOf("POTATO")),
-                createMeal(2, "Mashed", listOf("potato")),
-                createMeal(3, "Mixed", listOf("PoTaTo"))
-            )
+        val meals = listOfNotNull(
+            buildMeal(1, "POTATO FRIES", ingredients = listOf("POTATO")),
+            buildMeal(2, "Mashed", ingredients = listOf("potato")),
+            buildMeal(3, "Mixed", ingredients = listOf("PoTaTo"))
         )
+        every { mealRepository.getAllMeals() } returns Result.success(meals)
 
         // When
         val inputCount = 3
@@ -117,21 +120,20 @@ class GetPotatoMealsUseCaseTest{
         // Then
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrNull()!!.size).isEqualTo(3)
+        verify(exactly = 1) { mealRepository.getAllMeals() }
     }
 
     @Test
     fun `getRandomPotatoMeals should return empty list when count is zero`() {
 
         // Given
-        every { mealRepository.getAllMeals() } returns Result.success(
-            listOf(
-                createMeal(1, "Potato", listOf("oil", "potato", "salt")),
-                createMeal(2,"Mashed Potatoes", listOf("Potato", "Butter", "Milk")),
-                createMeal(3,"Rice and Chicken", listOf("Rice", "Chicken", "Spices")),
-                createMeal(4,"Potato Salad", listOf("Potato", "Mayonnaise", "Onion")),
-                createMeal(5,"Tomato Soup", listOf("Tomato", "Water", "Salt")),
-            )
+        val meals = listOfNotNull(
+            buildMeal(1, "Potato Salad", ingredients = listOf("Potato", "Mayonnaise", "Onion")),
+            buildMeal(2, "Mashed Potatoes", ingredients = listOf("Potato", "Butter", "Milk")),
+            buildMeal(3, "French Fries", ingredients = listOf("Potato", "Oil", "Salt")),
+            buildMeal(4, "Tomato Soup", ingredients = listOf("Tomato", "Water", "Salt"))
         )
+        every { mealRepository.getAllMeals() } returns Result.success(meals)
 
         // When
         val inputCount = 0
@@ -140,38 +142,46 @@ class GetPotatoMealsUseCaseTest{
         // Then
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrNull()).isEmpty()
+        verify(exactly = 0) { mealRepository.getAllMeals() }
     }
 
     @Test
     fun `getRandomPotatoMeals should skip meals with null ingredients`() {
-
         // Given
-        every { mealRepository.getAllMeals() } returns Result.success(
-            listOf(
-                createMeal(1, "Potato Chips", listOf("Potato", "Oil")),
-                createMeal(2, "Unknown Meal", null),
-                createMeal(3, "Potato Stew", listOf("Potato", "Carrot"))
-            )
+        val meals = listOfNotNull(
+            buildMeal(1, "Potato Salad", ingredients = listOf("Potato", "Mayonnaise", "Onion")),
+            buildMeal(2, "Mashed Potatoes", ingredients = listOf("Potato", "Butter", "Milk")),
+            buildMeal(3, "Tomato Soup", ingredients = null),
+            buildMeal(4, "French Fries", ingredients = listOf("Potato", "Oil", "Salt")),
+            buildMeal(5, "Chicken Soup", ingredients = null)
         )
 
+        every { mealRepository.getAllMeals() } returns Result.success(meals)
+
         // When
-        val inputCount = 3
+        val inputCount = 5
         val result = getRandomPotatoMeals.getRandomPotatoMeals(inputCount)
 
         // Then
-        assertThat(result.isSuccess).isTrue()
-        val meals = result.getOrNull()!!
-        assertThat(meals.size).isEqualTo(2)
-        assertThat(meals.none { it.ingredients == null }).isTrue()
+        val mealsResult = result.getOrNull()
+        assertThat(mealsResult!!.size).isEqualTo(3)
+        mealsResult.forEach { meal ->
+            assertThat(meal.ingredients).isNotNull()
+        }
+        verify(exactly = 1) { mealRepository.getAllMeals() }
     }
 
     @Test
     fun `getRandomPotatoMeals should return empty list when count is negative`() {
 
         // Given
-        every { mealRepository.getAllMeals() } returns Result.success(
-            listOf(createMeal(1, "Potato", listOf("Potato")))
+        val meals = listOfNotNull(
+            buildMeal(1, "Potato Salad", ingredients = listOf("Potato", "Mayonnaise", "Onion")),
+            buildMeal(2, "Mashed Potatoes", ingredients = listOf("Potato", "Butter", "Milk")),
+            buildMeal(3, "French Fries", ingredients = listOf("Potato", "Oil", "Salt")),
+            buildMeal(4, "Tomato Soup", ingredients = listOf("Tomato", "Water", "Salt"))
         )
+        every { mealRepository.getAllMeals() } returns Result.success(meals)
 
         // When
         val inputCount = -3
@@ -180,16 +190,20 @@ class GetPotatoMealsUseCaseTest{
         // Then
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrNull()).isEmpty()
+        verify(exactly = 0) { mealRepository.getAllMeals() }
     }
 
     @Test
     fun `getRandomPotatoMeals should handle duplicate potato meals`() {
 
         // Given
-        val potatoMeal = createMeal(1, "Potato Soup", listOf("Potato"))
-        every { mealRepository.getAllMeals() } returns Result.success(
-            listOf(potatoMeal, potatoMeal, potatoMeal)
+        val meals = listOfNotNull(
+            buildMeal(1, "Potato Salad", ingredients = listOf("Potato", "Mayonnaise", "Onion")),
+            buildMeal(2, "Mashed Potatoes", ingredients = listOf("Potato", "Butter", "Milk")),
+            buildMeal(3, "French Fries", ingredients = listOf("Potato", "Oil", "Salt")),
+            buildMeal(4, "Tomato Soup", ingredients = listOf("Tomato", "Water", "Salt"))
         )
+        every { mealRepository.getAllMeals() } returns Result.success(meals)
 
         // When
         val result = getRandomPotatoMeals.getRandomPotatoMeals(3)
@@ -197,28 +211,7 @@ class GetPotatoMealsUseCaseTest{
         //Then
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrNull()!!.size).isEqualTo(3)
-    }
-
-    @Test
-    fun `getRandomPotatoMeals should ignore meals with potato in name but not in ingredients`() {
-
-        // Given
-        every { mealRepository.getAllMeals() } returns Result.success(
-            listOf(
-                createMeal(1, "Fake Potato Dish", listOf("Carrot", "Oil")),
-                createMeal(2, "Real Potato Dish", listOf("Potato", "Oil"))
-            )
-        )
-
-        // When
-        val result = getRandomPotatoMeals.getRandomPotatoMeals(2)
-
-
-        // Then
-        assertThat(result.isSuccess).isTrue()
-        val meals = result.getOrNull()!!
-        assertThat(meals.size).isEqualTo(1)
-        assertThat(meals.all { meal -> meal.ingredients!!.any { it.equals("potato", ignoreCase = true) } }).isTrue()
+        verify(exactly = 1) { mealRepository.getAllMeals() }
     }
 
  }

@@ -2,6 +2,10 @@ package org.example.logic.usecases
 
 import model.Meal
 import org.example.logic.repository.MealsRepository
+import org.example.presentation.features.PotatoLoversUI.Companion.ERROR
+import org.example.presentation.features.PotatoLoversUI.Companion.I_LOVE_POTATO
+import org.example.presentation.features.PotatoLoversUI.Companion.MEAL
+import org.example.presentation.features.PotatoLoversUI.Companion.NO_POTATO_MEALS_FOUND
 import org.example.utils.Constants
 
 class GetPotatoMealsUseCase(private val mealsRepository: MealsRepository) {
@@ -25,3 +29,4 @@ class GetPotatoMealsUseCase(private val mealsRepository: MealsRepository) {
         } ?: Result.success(emptyList())
     }
 }
+

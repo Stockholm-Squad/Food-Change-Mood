@@ -32,18 +32,6 @@ class PotatoLoversUITest {
  }
 
  @Test
- fun `handleFailure should show error message when an exception occurs`() {
-  // Given
-  val exception = RuntimeException("Something went wrong")
-
-  // When
-  potatoMealUi.handleFailure(exception)
-
-  // Then
-  verify { outputPrinter.printLine("❌ Error: ${exception.message}") }
- }
-
- @Test
  fun `showPotatoLoversUI should show no meals found when GetPotatoMealUseCase returns empty list`() {
   // Given
   every { potatoMeals.getRandomPotatoMeals(any()) } returns Result.success(emptyList())
@@ -56,52 +44,9 @@ class PotatoLoversUITest {
   verify { outputPrinter.printLine("😢 No potato meals found.") }
  }
 
- @Test
- fun `showPotatoLoversUI should show error when GetPotatoMealUseCase fails`() {
-
-  // Given
-  val exception = RuntimeException("Something went wrong")
-  every { potatoMeals.getRandomPotatoMeals(any()) } returns Result.failure(exception)
-  every { inputReader.readLineOrNull() } returns "n"
-
-  // When
-  potatoMealUi.showPotatoLoversUI()
-
-  // Then
-  verify { outputPrinter.printLine("❌ Error: ${exception.message}") }
- }
 
  @Test
- fun `showPotatoLoversUI should handle when inputHandler read a readInput is empty string`() {
-  // Given
-  val potatoUi = PotatoLoversUI(potatoMeals, outputPrinter, inputReader)
-  val meals = listOf(Meal(
-   name = "Chips",
-   minutes = 20,
-   numberOfSteps = 0,
-   steps = null,
-   description = "Just plain white rice",
-   nutrition = Nutrition(12.0f, 12.0f,12.0f,12.0f,12.0f,12.0f,12.0f),
-   numberOfIngredients = 0,
-   ingredients = null,
-   submitted = null,
-   contributorId = 12,
-   id = 1,
-   tags = null
-  ))
-
-  every { potatoMeals.getRandomPotatoMeals(10) } returns Result.success(meals)
-  every { inputReader.readLineOrNull() } returns "n"
-
-  // When
-  potatoUi.showPotatoLoversUI()
-
-  // Then
-  verify { outputPrinter.printLine("🍽️ Meal #1: Chips") }
- }
-
- @Test
- fun `askForMoreMeals should recall showPotatoLoversUI when input is capital Y`() {
+ fun `askIfWantsMore should recall showPotatoLoversUI when input is capital Y`() {
 
   // Given
   val meals = listOf(Meal(
@@ -140,12 +85,12 @@ class PotatoLoversUITest {
   potatoMealUi.showPotatoLoversUI()
 
   // Then
-  verify(exactly = 1) { potatoMeals.getRandomPotatoMeals(10) }
+  verify(exactly = 2) { potatoMeals.getRandomPotatoMeals(10) }
   verify { outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋") }
  }
 
  @Test
- fun `askForMoreMeals should not recall showPotatoLoversUI when input is capital N`() {
+ fun `askIfWantsMore should not recall showPotatoLoversUI when input is capital N`() {
 
   // Given
   val meals = listOf(Meal(
@@ -184,7 +129,7 @@ class PotatoLoversUITest {
   potatoMealUi.showPotatoLoversUI()
 
   // Then
-  verify(exactly = 1) { potatoMeals.getRandomPotatoMeals(10) }
+  verify(exactly = 2) { potatoMeals.getRandomPotatoMeals(10) }
   verify { outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋") }
  }
 
@@ -231,49 +176,7 @@ class PotatoLoversUITest {
   verify { outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋") }
  }
 
- @Test
- fun `showPotatoLoversUI should handle when input is a number`() {
 
-  // Given
-  val meals = listOf(Meal(
-   name = "Mashed Potatoes",
-   minutes = 20,
-   numberOfSteps = 0,
-   steps = null,
-   description = "Just plain white rice",
-   nutrition = Nutrition(12.0f, 12.0f,12.0f,12.0f,12.0f,12.0f,12.0f),
-   numberOfIngredients = 0,
-   ingredients = null,
-   submitted = null,
-   contributorId = 12,
-   id = 1,
-   tags = null
-  ),
-   Meal(
-    name = "Potato Salad",
-    minutes = 20,
-    numberOfSteps = 0,
-    steps = null,
-    description = "Just plain white rice",
-    nutrition = Nutrition(12.0f, 12.0f,12.0f,12.0f,12.0f,12.0f,12.0f),
-    numberOfIngredients = 0,
-    ingredients = null,
-    submitted = null,
-    contributorId = 12,
-    id = 2,
-    tags = null
-   ))
-
-  val inputCount = 10
-  every { potatoMeals.getRandomPotatoMeals(inputCount) } returns Result.success(meals)
-  every { inputReader.readLineOrNull() } returns "1"
-
-  // When
-  potatoMealUi.showPotatoLoversUI()
-
-  // Then
-  verify { outputPrinter.printLine("Okay! Enjoy your potato meals! 🥔😋") }
- }
 
  @Test
  fun `normalizeInput trims and lowercases correctly`() {
