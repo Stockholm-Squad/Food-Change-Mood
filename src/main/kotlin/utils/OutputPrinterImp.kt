@@ -1,6 +1,7 @@
 package org.example.utils
 
 import model.Meal
+import org.example.input_output.output.OutputPrinter
 
 class OutputPrinterImplementation : OutputPrinter {
     override fun printLine(value: String?) {
