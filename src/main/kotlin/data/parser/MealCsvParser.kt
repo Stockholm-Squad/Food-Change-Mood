@@ -5,13 +5,11 @@ import model.Meal
 import model.Nutrition
 import org.example.data.utils.CsvLineFormatter
 import org.example.model.FoodChangeMoodExceptions.ValidationException
-import org.example.utils.Constants
-import org.example.utils.MealColumnIndex
-import org.example.utils.NutritionIndex
-import org.example.utils.DateParserImpl
+import org.example.utils.*
 
 class MealCsvParser(
     private val csvLineFormatter: CsvLineFormatter,
+    private val dateParser: DateParser
 ): MealParser {
 
     override fun parseLine(row: String): Result<Meal> {
@@ -70,7 +68,7 @@ class MealCsvParser(
         index: MealColumnIndex
     ): LocalDate? {
         return safeAccessColumn(mealRow, index.index, "Date") { dateField ->
-            DateParserImpl().getDateFromString(dateField).fold(
+            dateParser.getDateFromString(dateField).fold(
                 onSuccess = { date -> date },
                 //TODO we need to handle the Result more not just return null
                 onFailure = { exception ->
