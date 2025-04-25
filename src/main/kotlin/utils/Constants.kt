@@ -1,6 +1,13 @@
 package org.example.utils
 
 object Constants {
+    const val NO_EVALUATE_GUESS="❗no evaluate to guess "
+    const val NO_PREPARATION_TIME="❌ This meal has no preparation time."
+    const val INVALID_INPUT_MESSAGE="❗ Invalid input. Please enter a number."
+    const val FAILED_MESSAGE="❌ You've used all attempts. The correct time was 15 minutes."
+    const val HIGH_MESSAGE="⬆️ Too high."
+    const val LOW_MESSAGE="⬇️ Too low."
+    const val CORRECT_MESSAGE="🎉 Correct! The preparation time is 15 minutes."
     const val MEAL_CSV_FILE = "food.csv"
     const val INVALID_INPUT = "Invalid input"
     const val NO_MEALS_FOR_GYM_HELPER = "No meals match the desired protein and calories!!"
@@ -14,6 +21,9 @@ object Constants {
     const val NO_MEALS_FOUND_MATCHING = "No meals found matching"
     const val UNEXPECTED_ERROR = "Unexpected error occurred"
     const val ERROR_FETCHING_MEALS = "Error fetching meals: "
+    const val NO_MEALS_FOUND="Error There is no meals Found"
+    const val UN_EXPECTED_STATE ="❗ Unexpected state."
+    const val ENTER_INPUT="Enter your guess:"
     const val INVALID_SELECTION_MESSAGE = "Invalid selection. Please choose a valid number."
     const val ENTER_MEAL_KEYWORD_TO_SEARCH = "Enter a meal keyword to search: "
     const val MEAL_DETAILS_PROMPT = "Would you like to view the details of any of these meals? (Enter the number or 'n' to skip):"

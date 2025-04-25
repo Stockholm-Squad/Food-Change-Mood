@@ -20,4 +20,8 @@ class InputReaderImplementation(private val dateParser: DateParser) : InputReade
         return readlnOrNull()?.toFloatOrNull()
     }
 
+    override fun readIntOrNull(): Int? {
+        return readlnOrNull()?.toIntOrNull()
+    }
+
 }
