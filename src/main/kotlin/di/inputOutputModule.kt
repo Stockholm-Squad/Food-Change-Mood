@@ -1,4 +1,4 @@
-package di
+package org.example.di
 
 import org.example.input_output.input.InputReader
 import org.example.input_output.input.InputReaderImplementation
