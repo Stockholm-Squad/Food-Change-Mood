@@ -1,15 +1,16 @@
 package org.example.input_output.input
 
-import org.example.utils.getDateFromString
-import java.util.*
+import kotlinx.datetime.LocalDate
+import org.example.utils.DateParser
 
-class InputReaderImplementation : InputReader {
+
+class InputReaderImplementation(private val dateParser: DateParser) : InputReader {
     override fun readStringOrNull(): String? {
         return readlnOrNull()
     }
 
-    override fun readDateOrNull(): Date? {
-        return getDateFromString(readlnOrNull() ?: "").fold(
+    override fun readDateOrNull(): LocalDate? {
+        return dateParser.getDateFromString(readlnOrNull() ?: "").fold(
             onSuccess = { it },
             onFailure = { null }
         )
