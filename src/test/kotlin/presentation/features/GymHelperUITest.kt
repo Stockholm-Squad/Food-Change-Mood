@@ -42,7 +42,6 @@ class GymHelperUITest {
             )
         } returns Result.success(
             listOf(
-                buildMeal(1, nutrition = buildNutrition(calories = 20F, protein = 50F)),
                 buildMeal(2, nutrition = buildNutrition(calories = 9F, protein = 45F)),
                 buildMeal(3, nutrition = buildNutrition(calories = 10F, protein = 45F)),
             )
@@ -52,7 +51,14 @@ class GymHelperUITest {
         gymHelperUI.useGymHelper()
 
         //Then
-        verify { printer.printLine(buildMeal(2, nutrition = buildNutrition(calories = 9F, protein = 45F)).toString()) }
+        verify {
+            printer.printMeals(
+                listOf(
+                    buildMeal(2, nutrition = buildNutrition(calories = 9F, protein = 45F)),
+                    buildMeal(3, nutrition = buildNutrition(calories = 10F, protein = 45F))
+                )
+            )
+        }
     }
 
     @Test
