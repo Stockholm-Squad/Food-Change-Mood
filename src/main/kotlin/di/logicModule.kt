@@ -16,7 +16,7 @@ val logicModule = module {
     single { GetIngredientGameUseCase(get()) }
     single { GetMealsByDateUseCase(get(), get()) }
     single { GetItalianMealsForLargeGroupUseCase(get()) }
-    single { GetMealsForSoThinProblemUseCase(get()) }
+    single { GetMealForSoThinPeopleUseCase(get()) }
 
     single<SearchingByKmpUseCase> { SearchingByKmpUseCase() }
     single { GetMealByNameUseCase(get(), get())}
