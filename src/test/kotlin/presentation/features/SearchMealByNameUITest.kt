@@ -27,7 +27,7 @@ class SearchMealByNameUITest {
     fun `handleSearchByName shows error for empty input`() {
         // Given
         listOf("", "   ", null).forEach { input ->
-            every { reader.readLineOrNull() } returns input
+            every { reader.readStringOrNull() } returns input
 
             // When
             searchMealByNameUI.handleSearchByName()
@@ -44,7 +44,7 @@ class SearchMealByNameUITest {
             buildMeal(1, "Pizza Margherita"),
             buildMeal(2, "Pepperoni Pizza")
         )
-        every { reader.readLineOrNull() } returnsMany listOf("pizza", "n")
+        every { reader.readStringOrNull() } returnsMany listOf("pizza", "n")
         every { getMealByNameUseCase.getMealByName("pizza") } returns Result.success(meals)
 
         // When
@@ -62,7 +62,7 @@ class SearchMealByNameUITest {
     @Test
     fun `handleSearchByName handles no results`() {
         // Given
-        every { reader.readLineOrNull() } returnsMany listOf("invalid", "n")
+        every { reader.readStringOrNull() } returnsMany listOf("invalid", "n")
         every { getMealByNameUseCase.getMealByName("invalid") } returns Result.success(emptyList())
 
         // When
@@ -79,7 +79,7 @@ class SearchMealByNameUITest {
             buildMeal(1, "Caprese Pizza"),
             buildMeal(2, "BBQ Chicken Pizza")
         )
-        every { reader.readLineOrNull() } returnsMany listOf("pizza", "2", "n")
+        every { reader.readStringOrNull() } returnsMany listOf("pizza", "2", "n")
         every { getMealByNameUseCase.getMealByName("pizza") } returns Result.success(meals)
 
         // When
@@ -96,7 +96,7 @@ class SearchMealByNameUITest {
     fun `handleSearchByName handles invalid index selection`() {
         // Given
         val meals = listOf(buildMeal(1, "Hawaiian Pizza"))
-        every { reader.readLineOrNull() } returnsMany listOf("pizza", "2", "n")
+        every { reader.readStringOrNull() } returnsMany listOf("pizza", "2", "n")
         every { getMealByNameUseCase.getMealByName("pizza") } returns Result.success(meals)
 
         // When
@@ -110,7 +110,7 @@ class SearchMealByNameUITest {
     fun `handleSearchByName handles non-numeric selection`() {
         // Given
         val meals = listOf(buildMeal(1, "Veggie Pizza"))
-        every { reader.readLineOrNull() } returnsMany listOf("pizza", "abc", "n")
+        every { reader.readStringOrNull() } returnsMany listOf("pizza", "abc", "n")
         every { getMealByNameUseCase.getMealByName("pizza") } returns Result.success(meals)
 
         // When
@@ -123,7 +123,7 @@ class SearchMealByNameUITest {
     @Test
     fun `handleSearchByName handles search repetition`() {
         // Given
-        every { reader.readLineOrNull() } returnsMany listOf("pizza", "y", "pasta", "n")
+        every { reader.readStringOrNull() } returnsMany listOf("pizza", "y", "pasta", "n")
         every { getMealByNameUseCase.getMealByName(any()) } returns Result.success(emptyList())
 
         // When
@@ -137,7 +137,7 @@ class SearchMealByNameUITest {
     @Test
     fun `handleSearchByName handles case-insensitive inputs`() {
         // Given
-        every { reader.readLineOrNull() } returnsMany listOf("PIZZA", "N")
+        every { reader.readStringOrNull() } returnsMany listOf("PIZZA", "N")
         every { getMealByNameUseCase.getMealByName("PIZZA") } returns Result.success(emptyList())
 
         // When
@@ -150,7 +150,7 @@ class SearchMealByNameUITest {
     @Test
     fun `handleSearchByName handles special characters`() {
         // Given
-        every { reader.readLineOrNull() } returnsMany listOf("pi@zza!", "n")
+        every { reader.readStringOrNull() } returnsMany listOf("pi@zza!", "n")
         every { getMealByNameUseCase.getMealByName("pi@zza!") } returns
                 Result.failure(Throwable(Constants.NO_MEALS_FOUND_MATCHING))
 
@@ -165,7 +165,7 @@ class SearchMealByNameUITest {
     fun `handleSearchByName handles single meal case`() {
         // Given
         val meal = buildMeal(1, "Cheese Pizza")
-        every { reader.readLineOrNull() } returnsMany listOf("cheese", "1", "n")
+        every { reader.readStringOrNull() } returnsMany listOf("cheese", "1", "n")
         every { getMealByNameUseCase.getMealByName("cheese") } returns Result.success(listOf(meal))
 
         // When
@@ -182,7 +182,7 @@ class SearchMealByNameUITest {
     fun `handleSearchByName() should print 'No meals found' when use case returns empty list`() {
         // Given
         val pattern = "invalid"
-        every { reader.readLineOrNull() } returnsMany listOf(pattern, "n")
+        every { reader.readStringOrNull() } returnsMany listOf(pattern, "n")
         every { getMealByNameUseCase.getMealByName(pattern) } returns Result.success(emptyList())
 
         // When
@@ -197,7 +197,7 @@ class SearchMealByNameUITest {
         // Given
         val pattern = "Pizza"
         val mealList = listOf(buildMeal(name = "Pizza", id = 1))
-        every { reader.readLineOrNull() } returnsMany listOf(pattern, "", "n")
+        every { reader.readStringOrNull() } returnsMany listOf(pattern, "", "n")
         every { getMealByNameUseCase.getMealByName(pattern) } returns Result.success(mealList)
 
         // When
@@ -212,7 +212,7 @@ class SearchMealByNameUITest {
         // Given
         val pattern = "Pizza"
         val mealList = listOf(buildMeal(name = "Pizza", id = 1))
-        every { reader.readLineOrNull() } returnsMany listOf(pattern, "maybe", "n")
+        every { reader.readStringOrNull() } returnsMany listOf(pattern, "maybe", "n")
         every { getMealByNameUseCase.getMealByName(pattern) } returns Result.success(mealList)
 
         // When
@@ -227,7 +227,7 @@ class SearchMealByNameUITest {
         // Given
         val pattern = "Pizza"
         val mealList = listOf(buildMeal(name = "Pizza", id = 1))
-        every { reader.readLineOrNull() } returnsMany listOf(pattern, null)
+        every { reader.readStringOrNull() } returnsMany listOf(pattern, null)
         every { getMealByNameUseCase.getMealByName(pattern) } returns Result.success(mealList)
 
         // When
@@ -242,7 +242,7 @@ class SearchMealByNameUITest {
         // Given
         val pattern = "Pizza"
         val mealList = listOf(buildMeal(name = "Pizza", id = 1))
-        every { reader.readLineOrNull() } returnsMany listOf(pattern, "")
+        every { reader.readStringOrNull() } returnsMany listOf(pattern, "")
         every { getMealByNameUseCase.getMealByName(pattern) } returns Result.success(mealList)
 
         // When
@@ -256,7 +256,7 @@ class SearchMealByNameUITest {
     fun `handleSearchByName() should handle uppercase 'Y' in search repetition`() {
         // Given
         val mealList = listOf(buildMeal(name = "Pizza", id = 1))
-        every { reader.readLineOrNull() } returnsMany listOf("Pizza", "Y", "Pizza", "n")
+        every { reader.readStringOrNull() } returnsMany listOf("Pizza", "Y", "Pizza", "n")
         every { getMealByNameUseCase.getMealByName(any()) } returns Result.success(mealList)
 
         // When
@@ -271,7 +271,7 @@ class SearchMealByNameUITest {
         // Given
         val pattern = "ValidInput"
         val mealList = listOf(buildMeal(name = "Meal", id = 1))
-        every { reader.readLineOrNull() } returnsMany listOf(pattern, "n")
+        every { reader.readStringOrNull() } returnsMany listOf(pattern, "n")
         every { getMealByNameUseCase.getMealByName(pattern) } returns Result.success(mealList)
 
         // When
@@ -285,7 +285,7 @@ class SearchMealByNameUITest {
     fun `handleSearchByName() should handle use case failure with null message`() {
         // Given
         val pattern = "invalid"
-        every { reader.readLineOrNull() } returnsMany listOf(pattern, "n")
+        every { reader.readStringOrNull() } returnsMany listOf(pattern, "n")
         every { getMealByNameUseCase.getMealByName(pattern) } returns Result.failure(Throwable())
 
         // When
@@ -298,7 +298,7 @@ class SearchMealByNameUITest {
     @Test
     fun `handleSearchByName() should exit on invalid search again input`() {
         // Given
-        every { reader.readLineOrNull() } returnsMany listOf("Pizza", "maybe", "n")
+        every { reader.readStringOrNull() } returnsMany listOf("Pizza", "maybe", "n")
         every { getMealByNameUseCase.getMealByName(any()) } returns Result.success(emptyList())
 
         // When
@@ -311,7 +311,7 @@ class SearchMealByNameUITest {
     @Test
     fun `handleSearchByName() should handle null search again input`() {
         // Given
-        every { reader.readLineOrNull() } returnsMany listOf("Pizza", null)
+        every { reader.readStringOrNull() } returnsMany listOf("Pizza", null)
         every { getMealByNameUseCase.getMealByName(any()) } returns Result.success(emptyList())
 
         // When
@@ -325,7 +325,7 @@ class SearchMealByNameUITest {
     fun `handleSearchByName() should handle uppercase Y with spaces`() {
         // Given
         val mealList = listOf(buildMeal(name = "Pizza", id = 1))
-        every { reader.readLineOrNull() } returnsMany listOf("Pizza", "  Y  ", "n")
+        every { reader.readStringOrNull() } returnsMany listOf("Pizza", "  Y  ", "n")
         every { getMealByNameUseCase.getMealByName(any()) } returns Result.success(mealList)
 
         // When
@@ -339,7 +339,7 @@ class SearchMealByNameUITest {
     fun `handleSearchByName() should handle mixed case and trimmed input`() {
         // Given
         val mealList = listOf(buildMeal(name = "Pizza", id = 1))
-        every { reader.readLineOrNull() } returnsMany listOf("Pizza", "\t y \n", "n")
+        every { reader.readStringOrNull() } returnsMany listOf("Pizza", "\t y \n", "n")
         every { getMealByNameUseCase.getMealByName(any()) } returns Result.success(mealList)
 
         // When
@@ -353,7 +353,7 @@ class SearchMealByNameUITest {
     fun `handleSearchByName() should print 'No meals found matching' when no results`() {
         // Given
         val pattern = "invalid"
-        every { reader.readLineOrNull() } returnsMany listOf(pattern, "n")
+        every { reader.readStringOrNull() } returnsMany listOf(pattern, "n")
         every { getMealByNameUseCase.getMealByName(pattern) } returns Result.failure(Throwable(Constants.NO_MEALS_FOUND_MATCHING))
 
         // When
@@ -371,7 +371,7 @@ class SearchMealByNameUITest {
             buildMeal(name = "pizza wrap", id = 1),
             buildMeal(name = "5 minute bread pizza", id = 2)
         )
-        every { reader.readLineOrNull() } returnsMany listOf(pattern, "n")
+        every { reader.readStringOrNull() } returnsMany listOf(pattern, "n")
         every { getMealByNameUseCase.getMealByName(pattern) } returns Result.success(mealList)
 
         // When
@@ -392,7 +392,7 @@ class SearchMealByNameUITest {
         )
         val userInputIndex = 2
         val selectedMeal = mealList[userInputIndex - 1]
-        every { reader.readLineOrNull() } returnsMany listOf(pattern, userInputIndex.toString(), "n")
+        every { reader.readStringOrNull() } returnsMany listOf(pattern, userInputIndex.toString(), "n")
         every { getMealByNameUseCase.getMealByName(pattern) } returns Result.success(mealList)
         every { printer.printMeal(any()) } just Runs
 
@@ -416,7 +416,7 @@ class SearchMealByNameUITest {
             buildMeal(name = "vegan pizza", id = 3)
         )
         val invalidInput = "4"
-        every { reader.readLineOrNull() } returnsMany listOf(pattern, invalidInput, "n")
+        every { reader.readStringOrNull() } returnsMany listOf(pattern, invalidInput, "n")
         every { getMealByNameUseCase.getMealByName(pattern) } returns Result.success(mealList)
 
         // When
