@@ -7,11 +7,9 @@ import io.mockk.verify
 import model.createListOfMeals
 import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetHealthyFastFoodUseCase
+import org.example.model.FoodChangeMoodExceptions
 import org.example.presentation.features.GetHealthyFastFoodMealsUI
-import org.example.utils.Constants
 import org.junit.jupiter.api.BeforeEach
-import utils.buildMeal
-import utils.buildNutrition
 import kotlin.test.Test
 
 class GetHealthyFastFoodMealsUITest {
@@ -27,19 +25,19 @@ class GetHealthyFastFoodMealsUITest {
     }
 
     @Test
-    fun `showHealthyFastFoodMeals () should print error message when use case fails`() {
+    fun `showHealthyFastFoodMeals() should print error message when use case fails`() {
         // Given
-        every { getHealthyFastFoodUseCase.getHealthyFastFood() } returns Result.failure(Throwable())
+        every { getHealthyFastFoodUseCase.getHealthyFastFood() } returns Result.failure(FoodChangeMoodExceptions.LogicException.NoMealsFound())
 
         // When
         getHealthyFastFoodMealsUI.showHealthyFastFoodMeals()
 
         // Then
-        verify { printer.printLine("${Constants.NO_MEALS_FOUND_MATCHING}") }
+        verify { printer.printLine("${FoodChangeMoodExceptions.LogicException.NoMealsFound().message}") }
     }
 
     @Test
-    fun `showHealthyFastFoodMeals () should print meal details when use case succeeds`() {
+    fun `showHealthyFastFoodMeals() should print meal details when use case succeeds`() {
         // Given
         val meals = createListOfMeals()
         every { getHealthyFastFoodUseCase.getHealthyFastFood() } returns Result.success(meals)
