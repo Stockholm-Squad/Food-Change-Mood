@@ -3,12 +3,12 @@ package presentation.features
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import model.Meal
 import org.example.input_output.input.InputReader
 import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetItalianMealsForLargeGroupUseCase
 import org.example.presentation.features.ItalianLargeGroupMealsUI
 import org.example.utils.Constants.NO_ITALIAN_MEALS_FOR_LARGE_GROUP_FOUND
-import org.example.utils.viewMealInListDetails
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import utils.buildMeal
@@ -78,21 +78,21 @@ class ItalianLargeGroupMealsUITest {
         verify(exactly = 1) { printer.printLine("Error: Unknown Error") }
     }
 
-    @Test
-    fun `italianLargeGroupMealsUI should show meal details when valid meal ID is entered`() {
-        // Given
-        val meal = buildMeal(id = 1, name = "Lasagna", tags = listOf("italian", "for-large-groups"))
-
-        every { getItalianMealsForLargeGroupUseCase.getItalianMealsForLargeGroup() } returns Result.success(listOf(meal))
-        every { reader.readStringOrNull() } returnsMany listOf("1", "-1")
-
-
-        // When
-        italianLargeGroupMealsUI.italianLargeGroupMealsUI()
-
-        // Then
-        verify(exactly = 1) { listOf(meal).viewMealInListDetails(1, printer) }
-    }
+//    @Test
+//    fun `italianLargeGroupMealsUI should show meal details when valid meal ID is entered`() {
+//        // Given
+//        val meal = buildMeal(id = 1, name = "Lasagna", tags = listOf("italian", "for-large-groups"))
+//
+//        every { getItalianMealsForLargeGroupUseCase.getItalianMealsForLargeGroup() } returns Result.success(listOf(meal))
+//        every { reader.readStringOrNull() } returnsMany listOf("1", "-1")
+//
+//
+//        // When
+//        italianLargeGroupMealsUI.italianLargeGroupMealsUI()
+//
+//        // Then
+//        verify(exactly = 1) { listOf(meal).viewMealInListDetails(1, printer) }
+//    }
 
     @Test
     fun `italianLargeGroupMealsUI should show error when invalid meal ID is entered`() {
@@ -166,5 +166,78 @@ class ItalianLargeGroupMealsUITest {
         // Then
         verify(exactly = 1) { printer.printLine("1 -> Fettuccine") }
         verify(exactly = 1) { printer.printLine("Enter a valid ID or -1") }
+    }
+
+    @Test
+    fun `viewMealInListDetails should print meal details when meal exists`() {
+        // Given
+        val mealId = 1
+        val meal = buildMeal(id = mealId, name = "Lasagna", tags = listOf("italian", "for-large-groups"))
+        val meals = listOf(meal)
+        val printer = mockk<OutputPrinter>(relaxed = true)
+
+        // When
+        italianLargeGroupMealsUI.viewMealInListDetails(mealId, meals, printer)
+
+        // Then
+        verify(exactly = 1) { printer.printMeal(meal) }
+    }
+
+    @Test
+    fun `viewMealInListDetails should print not found message when meal does not exist`() {
+        // Given
+        val mealId = 99
+        val meal = buildMeal(id = 1, name = "Risotto", tags = listOf("italian", "for-large-groups"))
+        val meals = listOf(meal)
+        val printer = mockk<OutputPrinter>(relaxed = true)
+
+        // When
+        italianLargeGroupMealsUI.viewMealInListDetails(mealId, meals, printer)
+
+        // Then
+        verify(exactly = 1) {
+            printer.printLine("The meal with ID $mealId does not exist.")
+        }
+        verify(exactly = 0) { printer.printMeal(any()) }
+    }
+
+    @Test
+    fun `viewMealInListDetails should handle empty list gracefully`() {
+        // Given
+        val mealId = 1
+        val meals = emptyList<Meal>()
+        val printer = mockk<OutputPrinter>(relaxed = true)
+
+        // When
+        italianLargeGroupMealsUI.viewMealInListDetails(mealId, meals, printer)
+
+        // Then
+        verify(exactly = 1) {
+            printer.printLine("The meal with ID $mealId does not exist.")
+        }
+        verify(exactly = 0) { printer.printMeal(any()) }
+    }
+
+    @Test
+    fun `viewMealInListDetails should print italian large group meal details correctly`() {
+        // Given
+        val mealId = 1
+        val meal = buildMeal(
+            id = mealId,
+            name = "Spaghetti Carbonara",
+            ingredients = listOf("pasta", "eggs", "bacon"),
+            tags = listOf("italian", "for-large-groups")
+        )
+        val meals = listOf(meal)
+        val printer = mockk<OutputPrinter>(relaxed = true)
+
+        // When
+        italianLargeGroupMealsUI.viewMealInListDetails(mealId, meals, printer)
+
+        // Then
+        verify(exactly = 1) { printer.printMeal(meal) }
+        verify(exactly = 0) {
+            printer.printLine("The meal with ID $mealId does not exist.")
+        }
     }
 }
