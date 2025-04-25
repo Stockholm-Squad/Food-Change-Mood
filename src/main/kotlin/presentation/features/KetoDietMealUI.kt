@@ -35,7 +35,7 @@ class KetoDietMealUI(
 
     private fun handleUserFeedback(mealName: String) {
         printer.printLine(Constants.ASK_YES_NO)
-        val input = reader.readLineOrNull()?.trim()?.lowercase()
+        val input = reader.readStringOrNull()?.trim()?.lowercase()
         when {
             input == "yes" -> printer.printLine("${Constants.YES_ANSWER}$mealName")
             input == "no" -> showKetoMeal()
