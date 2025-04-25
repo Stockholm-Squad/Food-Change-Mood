@@ -12,16 +12,16 @@ val uiModule = module {
     factory { ExploreCountryFoodUI(get()) }
     factory { GetHealthyFastFoodMealsUI(get()) }
     factory { GetIraqiMealsUI(get()) }
-    factory { GuessGameUI(get(),get()) }
+    factory { GuessGameUI(get(),get(),get (),get()) }
     factory { GymHelperUI(get(), get(), get())}
     factory { IngredientGameUI(get(), get(), get()) }
     factory { ItalianLargeGroupMealsUI(get()) }
     factory { KetoDietMealUI(get() , get() , get()) }
     factory { PotatoLoversUI(get()) }
-    factory { ProteinSeafoodRankingUI(get()) }
-    factory { SearchMealByNameUI(get()) }
-    factory { SearchByAddDateUI(get(), get()) }
+    factory { ProteinSeafoodRankingUI(get(),get()) }
+    factory { SearchMealByNameUI(get(), get(), get()) }
+    factory { SearchByAddDateUI(get(), get(), get(), get()) }
     factory { SuggestEasyMealsUI(get()) }
     factory { SuggestSweetNoEggsUI(get()) }
-    factory { SuggestMealForSoThinPeopleUI(get()) }
+    factory { SuggestMealForSoThinPeopleUI(get(),get(),get()) }
 }
