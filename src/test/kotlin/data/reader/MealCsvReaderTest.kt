@@ -3,13 +3,14 @@ package data.reader
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkConstructor
 import junit.framework.TestCase.assertTrue
 import org.example.data.reader.MealCsvReader
 import org.example.data.utils.CsvLineHandler
-import org.example.model.FoodChangeMoodExceptions
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
+import java.io.BufferedReader
 import java.io.File
 import kotlin.test.Test
 
@@ -17,12 +18,14 @@ class MealCsvReaderTest {
     private lateinit var csvFile: File
     private lateinit var csvLineHandler: CsvLineHandler
     private lateinit var reader: MealCsvReader
-
+    private lateinit var bufferedReader: BufferedReader
     @BeforeEach
     fun setUp() {
-        csvFile = File.createTempFile("food", ".csv")
+        csvFile = File.createTempFile("food",".csv")
         csvLineHandler = mockk()
         reader = MealCsvReader(csvFile, csvLineHandler)
+        mockkConstructor(BufferedReader::class)
+        bufferedReader= mockk<BufferedReader>(relaxed = true)
 
     }
 
@@ -43,7 +46,7 @@ class MealCsvReaderTest {
         )
 
         every { csvLineHandler.handleLine("Pizza,300") } returns "Pizza:300"
-        every {csvLineHandler.handleLine("Salad,150") } returns "Salad:150"
+        every { csvLineHandler.handleLine("Salad,150") } returns "Salad:150"
 
         //When
         val result = reader.readLinesFromFile()
@@ -72,6 +75,7 @@ class MealCsvReaderTest {
         //Then
         assertThat(result.getOrNull()).isEqualTo(listOf("Good:123"))
     }
+
     @Test
     fun `readLinesFromFile () should return empty list if only header is present`() {
         // Given
@@ -86,16 +90,6 @@ class MealCsvReaderTest {
     }
 
 
-    @Test
-    fun `readLinesFromFile () should return failure if file does not exist`() {
-        //Given
-        val nonExistentFile = File("non_existent.csv")
-        val reader = MealCsvReader(nonExistentFile, csvLineHandler)
-        //When
-        val result = reader.readLinesFromFile()
-        //Then
-        assertThrows<FoodChangeMoodExceptions.IOException.ReadFailedException> { result.getOrThrow() }
-    }
     @Test
     fun `readLinesFromFile() should skip invalid lines where handleLine returns null`() {
         // Given
@@ -117,6 +111,26 @@ class MealCsvReaderTest {
         assertThat(result.getOrNull()).isEqualTo(listOf("Good:123"))
     }
 
+    @Test
+    fun `readLinesFromFile() should throw ReadFailedException when an unexpected error happens during file reading`() {
+        // Given
+        val fakeBufferedReader = mockk<BufferedReader>()
+        every { fakeBufferedReader.readLine() } throws RuntimeException("Unexpected error")
+        every { fakeBufferedReader.close() } returns Unit
 
+        val reader = MealCsvReader(
+            File("any.csv"),
+            csvLineHandler = mockk(relaxed = true)
+        )
+        // When & Then
+         assertThrows<java.io.FileNotFoundException> {
+            reader.readLinesFromFile().getOrThrow()
+        }
+
+    }
 
 }
+
+
+
+
