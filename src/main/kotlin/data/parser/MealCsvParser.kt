@@ -1,17 +1,15 @@
 package org.example.data.parser
 
+import kotlinx.datetime.LocalDate
 import model.Meal
 import model.Nutrition
 import org.example.data.utils.CsvLineFormatter
 import org.example.model.FoodChangeMoodExceptions.ValidationException
-import org.example.utils.Constants
-import org.example.utils.MealColumnIndex
-import org.example.utils.NutritionIndex
-import org.example.utils.getDateFromString
-import java.util.Date
+import org.example.utils.*
 
 class MealCsvParser(
-    private val csvLineFormatter: CsvLineFormatter
+    private val csvLineFormatter: CsvLineFormatter,
+    private val dateParser: DateParser
 ): MealParser {
 
     override fun parseLine(row: String): Result<Meal> {
@@ -68,9 +66,9 @@ class MealCsvParser(
     private fun extractDateColumn(
         mealRow: List<String>,
         index: MealColumnIndex
-    ): Date? {
+    ): LocalDate? {
         return safeAccessColumn(mealRow, index.index, "Date") { dateField ->
-            getDateFromString(dateField).fold(
+            dateParser.getDateFromString(dateField).fold(
                 onSuccess = { date -> date },
                 //TODO we need to handle the Result more not just return null
                 onFailure = { exception ->

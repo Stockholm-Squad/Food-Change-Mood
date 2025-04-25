@@ -2,6 +2,7 @@ package org.example.di
 
 import org.example.logic.usecases.SearchingByKmpUseCase
 import org.example.logic.usecases.*
+import org.example.utils.DateParser
 import org.koin.dsl.module
 
 val logicModule = module {
@@ -13,7 +14,7 @@ val logicModule = module {
     single { GetPotatoMealsUseCase(get()) }
     single { GetMealsForGymHelperUseCase(get()) }
     single { GetIngredientGameUseCase(get()) }
-    single { GetMealsByDateUseCase(get()) }
+    single { GetMealsByDateUseCase(get(), get()) }
     single { GetItalianMealsForLargeGroupUseCase(get()) }
     single { GetMealsForSoThinProblemUseCase(get()) }
 
