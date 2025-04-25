@@ -14,7 +14,7 @@ class SearchMealByNameUI(
 
     fun handleSearchByName() {
         printer.printLine(Constants.ENTER_MEAL_KEYWORD_TO_SEARCH)
-        reader.readLineOrNull()?.trim()
+        reader.readStringOrNull()?.trim()
             ?.takeIf { it.isNotBlank() }
             ?.let { pattern ->
                 getMealByNameUseCase.getMealByName(pattern)
@@ -37,7 +37,7 @@ class SearchMealByNameUI(
 
     private fun askToViewMealDetails(meals: List<Meal>) {
         printer.printLine(Constants.MEAL_DETAILS_PROMPT)
-        reader.readLineOrNull()?.trim()?.lowercase()
+        reader.readStringOrNull()?.trim()?.lowercase()
             ?.takeIf { it != "n" }
             ?.let { input ->
                 input.toIntOrNull()
@@ -54,7 +54,7 @@ class SearchMealByNameUI(
 
     private fun askForMoreMeals() {
         printer.printLine(Constants.SEARCH_AGAIN_PROMPT)
-        val response = reader.readLineOrNull()?.trim()?.lowercase()
+        val response = reader.readStringOrNull()?.trim()?.lowercase()
         if (response == "y") {
             handleSearchByName()
         } else {
