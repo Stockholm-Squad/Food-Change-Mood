@@ -1,9 +1,8 @@
 package presentation.features
 
-import com.google.common.truth.Truth.assertThat
 import io.mockk.*
-import logic.usecases.buildMeal
-import model.Nutrition
+import org.example.input_output.input.InputReader
+import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetPotatoMealsUseCase
 import org.example.presentation.features.PotatoLoversUI
 import org.example.utils.Constants
@@ -33,7 +32,7 @@ class PotatoLoversUITest {
     fun `should print intro and call useCase when showPotatoLoversUI is called`() {
         // Given
         every { potatoMeals.getRandomPotatoMeals(any()) } returns Result.success(emptyList())
-        every { inputReader.readLineOrNull() } returns "n"
+        every { inputReader.readStringOrNull() } returns "n"
 
         // When
         potatoMealUi.showPotatoLoversUI(5)
@@ -49,7 +48,7 @@ class PotatoLoversUITest {
     fun `should repeat UI if user enters yes`() {
         // Given
         every { potatoMeals.getRandomPotatoMeals(any()) } returns Result.success(emptyList())
-        every { inputReader.readLineOrNull() } returnsMany listOf("yes", "n")
+        every { inputReader.readStringOrNull() } returnsMany listOf("yes", "n")
 
         // When
         potatoMealUi.showPotatoLoversUI(3)
@@ -64,7 +63,7 @@ class PotatoLoversUITest {
     fun `should not repeat UI if user enters anything other than yes`() {
         // Given
         every { potatoMeals.getRandomPotatoMeals(any()) } returns Result.success(emptyList())
-        every { inputReader.readLineOrNull() } returns "no"
+        every { inputReader.readStringOrNull() } returns "no"
 
         // When
         potatoMealUi.showPotatoLoversUI(2)
@@ -78,7 +77,7 @@ class PotatoLoversUITest {
     fun `should handle null input without crashing`() {
         // Given
         every { potatoMeals.getRandomPotatoMeals(any()) } returns Result.success(emptyList())
-        every { inputReader.readLineOrNull() } returns null
+        every { inputReader.readStringOrNull() } returns null
 
         // When
         potatoMealUi.showPotatoLoversUI()
