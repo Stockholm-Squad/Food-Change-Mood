@@ -10,7 +10,7 @@ val uiModule = module {
     singleOf(::FoodConsoleUI)
 
     factory { ExploreCountryMealsUI(get(),get(),get()) }
-    factory { GetHealthyFastFoodMealsUI(get()) }
+    factory { GetHealthyFastFoodMealsUI(get(), get()) }
     factory { GetIraqiMealsUI(get(),get()) }
     factory { GuessGameUI(get(),get(),get (),get()) }
     factory { GymHelperUI(get(), get(), get())}
@@ -23,5 +23,5 @@ val uiModule = module {
     factory { SearchByAddDateUI(get(), get(), get(), get()) }
     factory { SuggestEasyMealsUI(get()) }
     factory { SuggestSweetNoEggsUI(get(),get(),get()) }
-    factory { SuggestMealForSoThinPeopleUI(get()) }
+    factory { SuggestMealForSoThinPeopleUI(get(), get(), get()) }
 }
