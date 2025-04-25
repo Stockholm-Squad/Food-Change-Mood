@@ -53,7 +53,7 @@ class KetoDietMealUITest {
     fun `showKetoMeal() should show meal and handle positive feedback`() {
         //given
         every { useCase.getKetoMeal() } returns Result.success(ketoMeal)
-        every { reader.readLineOrNull() } returns "yes"
+        every { reader.readStringOrNull() } returns "yes"
         //when
         ui.showKetoMeal()
         //given
@@ -68,7 +68,7 @@ class KetoDietMealUITest {
     fun `showKetoMeal() should recursively call showKetoMeal on negative feedback`() {
         //given
         every { useCase.getKetoMeal() } returnsMany listOf(Result.success(ketoMeal), Result.success(null))
-        every { reader.readLineOrNull() } returnsMany listOf("no")
+        every { reader.readStringOrNull() } returnsMany listOf("no")
         //when
         ui.showKetoMeal()
         //then
@@ -80,7 +80,7 @@ class KetoDietMealUITest {
     fun `showKetoMeal() should prompt again on invalid input`() {
         //given
         every { useCase.getKetoMeal() } returns Result.success(ketoMeal)
-        every { reader.readLineOrNull() } returnsMany listOf("maybe", "yes")
+        every { reader.readStringOrNull() } returnsMany listOf("maybe", "yes")
         //when
         ui.showKetoMeal()
         //then
@@ -107,7 +107,7 @@ class KetoDietMealUITest {
     fun `showKetoMeal should display meal details and handle yes response`() {
         // Given
         every { useCase.getKetoMeal() } returns Result.success(ketoMeal)
-        every { reader.readLineOrNull() } returns "yes"
+        every { reader.readStringOrNull() } returns "yes"
 
         // When
         ui.showKetoMeal()
@@ -131,7 +131,7 @@ class KetoDietMealUITest {
             Result.success(ketoMeal),
             Result.success(null)
         )
-        every { reader.readLineOrNull() } returns "no"
+        every { reader.readStringOrNull() } returns "no"
 
         // When
         ui.showKetoMeal()
@@ -147,7 +147,7 @@ class KetoDietMealUITest {
     fun `showKetoMeal should reprompt on invalid input`() {
         // Given
         every { useCase.getKetoMeal() } returns Result.success(ketoMeal)
-        every { reader.readLineOrNull() } returnsMany listOf("maybe", "yes")
+        every { reader.readStringOrNull() } returnsMany listOf("maybe", "yes")
 
         // When
         ui.showKetoMeal()
@@ -179,7 +179,7 @@ class KetoDietMealUITest {
     fun `showKetoMeal should handle case-insensitive input`() {
         // Given
         every { useCase.getKetoMeal() } returns Result.success(ketoMeal)
-        every { reader.readLineOrNull() } returns "YES" // Uppercase
+        every { reader.readStringOrNull() } returns "YES" // Uppercase
 
         // When
         ui.showKetoMeal()
@@ -194,7 +194,7 @@ class KetoDietMealUITest {
     fun `showKetoMeal should handle empty input`() {
         // Given
         every { useCase.getKetoMeal() } returns Result.success(ketoMeal)
-        every { reader.readLineOrNull() } returnsMany listOf("", "yes")
+        every { reader.readStringOrNull() } returnsMany listOf("", "yes")
 
         // When
         ui.showKetoMeal()
@@ -209,7 +209,7 @@ class KetoDietMealUITest {
         // Given
         val mealWithNullNutrition = ketoMeal.copy(nutrition = null)
         every { useCase.getKetoMeal() } returns Result.success(mealWithNullNutrition)
-        every { reader.readLineOrNull() } returns "yes"
+        every { reader.readStringOrNull() } returns "yes"
 
         // When
         ui.showKetoMeal()
@@ -234,14 +234,14 @@ class KetoDietMealUITest {
 
         // Then
         verify(exactly = 0) { printer.printLine(Constants.ASK_YES_NO) }
-        verify(exactly = 0) { reader.readLineOrNull() }
+        verify(exactly = 0) { reader.readStringOrNull() }
     }
 
     @Test
     fun `showKetoMeal should trim input with whitespace`() {
         // Given
         every { useCase.getKetoMeal() } returns Result.success(ketoMeal)
-        every { reader.readLineOrNull() } returns "  yes  "
+        every { reader.readStringOrNull() } returns "  yes  "
 
         // When
         ui.showKetoMeal()
@@ -256,7 +256,7 @@ class KetoDietMealUITest {
     fun `showKetoMeal should handle mixed case input`() {
         // Given
         every { useCase.getKetoMeal() } returns Result.success(ketoMeal)
-        every { reader.readLineOrNull() } returns "YeS"
+        every { reader.readStringOrNull() } returns "YeS"
 
         // When
         ui.showKetoMeal()
@@ -272,7 +272,7 @@ class KetoDietMealUITest {
     fun `showKetoMeal should handle null input as invalid`() {
         // Given
         every { useCase.getKetoMeal() } returns Result.success(ketoMeal)
-        every { reader.readLineOrNull() } returnsMany listOf(null, "yes")
+        every { reader.readStringOrNull() } returnsMany listOf(null, "yes")
 
         // When
         ui.showKetoMeal()

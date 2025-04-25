@@ -31,7 +31,7 @@ class IngredientGameUITest {
       //given
       val question = IngredientQuestionModel("Pasta", listOf("Tomato", "Cheese", "Basil"), "Tomato")
       every { game.startIngredientGame() } returns Result.success(question)
-      every { reader.readLineOrNull() } returns "1"
+      every { reader.readStringOrNull() } returns "1"
       every { game.submitAnswer("Tomato") } returns true
 
       //when
@@ -47,7 +47,7 @@ class IngredientGameUITest {
    fun `start() should print correct after select correct ingredient`() {
       val question = IngredientQuestionModel("Pizza", listOf("Cheese", "Tomato", "Olives") , "Lettuce")
       every { game.startIngredientGame() } returns Result.success(question)
-      every { reader.readLineOrNull() } returns "1"
+      every { reader.readStringOrNull() } returns "1"
       every { game.submitAnswer("Cheese") } returns true
 
       //when
@@ -63,7 +63,7 @@ class IngredientGameUITest {
       //given
       val question = IngredientQuestionModel("Burger", listOf("Lettuce", "Pickles", "Beef"), "Lettuce")
       every { game.startIngredientGame() } returns Result.success(question)
-      every { reader.readLineOrNull() } returns "2"
+      every { reader.readStringOrNull() } returns "2"
       every { game.submitAnswer("Pickles") } returns false
       //when
       ui.start()
@@ -77,7 +77,7 @@ class IngredientGameUITest {
       //given
       val question = IngredientQuestionModel("Salad", listOf("Lettuce", "Cucumber", "Tomato"), "Lettuce")
       every { game.startIngredientGame() } returns Result.success(question)
-      every { reader.readLineOrNull() } returnsMany listOf("0", "abc", "2")
+      every { reader.readStringOrNull() } returnsMany listOf("0", "abc", "2")
       every { game.submitAnswer("Cucumber") } returns false
       //when
       ui.start()
@@ -90,7 +90,7 @@ class IngredientGameUITest {
    fun `start() should exit and print invalid input when user enters q to quit`() {
       val question = IngredientQuestionModel("Sushi", listOf("Rice", "Fish", "Seaweed"), "Fish")
       every { game.startIngredientGame() } returns Result.success(question)
-      every { reader.readLineOrNull() } returns "q"
+      every { reader.readStringOrNull() } returns "q"
 
       ui.start()
 
@@ -108,7 +108,7 @@ class IngredientGameUITest {
    fun `start() should display the question with all options`() {
       val question = IngredientQuestionModel("Pasta", listOf("Cheese", "Tomato", "Olives"), "Tomato")
       every { game.startIngredientGame() } returns Result.success(question)
-      every { reader.readLineOrNull() } returns "2"
+      every { reader.readStringOrNull() } returns "2"
       every { game.submitAnswer("Tomato") } returns true
 
       ui.start()
@@ -124,7 +124,7 @@ class IngredientGameUITest {
    fun `start() should print the game introduction`() {
       val question = IngredientQuestionModel("Stew", listOf("Carrot", "Meat", "Potato"), "Carrot")
       every { game.startIngredientGame() } returns Result.success(question)
-      every { reader.readLineOrNull() } returns "1"
+      every { reader.readStringOrNull() } returns "1"
       every { game.submitAnswer(question.correctIngredient) } returns false
 
       ui.start()
@@ -137,7 +137,7 @@ class IngredientGameUITest {
       //given
       val question = IngredientQuestionModel("Pizza", listOf("Cheese", "Tomato", "Olives"), "Tomato")
       every { game.startIngredientGame() } returns Result.success(question)
-      every { reader.readLineOrNull() } returnsMany listOf(" ", "", "1")
+      every { reader.readStringOrNull() } returnsMany listOf(" ", "", "1")
       every { game.submitAnswer("Tomato") } returns true
 
       //when

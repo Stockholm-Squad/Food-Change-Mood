@@ -172,7 +172,7 @@ class GuessGameUITest {
                 preparationTime = any()
             )
         } returns Result.failure(
-            FoodChangeMoodExceptions.ValidationException()
+            Throwable()
         )
         guessGameUI.playGuessGame()
         // Then
