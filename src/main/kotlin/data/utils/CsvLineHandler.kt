@@ -10,12 +10,13 @@ class CsvLineHandler {
     ): String? {
         currentLine.append(line)
         handleIfInsideQuote()
-        //TODO refactor this if else with functional programming
+
         if (!insideQuotes) {
             return getNewLineAndClearCurrentLine()
         } else {
             currentLine.append("\n")
         }
+
         return null
     }
 

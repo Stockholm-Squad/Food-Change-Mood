@@ -10,5 +10,6 @@ object Constants {
     const val NO_MEALS_FOUND_MATCHING = "No meals found matching"
     const val UNEXPECTED_ERROR = "Unexpected error occurred"
     const val ERROR_FETCHING_MEALS = "Error fetching meals: "
-
+    const val ERROR_WHILE_READING_FROM_FILE = "Error while reading from the file!!"
+    const val INSUFFICIANT_DATA_IN_ROW = "Insufficient data in row while parsing!!"
 }

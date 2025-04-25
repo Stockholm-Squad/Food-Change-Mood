@@ -27,7 +27,7 @@ val uiModule = module {
     factory { GetHealthyFastFoodMealsUI(get()) }
     factory { GetIraqiMealsUI(get()) }
     factory { GuessGameUI(get(),get()) }
-    factory { GymHelperUI(get()) }
+    factory { GymHelperUI(get(), get(), get())}
     factory { IngredientGameUI(get()) }
     factory { ItalianLargeGroupMealsUI(get()) }
     factory { KetoDietMealUI(get()) }
