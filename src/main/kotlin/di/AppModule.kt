@@ -1,3 +1,7 @@
+package di
+
+import dataModule
+import org.example.di.inputOutputModule
 import org.example.di.logicModule
 import org.example.di.uiModule
 import org.example.di.utilsModule

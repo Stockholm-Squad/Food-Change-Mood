@@ -23,5 +23,5 @@ val uiModule = module {
     factory { SearchByAddDateUI(get(), get(), get(), get()) }
     factory { SuggestEasyMealsUI(get()) }
     factory { SuggestSweetNoEggsUI(get(),get(),get()) }
-    factory { SuggestMealForSoThinPeopleUI(get()) }
+    factory { SuggestMealForSoThinPeopleUI(get(), get() , get()) }
 }

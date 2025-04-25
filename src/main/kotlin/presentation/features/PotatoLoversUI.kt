@@ -1,4 +1,5 @@
 package org.example.presentation.features
+
 import model.Meal
 import org.example.logic.usecases.GetPotatoMealsUseCase
 import org.example.utils.Constants
@@ -13,9 +14,12 @@ class PotatoLoversUI(
 ) {
 
     fun showPotatoLoversUI(count: Int = 10) {
-        outputPrinter.printLine(Constants.I_LOVE_POTATO_HERE+"$count "+ Constants.MEAL_INCLUDE_POTATO+"\n")
-        getPotatoMealsUseCase.getRandomPotatoMeals(count)
-        askToViewMealDetails()
+        outputPrinter.printLine(Constants.I_LOVE_POTATO_HERE + "$count " + Constants.MEAL_INCLUDE_POTATO + "\n")
+
+        val result = getPotatoMealsUseCase.getRandomPotatoMeals(count)
+        val meals = result.getOrNull() ?: emptyList()
+
+        askToViewMealDetails(meals)
         askIfWantsMore()
     }
 
