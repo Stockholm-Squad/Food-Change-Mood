@@ -1,7 +1,9 @@
-package data
+package data.reader
 
 import io.mockk.every
 import io.mockk.mockk
+import org.example.data.reader.MealCsvReader
+import org.example.data.reader.MealReader
 import org.example.data.utils.CsvLineHandler
 import org.junit.jupiter.api.BeforeEach
 import java.io.BufferedReader
@@ -16,7 +18,7 @@ class MealCsvReaderTest {
 
     private lateinit var csvFile: File
     private lateinit var csvLineHandler: CsvLineHandler
-    private lateinit var mealCsvReader: MealCsvReader
+    private lateinit var mealCsvReader: MealReader
     private lateinit var reader: BufferedReader
 
     @BeforeEach
