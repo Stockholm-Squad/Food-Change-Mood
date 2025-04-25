@@ -7,8 +7,6 @@ import model.Nutrition
 import org.example.logic.usecases.GetPotatoMealsUseCase
 import org.example.presentation.features.PotatoLoversUI
 import org.example.utils.Constants
-import org.example.utils.InputReader
-import org.example.utils.OutputPrinter
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 

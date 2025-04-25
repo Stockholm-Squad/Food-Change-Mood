@@ -1,10 +1,10 @@
 package org.example.presentation.features
 
 import model.Meal
+import org.example.input_output.input.InputReader
+import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetPotatoMealsUseCase
 import org.example.utils.Constants
-import org.example.utils.InputReader
-import org.example.utils.OutputPrinter
 
 
 class PotatoLoversUI(
@@ -29,7 +29,7 @@ class PotatoLoversUI(
         do {
             outputPrinter.printLine("\n"+ Constants.VIEW_MEAL_DETAILS)
 
-            val input = inputReader.readLineOrNull()!!.trim().lowercase()
+            val input = inputReader.readStringOrNull()!!.trim().lowercase()
 
 
             if ( input == "n") {
@@ -69,7 +69,7 @@ class PotatoLoversUI(
 
     private fun askIfWantsMore(onYes: () -> Unit = { showPotatoLoversUI() }) {
         outputPrinter.printLine(Constants.SEE_MORE_MEALS)
-        val input = inputReader.readLineOrNull()
+        val input = inputReader.readStringOrNull()
 
         val normalizedAnswer = normalizeInput(input)
 
