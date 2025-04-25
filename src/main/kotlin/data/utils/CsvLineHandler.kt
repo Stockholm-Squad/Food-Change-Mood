@@ -11,13 +11,10 @@ class CsvLineHandler {
         currentLine.append(line)
         handleIfInsideQuote()
 
-        if (!insideQuotes) {
-            return getNewLineAndClearCurrentLine()
-        } else {
-            currentLine.append("\n")
-        }
-
-        return null
+        return (!insideQuotes)
+            .takeIf { it }
+            ?.let { getNewLineAndClearCurrentLine() }
+            ?: run { currentLine.append("\n"); null }
     }
 
     private fun getNewLineAndClearCurrentLine(): String {
