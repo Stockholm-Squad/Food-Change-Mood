@@ -20,8 +20,8 @@ class GetEasyFoodSuggestionsUseCase(
         return allMeals.filter {
             isEasyMeal(it)
         }.shuffled()
-            .take(10)
             .takeIf { it.isNotEmpty() }
+            ?.take(10)
             ?.let { Result.success(it) }
             ?: getFailureResult(NoSuchElementException("No easy meals found."))
 
@@ -37,8 +37,15 @@ class GetEasyFoodSuggestionsUseCase(
         maxIngredients: Int = 5,
         maxSteps: Int = 6
     ): Boolean {
-        return (meal.minutes ?: 0) <= maxPrepTime &&
-                (meal.numberOfIngredients ?: 0) <= maxIngredients &&
-                (meal.numberOfSteps ?: 0) <= maxSteps
+        val minutes = meal.minutes
+        val ingredients = meal.numberOfIngredients
+        val steps = meal.numberOfSteps
+
+        // Only evaluate meals where all fields are non-null
+        return minutes != null && ingredients != null && steps != null &&
+                minutes <= maxPrepTime &&
+                ingredients <= maxIngredients &&
+                steps <= maxSteps
     }
+
 }
