@@ -12,11 +12,11 @@ class ExploreCountryMealsUI(
     private val printer: OutputPrinter
 ) {
     fun handleCountryByNameAction() {
-        printer.printLine("🌍 Let's take your taste buds on a world tour!")
-        printer.printLine("Enter the country you want to explore: ")
+        printer.printLine(Constants.COUNTRY_BY_NAME_PROMPT)
+        printer.printLine(Constants.ENTER_COUNTRY_NAME)
 
-        reader.readLineOrNull()?.trim()
-            ?.takeIf { it.isNotBlank() }
+        reader.readStringOrNull()
+            ?.takeIf { it.isNotEmpty() }
             ?.let { countryName ->
                 getCountriesFood.getMealsForCountry(countryName)
                     .onSuccess { meals -> displayMeals(meals, countryName) }
@@ -27,7 +27,7 @@ class ExploreCountryMealsUI(
     private fun displayMeals(meals: List<Meal>, countryName: String) {
         meals.takeIf { it.isNotEmpty() }?.let {
             printer.printLine(Constants.HERE_ARE_THE_MEALS)
-            it.forEachIndexed { index, meal ->showMealDetails(meal) }
+            it.forEachIndexed { index, meal -> showMealDetails(meal) }
 
         } ?: printer.printLine(Constants.NO_MEALS_FOUND_MATCHING)
     }

@@ -34,7 +34,7 @@ class SuggestSweetNoEggsUITest {
             id = 1, name = "No-Egg Brownie", tags = listOf("desserts"), ingredients = listOf("flour", "suger")
         )
         every { getDessertsWithNoEggsUseCase.getDessertsWithNNoEggs() } returns Result.success(listOf(meal))
-        every { stringReader.readLineOrNull() } returns "y"
+        every { stringReader.readStringOrNull() } returns "y"
         //When
         suggestSweetNoEggsUI.handleSweetsNoEggs()
         //Then
@@ -58,7 +58,7 @@ class SuggestSweetNoEggsUITest {
         val meal2 = buildMeal(id = 2, name = "Pancake", tags = listOf("desserts"))
 
         every { getDessertsWithNoEggsUseCase.getDessertsWithNNoEggs() } returns Result.success(listOf(meal1, meal2))
-        every { stringReader.readLineOrNull() } returnsMany listOf("n", "n")
+        every { stringReader.readStringOrNull() } returnsMany listOf("n", "n")
 
         // When
         suggestSweetNoEggsUI.handleSweetsNoEggs()

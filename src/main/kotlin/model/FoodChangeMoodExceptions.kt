@@ -17,7 +17,15 @@ sealed class FoodChangeMoodExceptions(message: String) : Throwable(message) {
 
         data class CanNotParseDateFromString(override val message: String = Constants.CAN_NOT_PARSE_DATE_FROM_STRING) :
             LogicException(message)
-        data class NoMealsForGymHelperException(override val message: String = Constants.NO_MEALS_FOR_GYM_HELPER) : LogicException(message)
-        data class NoSeaFoodMealsFound(override val message: String = Constants.NO_SEA_FOOD_MEALS_FOUND): LogicException(message)
+
+        data class NoMealsForGymHelperException(override val message: String = Constants.NO_MEALS_FOR_GYM_HELPER) :
+            LogicException(message)
+
+        data class NoSeaFoodMealsFound(override val message: String = Constants.NO_SEA_FOOD_MEALS_FOUND) :
+            LogicException(message)
+
+        data class NoDessertFound(override val message: String = Constants.NO_DESSERT_FOUND) : LogicException(message)
+        data class NoMealsFoundForCountry(override val message: String = Constants.NO_MEALS_FOUND_FOR_COUNTRY) :
+            LogicException(message)
     }
 }

@@ -1,8 +1,10 @@
 package org.example.utils
 
 object Constants {
-    val NO_MORE_DESSERTS_AVAILABLE = "No more desserts available"
-    const val COULD_NOT_FIND_DESSERTS = "Couldn't find desserts"
+    const val DESSERT_WITH_NO_EGGS_PROMPT ="🍬 Craving dessert? Here’s something sweet with zero eggs!"
+    const val ENTER_COUNTRY_NAME = "Enter the country you want to explore: "
+    const val COUNTRY_BY_NAME_PROMPT = "🌍 Let's take your taste buds on a world tour!"
+    const val NO_MORE_DESSERTS_AVAILABLE = "No more desserts available"
     const val MEAL_CSV_FILE = "food.csv"
     const val INVALID_INPUT = "Invalid input"
     const val NO_MEALS_FOR_GYM_HELPER = "No meals match the desired protein and calories!!"
@@ -19,7 +21,8 @@ object Constants {
     const val HERE_ARE_THE_MEALS = "Here are the meals"
     const val INVALID_SELECTION_MESSAGE = "Invalid selection. Please choose a valid number."
     const val ENTER_MEAL_KEYWORD_TO_SEARCH = "Enter a meal keyword to search: "
-    const val MEAL_DETAILS_PROMPT = "Would you like to view the details of any of these meals? (Enter the number or 'n' to skip):"
+    const val MEAL_DETAILS_PROMPT =
+        "Would you like to view the details of any of these meals? (Enter the number or 'n' to skip):"
 
     const val ERROR_WHILE_READING_FROM_FILE = "Error while reading from the file!!"
     const val INSUFFICIANT_DATA_IN_ROW = "Insufficient data in row while parsing!!"
@@ -28,8 +31,9 @@ object Constants {
     const val NO_ITALIAN_MEALS_FOR_LARGE_GROUP_FOUND = "No Italian meals for large groups found."
     const val SEARCH_AGAIN_OR_BACK = "search again or back."
     const val ENTER_VALID_DATE = "Enter a valid Date or zero => 0"
-
-    const val NO_SEA_FOOD_MEALS_FOUND ="No seafood meals found."
+    const val NO_DESSERT_FOUND = "No dessert meals without eggs found"
+    const val NO_SEA_FOOD_MEALS_FOUND = "No seafood meals found."
     const val Y = "y"
     const val N = "n"
+    const val NO_MEALS_FOUND_FOR_COUNTRY = "No meals found for this country"
 }

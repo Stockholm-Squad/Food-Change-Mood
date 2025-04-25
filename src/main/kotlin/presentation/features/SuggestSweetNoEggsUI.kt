@@ -13,7 +13,7 @@ class SuggestSweetNoEggsUI(
 ) {
 
     fun handleSweetsNoEggs() {
-        printer.printLine("🍬 Craving dessert? Here’s something sweet with zero eggs!")
+        printer.printLine(Constants.DESSERT_WITH_NO_EGGS_PROMPT)
 
         getSweetWithNoEggs.getDessertsWithNNoEggs()
             .onSuccess { allMeals ->
@@ -55,7 +55,7 @@ class SuggestSweetNoEggsUI(
 
     private fun continueDecision(): Boolean {
         printer.printLine("Do you like this dessert?.   (y/n)")
-        return reader.readLineOrNull() == "y"
+        return reader.readStringOrNull() == "y"
     }
 
 

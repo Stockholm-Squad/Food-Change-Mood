@@ -2,6 +2,7 @@ package org.example.logic.usecases
 
 import model.Meal
 import org.example.logic.repository.MealsRepository
+import org.example.model.FoodChangeMoodExceptions
 
 class GetDessertsWithNoEggsUseCase(private val mealRepository: MealsRepository) {
 
@@ -20,7 +21,7 @@ class GetDessertsWithNoEggsUseCase(private val mealRepository: MealsRepository) 
             model.filter { meal ->
                 filterForNoEggsAndDesserts(meal.tags, meal.ingredients)
             }.takeIf { it.isNotEmpty() }
-                ?: throw NoSuchElementException("No dessert meals without eggs found")
+                ?: throw FoodChangeMoodExceptions.LogicException.NoDessertFound()
         }
 
     }

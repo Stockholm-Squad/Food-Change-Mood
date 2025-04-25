@@ -7,6 +7,7 @@ import org.example.logic.repository.MealsRepository
 import org.example.logic.usecases.GetCountryMealsUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import utils.buildMeal
 
 class GetCountryMealsUseCaseTest {
@@ -77,6 +78,15 @@ class GetCountryMealsUseCaseTest {
     }
 
     @Test
+    fun `getMealsForCountry() should return failure when repository returns failure`() {
+        //Given
+        every { mealsRepository.getAllMeals() } returns Result.failure(Throwable())
+
+        //Then
+        assertThrows<Throwable> { getCountryMealsUseCase.getMealsForCountry("asia").getOrThrow() }
+    }
+
+    @Test
     fun `getMealsForCountry() should return the meals size`() {
         // Given
         val meal1 = buildMeal(
@@ -88,7 +98,7 @@ class GetCountryMealsUseCaseTest {
         val meal3 = buildMeal(
             id = 3, tags = listOf("asian")
         )
-        every { mealsRepository.getAllMeals() } returns Result.success(listOf(meal1,meal2,meal3))
+        every { mealsRepository.getAllMeals() } returns Result.success(listOf(meal1, meal2, meal3))
         // When
         val result = getCountryMealsUseCase.getMealsForCountry("asian")
         //Then
@@ -100,7 +110,7 @@ class GetCountryMealsUseCaseTest {
     fun `getMealsForCountry() should return the meals size ignoring Upper and Lower case`() {
         // Given
         val meal1 = buildMeal(
-            id = 1, name = "emotional balance  spice mixture", tags = listOf("A sIan", "indian")
+            id = 1, name = "emotional balance  spice mixture", tags = listOf("AsIan", "indian")
         )
         val meal2 = buildMeal(
             id = 2, name = "i stole the idea from mirj  sesame noodles", tags = listOf("cairo")
@@ -108,11 +118,24 @@ class GetCountryMealsUseCaseTest {
         val meal3 = buildMeal(
             id = 3, tags = listOf("ASian")
         )
-        every { mealsRepository.getAllMeals() } returns Result.success(listOf(meal1,meal2,meal3))
+        every { mealsRepository.getAllMeals() } returns Result.success(listOf(meal1, meal2, meal3))
         // When
         val result = getCountryMealsUseCase.getMealsForCountry("asian")
         //Then
         assertThat(result.getOrNull()?.size).isEqualTo(2)
     }
 
+    @Test
+    fun `getMealsForCountry() should return the meal when in the name not the tags`() {
+        // Given
+        val meal1 = buildMeal(
+            id = 1, name = "asian spice mixture", tags = listOf("indian")
+        )
+
+        every { mealsRepository.getAllMeals() } returns Result.success(listOf(meal1))
+        // When
+        val result = getCountryMealsUseCase.getMealsForCountry("asian")
+        //Then
+        assertThat(result.getOrThrow()).containsExactly(meal1)
+    }
 }

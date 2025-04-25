@@ -3,10 +3,14 @@ package logic.usecases
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.example.logic.repository.MealsRepository
 import org.example.logic.usecases.GetDessertsWithNoEggsUseCase
+import org.example.model.FoodChangeMoodExceptions
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import utils.buildMeal
 
 class GetDessertsWithNoEggsUseCaseTest {
@@ -18,6 +22,11 @@ class GetDessertsWithNoEggsUseCaseTest {
     fun setUp() {
         mealsRepository = mockk()
         getDessertsWithNoEggsUseCase = GetDessertsWithNoEggsUseCase(mealsRepository)
+    }
+
+    @AfterEach
+    fun tearDown() {
+        verify(exactly = 1) { mealsRepository.getAllMeals() }
     }
 
     @Test
@@ -38,8 +47,11 @@ class GetDessertsWithNoEggsUseCaseTest {
         //When
         val result = getDessertsWithNoEggsUseCase.getDessertsWithNNoEggs()
         //Then
-        assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrNull()?.size).isEqualTo(1)
+
+//        assertThat(result.isSuccess).isTrue()
+//        assertThat(result.getOrNull()?.size).isEqualTo(1)
+        assertThat(result.getOrThrow()).containsExactly(meal2)
+        //   assertThat(result.getOrThrow()).isEqualTo(listOf(meal2))
     }
 
     @Test
@@ -56,6 +68,7 @@ class GetDessertsWithNoEggsUseCaseTest {
         val result = getDessertsWithNoEggsUseCase.getDessertsWithNNoEggs()
         //Then
         assertThat(result.isFailure).isTrue()
+
     }
 
     @Test
@@ -71,17 +84,17 @@ class GetDessertsWithNoEggsUseCaseTest {
         //When
         val result = getDessertsWithNoEggsUseCase.getDessertsWithNNoEggs()
         //Then
-        assertThat(result.isFailure).isTrue()
+        assertThrows<FoodChangeMoodExceptions.LogicException.NoDessertFound> { result.getOrThrow() }
     }
+
 
     @Test
     fun `getDessertsWithNNoEggs() should return failure when repository returns failure`() {
         //Given
-        every { mealsRepository.getAllMeals() } returns Result.failure(RuntimeException("Repo error"))
-        //When
-        val result = getDessertsWithNoEggsUseCase.getDessertsWithNNoEggs()
+        every { mealsRepository.getAllMeals() } returns Result.failure(Throwable())
+
         //Then
-        assertThat(result.isFailure).isTrue()
+        assertThrows<Throwable> { getDessertsWithNoEggsUseCase.getDessertsWithNNoEggs().getOrThrow() }
     }
 
     @Test
