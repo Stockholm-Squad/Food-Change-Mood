@@ -56,7 +56,7 @@ class IngredientGameUI(
     private fun handleInput(question: IngredientQuestionModel): Int? {
         while (true) {
             printer.printLine("Enter your choice (1-${question.options.size}) or 'q' to quit: ")
-            val input = reader.readLineOrNull()
+            val input = reader.readStringOrNull()
             if (input == "q") return null
             val choice = input?.toIntOrNull()
             if (choice != null && choice in 1..question.options.size) {
