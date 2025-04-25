@@ -1,7 +1,9 @@
 package org.example.input_output.input
 
 import kotlinx.datetime.LocalDate
-import org.example.utils.getDateFromString
+import org.example.utils.DateParser
+import org.example.utils.DateParserImpl
+
 
 class InputReaderImplementation : InputReader {
     override fun readStringOrNull(): String? {
@@ -9,7 +11,7 @@ class InputReaderImplementation : InputReader {
     }
 
     override fun readDateOrNull(): LocalDate? {
-        return getDateFromString(readlnOrNull() ?: "").fold(
+        return DateParserImpl().getDateFromString(readlnOrNull() ?: "").fold(
             onSuccess = { it },
             onFailure = { null }
         )

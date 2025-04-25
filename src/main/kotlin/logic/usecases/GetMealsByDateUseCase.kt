@@ -2,11 +2,13 @@ package org.example.logic.usecases
 
 import model.Meal
 import org.example.logic.repository.MealsRepository
-import org.example.utils.getDateFromString
+import org.example.utils.DateParser
 
 class GetMealsByDateUseCase(
-    private val mealsRepository: MealsRepository
-) {
+    private val mealsRepository: MealsRepository,
+    private val dateParser: DateParser,
+
+    ) {
 
     fun getMealsByDate(date: String): Result<List<Meal>> {
         return mealsRepository.getAllMeals().fold(
@@ -27,13 +29,14 @@ class GetMealsByDateUseCase(
     }
 
     private fun isMealWithDate(meal: Meal, date: String): Boolean {
-        val localDate = getDateFromString(date).fold(
-            onSuccess = { dateResult -> dateResult },
+        return dateParser.getDateFromString(date).fold(
+            onSuccess = { dateResult ->
+                meal.submitted == dateResult
+            },
             onFailure = { exception ->
                 println(exception)
                 false
             }
         )
-        return meal.submitted == localDate
     }
 }
