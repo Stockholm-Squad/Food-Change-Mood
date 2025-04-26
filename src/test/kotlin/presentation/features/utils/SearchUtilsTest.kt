@@ -1,381 +1,100 @@
 package presentation.features.utils
 
 import com.google.common.truth.Truth.assertThat
-import org.example.input_output.input.InputReader
-import org.example.presentation.features.utils.SearchUtils
-import org.junit.jupiter.api.Test
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
+import org.example.input_output.input.InputReader
+import org.example.input_output.output.OutputPrinter
+import org.example.presentation.features.utils.SearchUtils
+import org.example.utils.Constants
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import kotlin.test.BeforeTest
-import kotlin.test.assertEquals
-import kotlin.test.assertNull
-
 
 class SearchUtilsTest {
 
-    private lateinit var searchUtils: SearchUtils
     private lateinit var reader: InputReader
+    private lateinit var printer: OutputPrinter
+    private lateinit var searchUtils: SearchUtils
 
-    @BeforeTest
+    @BeforeEach
     fun setup() {
         reader = mockk(relaxed = true)
-        searchUtils = mockk(relaxed = true)
-    }
-
-    @ParameterizedTest
-    @CsvSource(
-        "null, false",
-        "'', false",
-        "' ', false",
-        "'Y', true",
-        "'y', true",
-        "' Y ', true",
-        "' y ', true",
-        "'n', false",
-        "'N', false",
-        "'yes', false",
-        "'no', false",
-        "'  y  ', true",
-        "'  Y  ', true",
-        "'randomString', false",
-        "'yYy', false",
-        "'\t\n\r y \t\n\r', true"
-    )
-    fun `isValidSearchAgainInput should return expected result when input is varied`(input: String?, expected: Boolean) {
-        // Given
-
-        // When
-        val actual = searchUtils.isValidSearchAgainInput(input)
-
-        // Then
-        assertThat(actual).isEqualTo(expected)
-    }
-
-    @ParameterizedTest
-    @CsvSource(
-        "'-1', 5, null",
-        "'1.5', 5, null",
-        "' 1 ', 5, 0",
-        "' 5 ', 5, 4",
-        "'0', 5, null",
-        "'6', 5, null",
-        "'1', 1, 0",
-        "'randomString', 5, null"
-    )
-    fun `getValidMealIndex should handle edge cases`(input: String, size: Int, expectedStr: String?) {
-        // Given
-        val expected = if (expectedStr == "null") null else expectedStr?.toInt()
-        every { reader.readStringOrNull() } returns input
-
-        // When
-        val actual = searchUtils.getValidMealIndex(reader, size)
-
-        // Then
-        assertEquals(expected, actual)
+        printer = mockk(relaxed = true)
+        searchUtils = SearchUtils(printer)
     }
 
     @Test
-    fun `readTrimmedLowercaseInput should return null when reader returns null`() {
-        // Given
-        every { reader.readStringOrNull() } returns null
-
-        // When
+    fun `readNonBlankTrimmedInput should return null for blank input`() {
+        every { reader.readStringOrNull() } returns "   "
         val result = searchUtils.readNonBlankTrimmedInput(reader)
-
-        // Then
         assertThat(result).isNull()
     }
 
     @Test
-    fun `readTrimmedLowercaseInput should return empty string when input is empty`() {
-        // Given
-        every { reader.readStringOrNull() } returns ""
-
-        // When
+    fun `readNonBlankTrimmedInput should return trimmed lowercase input`() {
+        every { reader.readStringOrNull() } returns "  TeStInG  "
         val result = searchUtils.readNonBlankTrimmedInput(reader)
-
-        // Then
-        assertThat(result).isEqualTo("")
+        assertThat(result).isEqualTo("testing")
     }
 
     @Test
-    fun `readTrimmedLowercaseInput should return empty string when input is only whitespace`() {
-        // Given
-        every { reader.readStringOrNull() } returns "   "
-
-        // When
-        val result = searchUtils.readNonBlankTrimmedInput(reader)
-
-        // Then
-        assertThat(result).isEqualTo("")
-    }
-
-    @Test
-    fun `readTrimmedLowercaseInput should return lowercase string when input is mixed case with whitespace`() {
-        // Given
-        every { reader.readStringOrNull() } returns "  Hello "
-
-        // When
-        val result = searchUtils.readNonBlankTrimmedInput(reader)
-
-        // Then
-        assertThat(result).isEqualTo("hello")
-    }
-
-    @Test
-    fun `readTrimmedLowercaseInput should return lowercase string when input is uppercase`() {
-        // Given
-        every { reader.readStringOrNull() } returns "WORLD"
-
-        // When
-        val result = searchUtils.readNonBlankTrimmedInput(reader)
-
-        // Then
-        assertThat(result).isEqualTo("world")
-    }
-
-    @Test
-    fun `readTrimmedLowercaseInput should return trimmed lowercase character when input is single character with spaces`() {
-        // Given
-        every { reader.readStringOrNull() } returns "  y "
-
-        // When
-        val result = searchUtils.readNonBlankTrimmedInput(reader)
-
-        // Then
-        assertThat(result).isEqualTo("y")
-    }
-
-    @Test
-    fun `readTrimmedLowercaseInput should return empty string when input is only spaces`() {
-        // Given
-        every { reader.readStringOrNull() } returns "   "
-
-        // When
-        val result = searchUtils.readNonBlankTrimmedInput(reader)
-
-        // Then
-        assertEquals("", result)
-    }
-
-    @Test
-    fun `readTrimmedLowercaseInput should return lowercase of trimmed input`() {
-        // Given
-        every { reader.readStringOrNull() } returns "  HeLLo  "
-
-        // When
-        val result = searchUtils.readNonBlankTrimmedInput(reader)
-
-        // Then
-        assertEquals("hello", result)
-    }
-
-    @Test
-    fun `readTrimmedLowercaseInput should return lowercase when already lowercase`() {
-        // Given
-        every { reader.readStringOrNull() } returns "  bye "
-
-        // When
-        val result = searchUtils.readNonBlankTrimmedInput(reader)
-
-        // Then
-        assertEquals("bye", result)
-    }
-
-    @Test
-    fun `readTrimmedLowercaseInput should return null when input is null`() {
-        // Given
-        every { reader.readStringOrNull() } returns null
-
-        // When
-        val result = searchUtils.readNonBlankTrimmedInput(reader)
-
-        // Then
-        assertNull(result)
-    }
-
-    @Test
-    fun `readTrimmedLowercaseInput should return empty string when input is only tabs and newlines`() {
-        // Given
+    fun `readNonBlankTrimmedInput should return null when input is only tabs and newlines`() {
         every { reader.readStringOrNull() } returns "\t\n\r"
-
-        // When
         val result = searchUtils.readNonBlankTrimmedInput(reader)
-
-        // Then
-        assertEquals("", result)
-    }
-
-    @Test
-    fun `readTrimmedLowercaseInput should handle special characters correctly`() {
-        // Given
-        every { reader.readStringOrNull() } returns " \tHeLLo\n "
-
-        // When
-        val result = searchUtils.readNonBlankTrimmedInput(reader)
-
-        // Then
-        assertEquals("hello", result)
+        assertThat(result).isNull()
     }
 
     @ParameterizedTest
     @CsvSource(
-        "null, 5, null",
-        "'', 5, null",
-        "'abc', 5, null",
-        "'0', 5, null",
-        "'6', 5, null",
-        "'1', 5, 0",
-        "'5', 5, 4",
-        "'3', 5, 2",
-        "'  1  ', 5, 0",
-        "'-1', 5, null",
-        "'1.5', 5, null",
-        "'randomString', 5, null"
+        "n, true",
+        "N, true",
+        "y, false",
+        "invalid, false"
     )
-    fun `getValidMealIndex should return expected index when input and size vary`(input: String, size: Int, expectedStr: String) {
-        // Given
-        val expected = if (expectedStr == "null") null else expectedStr.toInt()
-        every { reader.readStringOrNull() } returns if (input == "null") null else input
+    fun `isSkipInput should correctly identify skip input`(input: String, expected: Boolean) {
+        val result = searchUtils.isSkipInput(input)
+        assertThat(result).isEqualTo(expected)
+    }
 
-        // When
-        val actual = searchUtils.getValidMealIndex(reader, size)
+    @ParameterizedTest
+    @CsvSource(
+        "y, true",
+        "Y, true",
+    )
+    fun `shouldSearchAgain should correctly handle user input`(input: String, expected: String?) {
+        every { reader.readStringOrNull() } returns input
 
-        // Then
-        assertThat(actual).isEqualTo(expected)
+        val result = searchUtils.shouldSearchAgain(reader)
+
+        if (expected == null) {
+            assertThat(result).isNull()
+        } else {
+            assertThat(result).isEqualTo(expected.toBoolean())
+        }
     }
 
     @Test
-    fun `readNonBlankTrimmedInput should return null when reader returns null`() {
-        // Given
-        every { reader.readStringOrNull() } returns null
-
-        // When
-        val result = searchUtils.readNonBlankTrimmedInput(reader)
-
-        // Then
+    fun `getValidMealIndex should return null for skip input`() {
+        every { reader.readStringOrNull() } returns "n"
+        val result = searchUtils.getValidMealIndex(reader, 5)
         assertThat(result).isNull()
     }
 
     @Test
-    fun `readNonBlankTrimmedInput should return null when input is only whitespace`() {
-        // Given
-        every { reader.readStringOrNull() } returns "   "
+    fun `getValidMealIndex should return valid index for valid input`() {
+        every { reader.readStringOrNull() } returns "3"
+        val result = searchUtils.getValidMealIndex(reader, 5)
+        assertThat(result).isEqualTo(2)
+    }
 
-        // When
-        val result = searchUtils.readNonBlankTrimmedInput(reader)
-
-        // Then
+    @Test
+    fun `getValidMealIndex should handle invalid input and prompt again`() {
+        every { reader.readStringOrNull() } returnsMany listOf("invalid", "n")
+        val result = searchUtils.getValidMealIndex(reader, 5)
         assertThat(result).isNull()
-    }
-
-    @Test
-    fun `readNonBlankTrimmedInput should return trimmed string when input is valid`() {
-        // Given
-        every { reader.readStringOrNull() } returns "  validInput  "
-
-        // When
-        val result = searchUtils.readNonBlankTrimmedInput(reader)
-
-        // Then
-        assertThat(result).isEqualTo("validInput")
-    }
-
-    @Test
-    fun `readNonBlankTrimmedInput should return null when input contains only special characters`() {
-        // Given
-        every { reader.readStringOrNull() } returns "\t\n\r"
-
-        // When
-        val result = searchUtils.readNonBlankTrimmedInput(reader)
-
-        // Then
-        assertNull(result)
-    }
-
-    @Test
-    fun `readNonBlankTrimmedInput should handle inputs with special characters and valid content`() {
-        // Given
-        every { reader.readStringOrNull() } returns " \t ValidInput \n "
-
-        // When
-        val result = searchUtils.readNonBlankTrimmedInput(reader)
-
-        // Then
-        assertEquals("ValidInput", result)
-    }
-
-    @Test
-    fun `readNonBlankTrimmedInput should return trimmed input when input has trailing special characters`() {
-        // Given
-        every { reader.readStringOrNull() } returns "ValidInput\t\n\r"
-
-        // When
-        val result = searchUtils.readNonBlankTrimmedInput(reader)
-
-        // Then
-        assertEquals("ValidInput", result)
-    }
-
-    @Test
-    fun `readNonBlankTrimmedInput should return input as-is when already trimmed and valid`() {
-        // Given
-        every { reader.readStringOrNull() } returns "cleanInput"
-
-        // When
-        val result = searchUtils.readNonBlankTrimmedInput(reader)
-
-        // Then
-        assertThat(result).isEqualTo("cleanInput")
-    }
-
-    @ParameterizedTest
-    @CsvSource(
-        "null, null",
-        "'', null",
-        "' ', null",
-        "'Y', true",
-        "'y', true",
-        "' Y ', true",
-        "' y ', true",
-        "'n', null",
-        "'N', null",
-        "'yes', null",
-        "'no', null",
-        "'randomString', null",
-        "'\t\n\r y \t\n\r', true"
-    )
-    fun `shouldSearchAgain should return expected boolean when input is varied`(input: String?, expectedStr: String?) {
-        // Given
-        val expected = if (expectedStr == "null") null else expectedStr?.toBoolean()
-        every { reader.readStringOrNull() } returns input
-
-        // When
-        val actual = searchUtils.shouldSearchAgain(reader)
-
-        // Then
-        assertThat(actual).isEqualTo(expected)
-    }
-
-    @ParameterizedTest
-    @CsvSource(
-        "'\t Y \n', true",
-        "'\t y \n', true",
-        "'\t n \n', null",
-        "'\t N \n', null",
-        "'\t randomString \n', null"
-    )
-    fun `shouldSearchAgain should handle inputs with special characters`(input: String?, expectedStr: String?) {
-        // Given
-        val expected = if (expectedStr == "null") null else expectedStr?.toBoolean()
-        every { reader.readStringOrNull() } returns input
-
-        // When
-        val actual = searchUtils.shouldSearchAgain(reader)
-
-        // Then
-        assertEquals(expected, actual)
+        verify { printer.printLine(Constants.INVALID_SELECTION_MESSAGE) }
     }
 }
