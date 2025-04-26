@@ -1,6 +1,7 @@
 package org.example.utils
 
 object Constants {
+    const val NO_FILE_FOUND = "non existence file"
     const val NO_EASY_MEALS_FOUND = "No easy meals found"
     const val NO_EVALUATE_GUESS="❗no evaluate to guess "
     const val NO_PREPARATION_TIME="❌ This meal has no preparation time."

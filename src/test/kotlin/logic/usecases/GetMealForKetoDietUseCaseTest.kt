@@ -1,14 +1,14 @@
-package org.example.logic.usecases
+package logic.usecases
 
 import io.mockk.every
 import io.mockk.mockk
 import org.example.logic.repository.MealsRepository
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import utils.buildMeal
 import utils.buildNutrition
 import com.google.common.truth.Truth
+import org.example.logic.usecases.GetMealForKetoDietUseCase
 
 class GetMealForKetoDietUseCaseTest {
 
