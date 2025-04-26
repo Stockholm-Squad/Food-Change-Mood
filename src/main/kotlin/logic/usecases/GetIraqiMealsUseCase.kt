@@ -1,4 +1,3 @@
-
 package org.example.logic.usecases
 
 import model.Meal
@@ -16,15 +15,16 @@ class GetIraqiMealsUseCase(
     }
 
     private fun getSuccessResult(meals: List<Meal>): Result<List<Meal>> {
-        return Result.success(meals.filter { meal ->
-            meal.tags?.contains("iraqi")==true ||
-                    meal.description?.contains("iraq", ignoreCase = true) == true
-        }
+        return Result.success(
+            meals.filter { meal ->
+                meal.tags?.any { tags -> tags.contains("iraqi", true) } == true ||
+                        meal.description?.contains("iraq", ignoreCase = true) == true
+            }.takeIf { iraqiMeals -> iraqiMeals.isNotEmpty() } ?: return Result.failure(NoIraqiMeals())
         )
     }
 
-    private fun getFailureResult(throwable: Throwable): Result<List<Meal>>{
-        return  Result.failure(NoIraqiMeals())
+    private fun getFailureResult(throwable: Throwable): Result<List<Meal>> {
+        return Result.failure(NoIraqiMeals())
     }
 
 }
