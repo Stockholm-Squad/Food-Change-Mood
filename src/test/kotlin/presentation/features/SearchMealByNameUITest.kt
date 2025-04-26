@@ -22,11 +22,11 @@ class SearchMealByNameUITest {
 
     @BeforeTest
     fun setup() {
-        getMealByNameUseCase = mockk()
-        reader = mockk()
+        reader = mockk(relaxed = true)
         printer = mockk(relaxed = true)
+        searchUtils = mockk(relaxed = true)
         mealDisplayer = mockk(relaxed = true)
-        searchUtils = mockk()
+        getMealByNameUseCase = mockk(relaxed = true)
         searchMealByNameUI = SearchMealByNameUI(
             getMealByNameUseCase,
             reader,
