@@ -20,7 +20,7 @@ val uiModule = module {
     factory { KetoDietMealUI(get(), get(), get()) }
     factory { PotatoLoversUI(get(), get(), get()) }
     factory { ProteinSeafoodRankingUI(get(), get()) }
-    factory { SearchMealByNameUI(get(), get(), get()) }
+    factory { SearchMealByNameUI(get(), get(), get(), get(), get()) }
     factory { SearchByAddDateUI(get(), get(), get(), get()) }
     factory { SuggestEasyMealsUI(get(),get()) }
     factory { SuggestSweetNoEggsUI(get(), get(), get()) }
