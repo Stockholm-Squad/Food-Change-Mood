@@ -6,14 +6,15 @@ import org.example.utils.Constants
 
 class ConsoleMealDisplayer(private val printer: OutputPrinter) {
 
-    fun display(meal: Meal) {
-        meal.name?.let {
-            printMealHeader(it)
-        }
-        printer.printMeal(meal)
+    fun display(meal: Meal?) {
+        meal?.run {
+            name?.let { printMealHeader(it) }
+            printer.printMeal(this)
+        } ?: printer.printLine("No meal to display.")
     }
 
     private fun printMealHeader(name: String) {
         printer.printLine(Constants.MEAL_DETAILS_HEADER.format(name))
     }
+
 }
