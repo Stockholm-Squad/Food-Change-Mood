@@ -1,10 +1,12 @@
 package org.example.presentation
 
+import org.example.input_output.input.InputReader
 import org.example.presentation.features.*
 import org.example.utils.MenuOption
 
 
 class FoodConsoleUI(
+    private val reader: InputReader,
     private val healthyFastFoodMealsUI: GetHealthyFastFoodMealsUI,
     private val exploreCountryMealsUI: ExploreCountryMealsUI,
     private val getIraqiMealsUI: GetIraqiMealsUI,
@@ -27,8 +29,7 @@ class FoodConsoleUI(
 
         while (true) {
             printMenu()
-            val enteredOption = readlnOrNull()?.toIntOrNull()
-            if (handleEnteredMenuOption(enteredOption)) break
+            if (handleEnteredMenuOption(reader.readIntOrNull())) break
         }
     }
 

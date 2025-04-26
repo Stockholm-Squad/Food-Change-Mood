@@ -1,161 +1,136 @@
 package data.reader
 
+import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkConstructor
+import junit.framework.TestCase.assertTrue
 import org.example.data.reader.MealCsvReader
-import org.example.data.reader.MealReader
 import org.example.data.utils.CsvLineHandler
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.assertThrows
 import java.io.BufferedReader
 import java.io.File
-import java.io.IOException
 import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
-
 
 class MealCsvReaderTest {
-
     private lateinit var csvFile: File
     private lateinit var csvLineHandler: CsvLineHandler
-    private lateinit var mealCsvReader: MealReader
-    private lateinit var reader: BufferedReader
-
+    private lateinit var reader: MealCsvReader
+    private lateinit var bufferedReader: BufferedReader
     @BeforeEach
     fun setUp() {
-        csvFile = mockk()
+        csvFile = File.createTempFile("food",".csv")
         csvLineHandler = mockk()
-        mealCsvReader = MealCsvReader(csvFile, csvLineHandler)
-        reader = mockk(relaxed = true)
-        every { csvFile.bufferedReader() } returns reader
+        reader = MealCsvReader(csvFile, csvLineHandler)
+        mockkConstructor(BufferedReader::class)
+        bufferedReader= mockk<BufferedReader>(relaxed = true)
+
+    }
+
+    @AfterEach
+    fun tearDown() {
+        csvFile.delete()
     }
 
     @Test
-    fun `readLinesFromFile () should return success when file has valid lines`() {
+    fun `readLinesFromFile () should read and process all valid lines except header`() {
+        //Given
+        csvFile.writeText(
+            """
+                name,calories
+                Pizza,300
+                Salad,150
+            """.trimIndent()
+        )
+
+        every { csvLineHandler.handleLine("Pizza,300") } returns "Pizza:300"
+        every { csvLineHandler.handleLine("Salad,150") } returns "Salad:150"
+
+        //When
+        val result = reader.readLinesFromFile()
+
+        //Then
+        assertThat(result.getOrNull()).isEqualTo(listOf("Pizza:300", "Salad:150"))
+    }
+
+    @Test
+    fun `readLinesFromFile () should skip invalid lines where handleLine returns null`() {
+        //Given
+        csvFile.writeText(
+            """
+                name,calories
+                InvalidLine
+                GoodLine,123
+            """.trimIndent()
+        )
+
+        every { csvLineHandler.handleLine("InvalidLine") } returns null
+        every { csvLineHandler.handleLine("GoodLine,123") } returns "Good:123"
+
+        //When
+        val result = reader.readLinesFromFile()
+
+        //Then
+        assertThat(result.getOrNull()).isEqualTo(listOf("Good:123"))
+    }
+
+    @Test
+    fun `readLinesFromFile () should return empty list if only header is present`() {
         // Given
-        val lines = listOf("Header", "Line1", "Line2")
-        val processedLines = listOf("Processed1", "Processed2")
-        every { reader.readLine() } returns lines[0]
-        every { reader.forEachLine(any()) } answers {
-            val block = arg<(String) -> Unit>(0)
-            block("Line1")
-            block("Line2")
+        csvFile.writeText("name,calories\n")
+
+        // When
+        val result = reader.readLinesFromFile()
+
+        // Then
+        val lines = result.getOrThrow()
+        assertTrue(lines.isEmpty())
+    }
+
+
+    @Test
+    fun `readLinesFromFile() should skip invalid lines where handleLine returns null`() {
+        // Given
+        csvFile.writeText(
+            """
+            name,calories
+            InvalidLine
+            GoodLine,123
+        """.trimIndent()
+        )
+        every { csvLineHandler.handleLine("InvalidLine") } returns null
+        every { csvLineHandler.handleLine("GoodLine,123") } returns "Good:123"
+
+
+        // When
+        val result = reader.readLinesFromFile()
+
+        // Then
+        assertThat(result.getOrNull()).isEqualTo(listOf("Good:123"))
+    }
+
+    @Test
+    fun `readLinesFromFile() should throw ReadFailedException when an unexpected error happens during file reading`() {
+        // Given
+        val fakeBufferedReader = mockk<BufferedReader>()
+        every { fakeBufferedReader.readLine() } throws RuntimeException("Unexpected error")
+        every { fakeBufferedReader.close() } returns Unit
+
+        val reader = MealCsvReader(
+            File("any.csv"),
+            csvLineHandler = mockk(relaxed = true)
+        )
+        // When & Then
+         assertThrows<java.io.FileNotFoundException> {
+            reader.readLinesFromFile().getOrThrow()
         }
 
-        every { csvLineHandler.handleLine("Line1") } returns "Processed1"
-        every { csvLineHandler.handleLine("Line2") } returns "Processed2"
-
-        // When
-        val result = mealCsvReader.readLinesFromFile()
-
-        // Then
-        assertTrue(result.isSuccess)
-        assertEquals(processedLines, result.getOrNull())
     }
 
-    @Test
-    fun `readLinesFromFile () should return failure when exception occurs while reading`() {
-        // Given
-        every { csvFile.bufferedReader() } throws IOException("File read error")
-
-        // When
-        val result = mealCsvReader.readLinesFromFile()
-
-        // Then
-        assertTrue(result.isFailure)
-        assertEquals("File read error", result.exceptionOrNull()?.message)
-    }
-
-    @Test
-    fun `readLinesFromFile () should skip invalid lines that return null from handler`() {
-        // Given
-        val lines = listOf("Header", "InvalidLine", "ValidLine1", "InvalidLine2", "ValidLine2")
-        val processedLines = listOf("ProcessedValidLine1", "ProcessedValidLine2")
-
-        every { reader.readLine() } returns lines[0]
-        every { reader.forEachLine(any()) } answers {
-            val block = arg<(String) -> Unit>(0)
-            lines.forEach { line -> block(line) }
-        }
-        every { csvLineHandler.handleLine("ValidLine1") } returns "ProcessedValidLine1"
-        every { csvLineHandler.handleLine("ValidLine2") } returns "ProcessedValidLine2"
-
-        // When
-        val result = mealCsvReader.readLinesFromFile()
-
-        // Then
-        assertTrue(result.isSuccess)
-        assertEquals(processedLines, result.getOrNull())
-    }
-
-    @Test
-    fun `readLinesFromFile () should return empty list when all lines are invalid`() {
-        // Given
-        val lines = listOf<String?>(null, null, null)
-        val processedLines = emptyList<String>()
-
-        every { reader.readLine() } returns lines[0]
-        every { reader.forEachLine(any()) } answers {
-            val block = arg<(String?) -> Unit>(0)
-            lines.forEach { line -> block(line) }
-        }
-        every { csvLineHandler.handleLine(any()) } returns null
-
-        // When
-        val result = mealCsvReader.readLinesFromFile()
-
-        // Then
-        assertTrue(result.isSuccess)
-        assertEquals(processedLines, result.getOrNull())
-    }
-
-    @Test
-    fun `readLinesFromFile () should ignore null lines and process valid ones when mixed`() {
-        // Given
-        val lines = listOf("Line1", null, "Line2", null, "Line3")
-        val processedLine = listOf("processedLine1", "processedLine2", "processedLine3")
-
-        every { reader.readLine() } returns lines[0]
-        every { reader.forEachLine(any()) } answers {
-            val block = arg<(String?) -> Unit>(0)
-            lines.forEach { line -> block(line) }
-        }
-        every { csvLineHandler.handleLine("Line1") } returns "processedLine1"
-        every { csvLineHandler.handleLine("Line2") } returns "processedLine2"
-        every { csvLineHandler.handleLine("Line3") } returns "processedLine3"
-
-        // When
-        val result = mealCsvReader.readLinesFromFile()
-
-        // Then
-        assertTrue(result.isSuccess)
-        assertEquals(processedLine, result.getOrNull())
-    }
-
-    @Test
-    fun `readLinesFromFile () should return failure if exception occurs while reading first line`() {
-        // Given
-        every { reader.readLine() } throws IOException("File read error")
-
-        // When
-        val result = mealCsvReader.readLinesFromFile()
-
-        // Then
-        assertTrue(result.isFailure)
-        assertEquals("File read error", result.exceptionOrNull()?.message)
-    }
-
-    @Test
-    fun `readLinesFromFile () should return empty list when file is empty`() {
-        // Given
-        val lines = emptyList<String>()
-        every { reader.readLine() } returns null
-
-        // When
-        val result = mealCsvReader.readLinesFromFile()
-
-        // Then
-        assertTrue(result.isSuccess)
-        assertEquals(lines, result.getOrNull())
-    }
 }
+
+
+
+

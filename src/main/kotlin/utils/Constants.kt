@@ -1,6 +1,7 @@
 package org.example.utils
 
 object Constants {
+    const val NO_FILE_FOUND = "non existence file"
     const val NO_EASY_MEALS_FOUND = "No easy meals found"
     const val NO_EVALUATE_GUESS="❗no evaluate to guess "
     const val NO_PREPARATION_TIME="❌ This meal has no preparation time."
@@ -17,7 +18,7 @@ object Constants {
     const val SEARCH_QUERY_CAN_NOT_BE_EMPTY = "Search query cannot be empty or null"
     const val FOUND_MEALS = "Found %d meal(s):"
     const val MEAL_DETAILS_HEADER = "Here are the details for '%s':"
-    const val SEARCH_AGAIN_PROMPT = "Would you like to search again? (y or n)"
+    const val SEARCH_AGAIN_PROMPT = "\nWould you like to search again? (y/n):"
     const val GOODBYE_MESSAGE = "Okay! Enjoy your meals!"
     const val NO_MEALS_FOUND_MATCHING = "No meals found matching"
     const val UNEXPECTED_ERROR = "Unexpected error occurred"
@@ -64,27 +65,8 @@ object Constants {
     const val HERE_ARE_THE_MEALS = "Here are the meals"
     const val NO_DESSERT_FOUND = "No dessert meals without eggs found"
     const val NO_MEALS_FOUND_FOR_COUNTRY = "No meals found for this country"
-
-
-
-    const val NO_POTATO_MEALS_FOUND = "😢 No potato meals found."
-    const val I_LOVE_POTATO = "🥔 I 💛 Potato Meals:"
-    const val MEAL = "🍽️ Meal #"
     const val I_LOVE_POTATO_HERE = "🥔 I 💛 Potato! Here are "
     const val MEAL_INCLUDE_POTATO = "meals that include potatoes:"
-    const val ERROR = "❌ Error: "
-    const val VIEW_MEAL_DETAILS = "Would you like to view the details of any of these meals? (Enter the number or 'n' to skip):"
-    const val ENJOY_YOUR_MEAL = "Okay! Enjoy your potato meals! 🥔😋"
-    const val INVALID_SELECTION = "Invalid selection. Please choose a valid number."
-    const val DETAILS_MEAL = "🍽️ Details of"
-    const val MINUTE_TO_PREPARE = "🕒 Minutes to prepare:"
-    const val NUMBER_OF_STEP = "📖 Number of steps:"
-    const val STEPS = "📝 Steps:"
-    const val DESCRIPTION = "📃 Description:"
-    const val NUTRITION = "🍎 Nutrition"
-    const val NUMBER_OF_INGREDIENT = "🥣 Number of ingredients:"
-    const val INGREDIENT = "🧂 Ingredients:"
-    const val NA = "   N/A"
-    const val SEE_MORE_MEALS = "Would you like to see more? (y/n)"
-    const val YES = "y"
+    const val SKIPPING_MEAL_DETAILS = "Skipping meal details."
+
 }
