@@ -152,10 +152,10 @@ class SearchMealByNameUITest {
             searchUtils.readNonBlankTrimmedInput(reader)
             getMealByNameUseCase.getMealByName("pasta")
             printer.printLine("Something went wrong")
-            printer.printLine(Constants.SEARCH_AGAIN_PROMPT)
             searchUtils.shouldSearchAgain(reader)
             printer.printLine(Constants.GOODBYE_MESSAGE)
         }
+
     }
 
     @Test
@@ -176,7 +176,6 @@ class SearchMealByNameUITest {
             getMealByNameUseCase.getMealByName("pasta")
             printer.printLine(Constants.NO_MEALS_FOUND_MATCHING)
 
-            printer.printLine(Constants.SEARCH_AGAIN_PROMPT)
             searchUtils.shouldSearchAgain(reader)
 
             printer.printLine(Constants.ENTER_MEAL_KEYWORD_TO_SEARCH)
@@ -184,7 +183,6 @@ class SearchMealByNameUITest {
             getMealByNameUseCase.getMealByName("burger")
             printer.printLine(Constants.NO_MEALS_FOUND_MATCHING)
 
-            printer.printLine(Constants.SEARCH_AGAIN_PROMPT)
             searchUtils.shouldSearchAgain(reader)
             printer.printLine(Constants.GOODBYE_MESSAGE)
         }

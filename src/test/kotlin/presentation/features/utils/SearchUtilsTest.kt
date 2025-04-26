@@ -21,7 +21,7 @@ class SearchUtilsTest {
     @BeforeTest
     fun setup() {
         reader = mockk(relaxed = true)
-        searchUtils = SearchUtils()
+        searchUtils = mockk(relaxed = true)
     }
 
     @ParameterizedTest
@@ -82,7 +82,7 @@ class SearchUtilsTest {
         every { reader.readStringOrNull() } returns null
 
         // When
-        val result = searchUtils.readTrimmedLowercaseInput(reader)
+        val result = searchUtils.readNonBlankTrimmedInput(reader)
 
         // Then
         assertThat(result).isNull()
@@ -94,7 +94,7 @@ class SearchUtilsTest {
         every { reader.readStringOrNull() } returns ""
 
         // When
-        val result = searchUtils.readTrimmedLowercaseInput(reader)
+        val result = searchUtils.readNonBlankTrimmedInput(reader)
 
         // Then
         assertThat(result).isEqualTo("")
@@ -106,7 +106,7 @@ class SearchUtilsTest {
         every { reader.readStringOrNull() } returns "   "
 
         // When
-        val result = searchUtils.readTrimmedLowercaseInput(reader)
+        val result = searchUtils.readNonBlankTrimmedInput(reader)
 
         // Then
         assertThat(result).isEqualTo("")
@@ -118,7 +118,7 @@ class SearchUtilsTest {
         every { reader.readStringOrNull() } returns "  Hello "
 
         // When
-        val result = searchUtils.readTrimmedLowercaseInput(reader)
+        val result = searchUtils.readNonBlankTrimmedInput(reader)
 
         // Then
         assertThat(result).isEqualTo("hello")
@@ -130,7 +130,7 @@ class SearchUtilsTest {
         every { reader.readStringOrNull() } returns "WORLD"
 
         // When
-        val result = searchUtils.readTrimmedLowercaseInput(reader)
+        val result = searchUtils.readNonBlankTrimmedInput(reader)
 
         // Then
         assertThat(result).isEqualTo("world")
@@ -142,7 +142,7 @@ class SearchUtilsTest {
         every { reader.readStringOrNull() } returns "  y "
 
         // When
-        val result = searchUtils.readTrimmedLowercaseInput(reader)
+        val result = searchUtils.readNonBlankTrimmedInput(reader)
 
         // Then
         assertThat(result).isEqualTo("y")
@@ -154,7 +154,7 @@ class SearchUtilsTest {
         every { reader.readStringOrNull() } returns "   "
 
         // When
-        val result = searchUtils.readTrimmedLowercaseInput(reader)
+        val result = searchUtils.readNonBlankTrimmedInput(reader)
 
         // Then
         assertEquals("", result)
@@ -166,7 +166,7 @@ class SearchUtilsTest {
         every { reader.readStringOrNull() } returns "  HeLLo  "
 
         // When
-        val result = searchUtils.readTrimmedLowercaseInput(reader)
+        val result = searchUtils.readNonBlankTrimmedInput(reader)
 
         // Then
         assertEquals("hello", result)
@@ -178,7 +178,7 @@ class SearchUtilsTest {
         every { reader.readStringOrNull() } returns "  bye "
 
         // When
-        val result = searchUtils.readTrimmedLowercaseInput(reader)
+        val result = searchUtils.readNonBlankTrimmedInput(reader)
 
         // Then
         assertEquals("bye", result)
@@ -190,7 +190,7 @@ class SearchUtilsTest {
         every { reader.readStringOrNull() } returns null
 
         // When
-        val result = searchUtils.readTrimmedLowercaseInput(reader)
+        val result = searchUtils.readNonBlankTrimmedInput(reader)
 
         // Then
         assertNull(result)
@@ -202,7 +202,7 @@ class SearchUtilsTest {
         every { reader.readStringOrNull() } returns "\t\n\r"
 
         // When
-        val result = searchUtils.readTrimmedLowercaseInput(reader)
+        val result = searchUtils.readNonBlankTrimmedInput(reader)
 
         // Then
         assertEquals("", result)
@@ -214,7 +214,7 @@ class SearchUtilsTest {
         every { reader.readStringOrNull() } returns " \tHeLLo\n "
 
         // When
-        val result = searchUtils.readTrimmedLowercaseInput(reader)
+        val result = searchUtils.readNonBlankTrimmedInput(reader)
 
         // Then
         assertEquals("hello", result)

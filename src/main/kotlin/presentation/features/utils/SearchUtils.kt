@@ -1,54 +1,81 @@
 package org.example.presentation.features.utils
 
 import org.example.input_output.input.InputReader
+import org.example.input_output.output.OutputPrinter
 import org.example.utils.Constants
 
-class SearchUtils {
+class SearchUtils(
+    private val printer: OutputPrinter,
+) {
 
     /**
-     * Validates if the input matches Constants.Y after trimming and lowercasing.
+     * Validates if the input matches "y" (for search again).
      */
     fun isValidSearchAgainInput(input: String?): Boolean =
         input?.trim()?.lowercase() == Constants.Y
 
     /**
-     * Reads input from the reader, trims it, and converts it to lowercase.
-     */
-    fun readTrimmedLowercaseInput(reader: InputReader): String? =
-        reader.readStringOrNull()?.trim()?.lowercase()
-
-    /**
-     * Reads input from the reader, trims it, and ensures it is not blank.
+     * Reads and returns non-blank trimmed input from the user.
      */
     fun readNonBlankTrimmedInput(reader: InputReader): String? =
-        reader.readStringOrNull()
-            ?.trim()
-            ?.takeIf { it.isNotBlank() }
+        reader.readStringOrNull()?.trim()?.takeIf { it.isNotBlank() }
+
 
     /**
-     * Parses a valid meal index from the input.
-     * - Ensures the input is a number within the valid range [1, size].
-     * - Converts the valid index to a 0-based index.
-     */
-    fun parseValidMealIndex(input: String, size: Int): Int? {
-        val parsedNumber = input.toIntOrNull()
-        return parsedNumber?.takeIf { it in 1..size }?.let { it - 1 }
-    }
-
-    /**
-     * Reads a valid meal index from the reader.
+     * Continuously prompts the user for a valid meal index until a valid one or 'n' is entered.
+     * Returns null if user chooses to skip (by typing "n").
      */
     fun getValidMealIndex(reader: InputReader, size: Int): Int? {
-        val input = readTrimmedLowercaseInput(reader) ?: return null
-        return parseValidMealIndex(input, size)
+        while (true) {
+            val input = readTrimmedLowercaseInput(reader) ?: return null
+
+            when {
+                isSkipInput(input) -> return null // User skips
+                isValidMealIndex(input, size) -> return parseMealIndex(input)
+                else -> handleInvalidInput()
+            }
+        }
     }
 
     /**
-     * Determines if the user wants to search again based on the input.
-     * Returns true if the input matches Constants.Y, otherwise null.
+     * Reads and returns non-blank trimmed lowercase input from the user.
      */
-    fun shouldSearchAgain(reader: InputReader): Boolean? =
-        readTrimmedLowercaseInput(reader)?.let { input ->
-            if (isValidSearchAgainInput(input)) true else null
-        }
+    private fun readTrimmedLowercaseInput(reader: InputReader): String? =
+        reader.readStringOrNull()?.trim()?.lowercase()?.takeIf { it.isNotBlank() }
+
+    /**
+     * Checks if the input indicates the user wants to skip (e.g., "n").
+     */
+    private fun isSkipInput(input: String): Boolean =
+        input == Constants.N
+
+    /**
+     * Checks if the input represents a valid meal index within the range [1, size].
+     */
+    private fun isValidMealIndex(input: String, size: Int): Boolean =
+        input.toIntOrNull()?.let { it in 1..size } ?: false
+
+    /**
+     * Parses the input into a zero-based meal index.
+     */
+    private fun parseMealIndex(input: String): Int =
+        input.toInt() - 1
+
+    /**
+     * Handles invalid input by printing an error message.
+     */
+    private fun handleInvalidInput() {
+        printer.printLine(Constants.INVALID_SELECTION_MESSAGE)
+    }
+
+    /**
+     * Asks the user whether to search again. Returns true only if user enters "y".
+     */
+    fun shouldSearchAgain(reader: InputReader): Boolean? {
+        printer.printLine(Constants.SEARCH_AGAIN_PROMPT)
+        val input = readTrimmedLowercaseInput(reader)
+        return if (isValidSearchAgainInput(input)) true else null
+    }
+
 }
+

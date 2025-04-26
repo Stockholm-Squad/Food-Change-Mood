@@ -55,11 +55,10 @@ class SearchMealByNameUI(
     }
 
     private fun askForMoreMeals() =
-        printer.printLine(Constants.SEARCH_AGAIN_PROMPT).also {
-            searchUtils.shouldSearchAgain(reader)
-                ?.let { handleSearchByName() }
-                ?: printer.printLine(Constants.GOODBYE_MESSAGE)
-        }
+        searchUtils.shouldSearchAgain(reader)
+            ?.let { handleSearchByName() }
+            ?: printer.printLine(Constants.GOODBYE_MESSAGE)
+
 
     private fun handleFailure(exception: Throwable) {
         printer.printLine(exception.message)

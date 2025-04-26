@@ -12,38 +12,52 @@ class PotatoLoversUI(
     private val getPotatoMealsUseCase: GetPotatoMealsUseCase,
     private val printer: OutputPrinter,
     private val reader: InputReader,
-    private val searchUtils: SearchUtils = SearchUtils(),
+    private val searchUtils: SearchUtils,
     private val mealDisplayer: ConsoleMealDisplayer = ConsoleMealDisplayer(printer)
 ) {
 
     fun showPotatoLoversUI(count: Int = 10) {
-        val meals = getPotatoMealsUseCase.getRandomPotatoMeals(count).getOrNull().orEmpty()
-        printer.printLine("${Constants.I_LOVE_POTATO_HERE}$count${Constants.MEAL_INCLUDE_POTATO}\n")
+        var shouldContinue: Boolean
 
-        if (meals.isEmpty()) {
-            printer.printLine(Constants.NO_MEALS_FOUND)
-            return
-        }
+        do {
+            val meals = fetchPotatoMeals(count)
+            if (meals.isEmpty()) return
 
-        interactWithMealSelection(meals)
+            displayMealsIntro(count)
+            displayMealsList(meals)
+            askToViewMealDetails(meals)
+
+            shouldContinue = searchUtils.shouldSearchAgain(reader) == true
+        } while (shouldContinue)
     }
 
-    private fun interactWithMealSelection(meals: List<Meal>) {
-        generateSequence {
-            askToViewMealDetails(meals)
-            searchUtils.shouldSearchAgain(reader)
-        }.takeWhile { it }.toList()
+
+    private fun fetchPotatoMeals(count: Int): List<Meal> {
+        val meals = getPotatoMealsUseCase.getRandomPotatoMeals(count).getOrNull().orEmpty()
+        if (meals.isEmpty()) {
+            printer.printLine(Constants.NO_MEALS_FOUND)
+        }
+        return meals
+    }
+
+    private fun displayMealsIntro(count: Int) {
+        printer.printLine("${Constants.I_LOVE_POTATO_HERE}$count${Constants.MEAL_INCLUDE_POTATO}\n")
+    }
+
+    private fun displayMealsList(meals: List<Meal>) {
+        printer.printLine("Available meals:")
+        meals.forEachIndexed { index, meal ->
+            printer.printLine("${index + 1}. ${meal.name}")
+        }
     }
 
     private fun askToViewMealDetails(meals: List<Meal>) {
         printer.printLine("\n${Constants.MEAL_DETAILS_PROMPT}")
-        val selectedIndex = searchUtils.getValidMealIndex(reader, meals.size)
-        if (selectedIndex != null) meals[selectedIndex].let(::showMealDetails) else {
-            printer.printLine(Constants.INVALID_SELECTION_MESSAGE)
+        val index = searchUtils.getValidMealIndex(reader, meals.size)
+        if (index != null) {
+            mealDisplayer.display(meals[index])
+        } else {
+            printer.printLine(Constants.SKIPPING_MEAL_DETAILS)
         }
-    }
-
-    private fun showMealDetails(meal: Meal) {
-        mealDisplayer.display(meal)
     }
 }
