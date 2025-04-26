@@ -1,91 +1,104 @@
-package presentation.features
+package org.example.presentation.features
 
 import io.mockk.*
 import org.example.input_output.input.InputReader
 import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetPotatoMealsUseCase
-import org.example.presentation.features.PotatoLoversUI
+import org.example.presentation.features.utils.ConsoleMealDisplayer
+import org.example.presentation.features.utils.SearchUtils
 import org.example.utils.Constants
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import utils.buildMeal
 
 class PotatoLoversUITest {
 
-    private lateinit var potatoMeals: GetPotatoMealsUseCase
-    private lateinit var potatoMealUi: PotatoLoversUI
-    private lateinit var outputPrinter: OutputPrinter
-    private lateinit var inputReader: InputReader
+    private lateinit var getPotatoMealsUseCase: GetPotatoMealsUseCase
+    private lateinit var printer: OutputPrinter
+    private lateinit var reader: InputReader
+    private lateinit var searchUtils: SearchUtils
+    private lateinit var mealDisplayer: ConsoleMealDisplayer
+    private lateinit var potatoLoversUI: PotatoLoversUI
 
     @BeforeEach
     fun setUp() {
-        potatoMeals = mockk(relaxed = true)
-        outputPrinter = mockk(relaxed = true)
-        inputReader = mockk()
-        potatoMealUi = PotatoLoversUI(
-            potatoMeals,
-            outputPrinter,
-            inputReader
+        getPotatoMealsUseCase = mockk(relaxed = true)
+        printer = mockk(relaxed = true)
+        reader = mockk(relaxed = true)
+        searchUtils = mockk(relaxed = true)
+        mealDisplayer = mockk(relaxed = true)
+
+        potatoLoversUI = PotatoLoversUI(
+            getPotatoMealsUseCase = getPotatoMealsUseCase,
+            printer = printer,
+            reader = reader,
+            searchUtils = searchUtils,
+            mealDisplayer = mealDisplayer
         )
     }
 
     @Test
-    fun `should print intro and call useCase when showPotatoLoversUI is called`() {
+    fun `should display meals and interact with user when meals are available`() {
         // Given
-        every { potatoMeals.getRandomPotatoMeals(any()) } returns Result.success(emptyList())
-        every { inputReader.readStringOrNull() } returns "n"
+        val meals = listOf(buildMeal(1, "Salad"), buildMeal(2, "Fries"))
+        every { getPotatoMealsUseCase.getRandomPotatoMeals(10) } returns Result.success(meals)
+        every { searchUtils.getValidMealIndex(reader, meals.size) } returns 0
+        every { searchUtils.shouldSearchAgain(reader) } returnsMany listOf(true, false)
 
         // When
-        potatoMealUi.showPotatoLoversUI(5)
+        potatoLoversUI.showPotatoLoversUI()
 
         // Then
-        verify { outputPrinter.printLine(Constants.I_LOVE_POTATO_HERE + "5 " + Constants.MEAL_INCLUDE_POTATO + "\n") }
-        verify { potatoMeals.getRandomPotatoMeals(5) }
-        verify { outputPrinter.printLine(Constants.SEE_MORE_MEALS) }
-        verify { outputPrinter.printLine(Constants.ENJOY_YOUR_MEAL) }
+        verify { printer.printLine("${Constants.I_LOVE_POTATO_HERE}10${Constants.MEAL_INCLUDE_POTATO}\n") }
+        verify(atLeast = 1) { printer.printLine("\n${Constants.MEAL_DETAILS_PROMPT}") }
+        verify { mealDisplayer.display(meals[0]) }
+        verify(exactly = 2) { searchUtils.shouldSearchAgain(reader) }
     }
 
     @Test
-    fun `should repeat UI if user enters yes`() {
+    fun `should handle invalid meal selection gracefully`() {
         // Given
-        every { potatoMeals.getRandomPotatoMeals(any()) } returns Result.success(emptyList())
-        every { inputReader.readStringOrNull() } returnsMany listOf("yes", "n")
+        val meals = listOf(buildMeal(1, "Salad"), buildMeal(2, "Fries"))
+        every { getPotatoMealsUseCase.getRandomPotatoMeals(10) } returns Result.success(meals)
+        every { searchUtils.getValidMealIndex(reader, meals.size) } returns null
+        every { searchUtils.shouldSearchAgain(reader) } returns false
 
         // When
-        potatoMealUi.showPotatoLoversUI(3)
+        potatoLoversUI.showPotatoLoversUI()
 
         // Then
-        verify(exactly = 2) { potatoMeals.getRandomPotatoMeals(3) }
-        verify(exactly = 2) { outputPrinter.printLine(Constants.SEE_MORE_MEALS) }
-        verify { outputPrinter.printLine(Constants.ENJOY_YOUR_MEAL) }
+        verify { printer.printLine("${Constants.I_LOVE_POTATO_HERE}10${Constants.MEAL_INCLUDE_POTATO}\n") }
+        verify { printer.printLine(Constants.SKIPPING_MEAL_DETAILS) }
+        verify { searchUtils.shouldSearchAgain(reader) }
     }
 
     @Test
-    fun `should not repeat UI if user enters anything other than yes`() {
+    fun `should stop interaction when user chooses not to search again`() {
         // Given
-        every { potatoMeals.getRandomPotatoMeals(any()) } returns Result.success(emptyList())
-        every { inputReader.readStringOrNull() } returns "no"
+        val meals = listOf(buildMeal(1, "Salad"), buildMeal(2, "Fries"))
+        every { getPotatoMealsUseCase.getRandomPotatoMeals(10) } returns Result.success(meals)
+        every { searchUtils.getValidMealIndex(reader, meals.size) } returns 0
+        every { searchUtils.shouldSearchAgain(reader) } returns false
 
         // When
-        potatoMealUi.showPotatoLoversUI(2)
+        potatoLoversUI.showPotatoLoversUI()
 
         // Then
-        verify(exactly = 1) { potatoMeals.getRandomPotatoMeals(2) }
-        verify { outputPrinter.printLine(Constants.ENJOY_YOUR_MEAL) }
+        verify { printer.printLine("${Constants.I_LOVE_POTATO_HERE}10${Constants.MEAL_INCLUDE_POTATO}\n") }
+        verify(atLeast = 1) { printer.printLine("\n${Constants.MEAL_DETAILS_PROMPT}") }
+        verify { mealDisplayer.display(meals[0]) }
+        verify { searchUtils.shouldSearchAgain(reader) }
     }
 
     @Test
-    fun `should handle null input without crashing`() {
+    fun `should handle error in meal fetching`() {
         // Given
-        every { potatoMeals.getRandomPotatoMeals(any()) } returns Result.success(emptyList())
-        every { inputReader.readStringOrNull() } returns null
+        every { getPotatoMealsUseCase.getRandomPotatoMeals(10) } returns Result.failure(Exception("Error"))
 
         // When
-        potatoMealUi.showPotatoLoversUI()
+        potatoLoversUI.showPotatoLoversUI()
 
         // Then
-        verify { potatoMeals.getRandomPotatoMeals(10) }
-        verify { outputPrinter.printLine(Constants.ENJOY_YOUR_MEAL) }
+        verify { printer.printLine(Constants.NO_MEALS_FOUND) }
     }
-
-
 }
