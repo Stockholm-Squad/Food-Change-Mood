@@ -15,7 +15,7 @@ class GetMealForSoThinPeopleUseCase(
             onSuccess = { meal ->
                 handleGetAllMealsSuccess(meal)
             },
-            onFailure = {Result.failure(NoMealsForSoThinPeopleException())}
+            onFailure = { Result.failure(NoMealsForSoThinPeopleException()) }
         )
 
     }
