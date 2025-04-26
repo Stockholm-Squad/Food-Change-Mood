@@ -1,4 +1,5 @@
 package presentation.features
+
 import io.mockk.*
 import org.example.input_output.input.InputReader
 import org.example.input_output.output.OutputPrinter
@@ -37,7 +38,7 @@ class SearchMealByNameUITest {
     }
 
     @Test
-    fun `handleSearchByName() prints error when input is blank`() {
+    fun `handleSearchByName() should print error when input is blank`() {
         // Given
         every { searchUtils.readNonBlankTrimmedInput(reader) } returns null
         every { searchUtils.shouldSearchAgain(reader) } returns null
@@ -51,7 +52,7 @@ class SearchMealByNameUITest {
     }
 
     @Test
-    fun `handleSearchByName() displays no meals found if result is empty`() {
+    fun `handleSearchByName() should display no meals found when result is empty`() {
         // Given
         every { searchUtils.readNonBlankTrimmedInput(reader) } returns "salad"
         every { getMealByNameUseCase.getMealByName("salad") } returns Result.success(emptyList())
@@ -65,7 +66,7 @@ class SearchMealByNameUITest {
     }
 
     @Test
-    fun `handleSearchByName() displays meal list and handles invalid selection`() {
+    fun `handleSearchByName() should display meal list and print invalid selection when selection is invalid`() {
         // Given
         val meals = listOf(buildMeal(1, "Salad"))
         every { searchUtils.readNonBlankTrimmedInput(reader) } returns "salad"
@@ -83,7 +84,7 @@ class SearchMealByNameUITest {
     }
 
     @Test
-    fun `handleSearchByName() displays meal list and shows meal details on valid selection`() {
+    fun `handleSearchByName() should display meal list and meal details when selection is valid`() {
         // Given
         val meals = listOf(buildMeal(1, "Salad"))
         every { searchUtils.readNonBlankTrimmedInput(reader) } returns "salad"
@@ -99,7 +100,7 @@ class SearchMealByNameUITest {
     }
 
     @Test
-    fun `handleSearchByName() prints exception message when getMealByName fails`() {
+    fun `handleSearchByName() should print exception message when getMealByName fails`() {
         // Given
         val exception = RuntimeException("Something went wrong")
         every { searchUtils.readNonBlankTrimmedInput(reader) } returns "pizza"
@@ -115,7 +116,7 @@ class SearchMealByNameUITest {
     }
 
     @Test
-    fun `handleSearchByName() restarts search if user chooses to search again`() {
+    fun `handleSearchByName() should restart search when user chooses to search again`() {
         // Given
         val meals = listOf(buildMeal(1, "Burger"))
 
@@ -136,7 +137,7 @@ class SearchMealByNameUITest {
     }
 
     @Test
-    fun `handleSearchByName() prints exception message when use case fails`() {
+    fun `handleSearchByName() should print exception message when use case fails`() {
         // Given
         val exception = RuntimeException("Something went wrong")
         every { searchUtils.readNonBlankTrimmedInput(reader) } returns "pasta"
@@ -155,7 +156,6 @@ class SearchMealByNameUITest {
             searchUtils.shouldSearchAgain(reader)
             printer.printLine(Constants.GOODBYE_MESSAGE)
         }
-
     }
 
     @Test
@@ -175,14 +175,11 @@ class SearchMealByNameUITest {
             searchUtils.readNonBlankTrimmedInput(reader)
             getMealByNameUseCase.getMealByName("pasta")
             printer.printLine(Constants.NO_MEALS_FOUND_MATCHING)
-
             searchUtils.shouldSearchAgain(reader)
-
             printer.printLine(Constants.ENTER_MEAL_KEYWORD_TO_SEARCH)
             searchUtils.readNonBlankTrimmedInput(reader)
             getMealByNameUseCase.getMealByName("burger")
             printer.printLine(Constants.NO_MEALS_FOUND_MATCHING)
-
             searchUtils.shouldSearchAgain(reader)
             printer.printLine(Constants.GOODBYE_MESSAGE)
         }

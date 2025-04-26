@@ -1,6 +1,5 @@
 package presentation.features.utils
 
-
 import io.mockk.*
 import model.Meal
 import org.example.input_output.output.OutputPrinter
@@ -22,7 +21,7 @@ class ConsoleMealDisplayerTest {
     }
 
     @Test
-    fun `display prints meal header and meal details when meal is not null`() {
+    fun `display() should print meal header and meal details when meal is not null`() {
         // Given
         val meal = buildMeal(1, "Cheese Pizza")
 
@@ -37,7 +36,7 @@ class ConsoleMealDisplayerTest {
     }
 
     @Test
-    fun `display prints no meal message when meal is null`() {
+    fun `display() should print no meal message when meal is null`() {
         // Given
         val meal: Meal? = null
 
@@ -51,7 +50,7 @@ class ConsoleMealDisplayerTest {
     }
 
     @Test
-    fun `display should skip header when meal name is null`() {
+    fun `display() should skip header when meal name is null`() {
         // Given
         val meal = buildMeal(id = 1, name = null)
 
@@ -62,5 +61,4 @@ class ConsoleMealDisplayerTest {
         verify(exactly = 0) { printer.printLine(any()) }
         verify { printer.printMeal(meal) }
     }
-
 }
