@@ -13,33 +13,35 @@ class SuggestMealForSoThinPeopleUI(
     private val printer: OutputPrinter,
 ) {
     fun showMealWithHighCalorie() {
-        printer.printLine("-------------------------------------------------------------------------------------------------")
-        printer.printLine("🔥 Feeling too thin? This meal above 700 calories!")
         getMealForSoThinPeopleUseCase.suggestRandomMealForSoThinPeople()
             .fold(
-                onSuccess = { meal ->
-                    printer.printLine("------------------------------------------------------------------------------------------------")
-                    printer.printLine("Name: " + meal.name)
-                    printer.printLine("Description: " + meal.description)
-                    printer.printLine("--------------------------------------------------------------------------------------------------")
-                    printer.printLine("Do you like it? (yes/no) 😊")
-                    when (reader.readStringOrNull()?.lowercase()?.trim()) {
-                        "no" -> showMealWithHighCalorie()
-                        "yes" -> showMealDetails(meal)
-                        else -> printer.printLine(Constants.INVALID_INPUT)
-                    }
-                },
+                onSuccess = {meal -> handleSuccess(meal)},
                 onFailure =::handleFailure
             )
     }
     private fun handleFailure(exception: Throwable){
         printer.printLine(exception.message)
     }
+    private fun handleSuccess(meal:Meal){
+        printer.printLine("-------------------------------------------------------------------------------------------------")
+        printer.printLine("🔥 Feeling too thin? This meal above 700 calories!")
+        printer.printLine("------------------------------------------------------------------------------------------------")
+        printer.printLine("Name: " + meal.name)
+        printer.printLine("Description: " + meal.description)
+        printer.printLine("--------------------------------------------------------------------------------------------------")
+        printer.printLine("Do you like it? (yes/no) 😊")
+        val input = reader.readStringOrNull().takeIf {it != null}?: printer.printLine(Constants.INVALID_INPUT)
+        when (input.toString().lowercase().trim()){
+            "no" -> showMealWithHighCalorie()
+            "yes" -> showMealDetails(meal)
+            else -> printer.printLine(Constants.INVALID_INPUT)
+        }
+    }
     private fun showMealDetails(meal: Meal) {
-        printer.printLine("Meal Name: " + meal.name)
-        printer.printLine("Meal Description: " + meal.description)
-        printer.printLine("Meal Preparation Time: " + meal.minutes + " minutes")
-        printer.printLine("Meal " + meal.nutrition)
+        printer.printLine("Name: " + meal.name)
+        printer.printLine("Description: " + meal.description)
+        printer.printLine("Preparation Time: " + meal.minutes + " minutes")
+        printer.printLine("Nutrition: " + meal.nutrition)
 
     }
 }
