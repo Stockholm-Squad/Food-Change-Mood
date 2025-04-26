@@ -1,41 +1,26 @@
 package org.example.presentation.features
 
-import model.Meal
+import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetHealthyFastFoodUseCase
+import org.example.utils.Constants
 
 class GetHealthyFastFoodMealsUI(
-    private val getHealthyFastFoodUseCase: GetHealthyFastFoodUseCase
+    private val getHealthyFastFoodUseCase: GetHealthyFastFoodUseCase,
+    private val printer: OutputPrinter,
 ) {
+
+
 
     fun showHealthyFastFoodMeals() {
         getHealthyFastFoodUseCase.getHealthyFastFood().fold(
             onSuccess = { allMeals ->
-                showMeals(allMeals)
+                printer.printMeals(allMeals)
             },
             onFailure = { error ->
-                println("❌ Failed to load meals: ${error.message}")
+                printer.printLine(error.message)
             }
         )
     }
 
-    fun showMeals(allMeals: List<Meal>) {
-        allMeals.forEachIndexed { index, meal ->
-            println(
-                "Meal ${index + 1}:\n" +
-                        "Name='${meal.name}'\n" +
-                        "ID=${meal.id}\n" +
-                        "Minutes=${meal.minutes}\n" +
-                        "ContributorID=${meal.contributorId}\n" +
-                        "Submitted='${meal.submitted}'\n" +
-                        "Tags=${meal.tags}\n" +
-                        "Nutrition=${meal.nutrition}\n" +
-                        "StepsCount=${meal.numberOfSteps}\n" +
-                        "Steps=${meal.steps}\n" +
-                        "Description='${meal.description?.take(30)}...'\n" +
-                        "Ingredients=${meal.ingredients}\n" +
-                        "IngredientsCount=${meal.numberOfIngredients}\n"
-            )
-        }
-
-    }
 }
+

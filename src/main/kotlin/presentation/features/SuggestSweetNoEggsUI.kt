@@ -1,33 +1,62 @@
 package org.example.presentation.features
 
 import model.Meal
+import org.example.input_output.input.InputReader
+import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetDessertsWithNoEggsUseCase
+import org.example.utils.Constants
 
-class SuggestSweetNoEggsUI(private val getSweetWithNoEggs: GetDessertsWithNoEggsUseCase) {
+class SuggestSweetNoEggsUI(
+    private val getSweetWithNoEggs: GetDessertsWithNoEggsUseCase,
+    private val reader: InputReader,
+    private val printer: OutputPrinter
+) {
 
-    fun showSweetsNoEggs() {
-        println("🍬 Craving dessert? Here’s something sweet with zero eggs!")
+    fun handleSweetsNoEggs() {
+        printer.printLine(Constants.DESSERT_WITH_NO_EGGS_PROMPT)
 
-
-        getSweetWithNoEggs.getDessertsWithNNoEggs().onSuccess { allMeals ->
-            showResultsRandomly(allMeals.toMutableList())
-        }.onFailure { println("Couldn't Find Desserts you grave sorry") }
+        getSweetWithNoEggs.getDessertsWithNNoEggs()
+            .onSuccess { allMeals ->
+                showResultsRandomly(allMeals.toMutableList())
+            }
+            .onFailure { printer.printLine(Constants.NO_MEALS_FOUND_MATCHING) }
     }
 
     private fun showResultsRandomly(model: MutableList<Meal>) {
-        while (model.isNotEmpty()) {
-            val index = (0..model.size).random()
-            println("Dessert: ${model[index].name}\nDescription: ${model[index].description}\n")
-            println("Do you like this dessert?.   (y/n)")
-            if (choosingAnotherMealDecision() == "y") {
-                println("\nMeal Name: ${model[index].name}\nMeal Description: ${model[index].description}\nMeal Ingredients: ${model[index].ingredients}\nMeal preparation steps: ${model[index].steps}\n")
-                return
+        do {
+            getRandomIndex(model.size).let { index ->
+                printDessertBrief(model, index)
+
+                if (continueDecision()) {
+                    printDessertInDetails(model[index])
+                    return
+                }
+                model.removeAt(index)
             }
-            model.removeAt(2)
-        }
+        } while (model.isNotEmpty())
+        printer.printLine(Constants.NO_MORE_DESSERTS_AVAILABLE)
     }
 
-    private fun choosingAnotherMealDecision(): String? {
-        return readlnOrNull()
+    private fun printDessertBrief(model: MutableList<Meal>, index: Int) {
+        printer.printLine("Dessert: ${model[index].name}\nDescription: ${model[index].description}\n")
     }
+
+    private fun getRandomIndex(size: Int): Int {
+        return (0 until size).random()
+    }
+
+    private fun printDessertInDetails(model: Meal) {
+        printer.printLine(
+            "\nMeal Name: ${model.name}\n" +
+                    "Meal Description: ${model.description}\nMeal Ingredients: ${model.ingredients}\n" +
+                    "Meal preparation steps: ${model.steps}\n"
+        )
+    }
+
+    private fun continueDecision(): Boolean {
+        printer.printLine("Do you like this dessert?.   (y/n)")
+        return reader.readStringOrNull() == "y"
+    }
+
+
 }

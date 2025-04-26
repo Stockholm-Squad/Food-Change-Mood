@@ -1,15 +1,15 @@
 package utils
 
+import kotlinx.datetime.LocalDate
 import model.Meal
 import model.Nutrition
-import java.util.Date
 
 fun buildMeal(
     id: Int,
     name: String? = "None",
     minutes: Int? = null,
     contributorId: Int = 0,
-    submitted: Date? = null,
+    submitted: LocalDate? = null,
     tags: List<String>? = null,
     numberOfSteps: Int? = null,
     steps: List<String>? = null,

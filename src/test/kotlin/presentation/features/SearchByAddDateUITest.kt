@@ -3,6 +3,7 @@ package presentation.features
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import model.Meal
 import org.example.input_output.input.InputReader
 import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetMealsByDateUseCase
@@ -10,7 +11,6 @@ import org.example.presentation.features.SearchByAddDateUI
 import org.example.utils.Constants.ENTER_VALID_DATE
 import org.example.utils.Constants.NO_MEALS_FOUND_WITH_THIS_DATE
 import org.example.utils.DateValidator
-import org.example.utils.viewMealInListDetails
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import utils.buildMeal
@@ -140,8 +140,7 @@ class SearchByAddDateUITest {
         searchByAddDateUI.searchMealsByDate()
 
         // Then
-        verify(exactly = 1) { printer.printLine("1 -> Pizza") }
-        verify(exactly = 1) { listOf(meal).viewMealInListDetails(1, printer) }
+        verify(exactly = 1) { printer.printMeal(meal) }
     }
 
     @Test
@@ -191,5 +190,55 @@ class SearchByAddDateUITest {
         // Then
         verify(exactly = 1) { printer.printLine("Enter a valid ID or -1") }
         verify(exactly = 1) { printer.printLine("1 -> Lasagna") }
+    }
+
+    @Test
+    fun `viewMealInListDetails should print meal details when meal exists`() {
+        // Given
+        val mealId = 1
+        val meal = buildMeal(id = mealId, name = "Pasta")
+        val meals = listOf(meal)
+        val printer = mockk<OutputPrinter>(relaxed = true)
+
+        // When
+        searchByAddDateUI.viewMealInListDetails(mealId, meals, printer)
+
+        // Then
+        verify(exactly = 1) { printer.printMeal(meal) }
+    }
+
+    @Test
+    fun `viewMealInListDetails should print not found message when meal does not exist`() {
+        // Given
+        val mealId = 99
+        val meal = buildMeal(id = 1, name = "Pasta")
+        val meals = listOf(meal)
+        val printer = mockk<OutputPrinter>(relaxed = true)
+
+        // When
+        searchByAddDateUI.viewMealInListDetails(mealId, meals, printer)
+
+        // Then
+        verify(exactly = 1) {
+            printer.printLine("The meal with ID $mealId does not exist.")
+        }
+        verify(exactly = 0) { printer.printMeal(any()) }
+    }
+
+    @Test
+    fun `viewMealInListDetails should handle empty list gracefully`() {
+        // Given
+        val mealId = 1
+        val meals = emptyList<Meal>()
+        val printer = mockk<OutputPrinter>(relaxed = true)
+
+        // When
+        searchByAddDateUI.viewMealInListDetails(mealId, meals, printer)
+
+        // Then
+        verify(exactly = 1) {
+            printer.printLine("The meal with ID $mealId does not exist.")
+        }
+        verify(exactly = 0) { printer.printMeal(any()) }
     }
 }

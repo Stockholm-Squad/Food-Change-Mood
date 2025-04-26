@@ -28,7 +28,7 @@ class MealCsvReader(
 
     }
 
-    private fun readLine(csvFileReader: BufferedReader) {
+      private fun readLine(csvFileReader: BufferedReader) {
         try {
             csvFileReader.readLine()
         } catch (throwable: Throwable) {
@@ -36,4 +36,3 @@ class MealCsvReader(
         }
     }
 }
-

@@ -5,7 +5,6 @@ import org.example.input_output.input.InputReader
 import org.example.input_output.output.OutputPrinter
 import org.example.logic.usecases.GetItalianMealsForLargeGroupUseCase
 import org.example.utils.Constants.NO_ITALIAN_MEALS_FOR_LARGE_GROUP_FOUND
-import org.example.utils.viewMealInListDetails
 
 class ItalianLargeGroupMealsUI(
     private val getItalianMealsForLargeGroupUseCase: GetItalianMealsForLargeGroupUseCase,
@@ -55,8 +54,21 @@ class ItalianLargeGroupMealsUI(
         when (val mealId = input?.toIntOrNull()) {
             null -> printer.printLine("Enter a valid ID or -1")
             -1 -> return true
-            else -> meals.viewMealInListDetails(mealId, printer)
+            else -> viewMealInListDetails(mealId, meals, printer)
         }
         return false
+    }
+
+    fun viewMealInListDetails(mealId: Int, list: List<Meal>, printer: OutputPrinter) {
+        val meal: Meal? = list.find { meal ->
+            meal.id == mealId
+        }
+
+        if (meal == null) {
+            printer.printLine("The meal with ID $mealId does not exist.")
+            return
+        }
+
+        printer.printMeal(meal)
     }
 }

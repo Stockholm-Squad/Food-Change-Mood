@@ -1,3 +1,5 @@
+package org.example.di
+
 import org.example.data.parser.MealCsvParser
 import org.example.data.reader.MealCsvReader
 import org.example.data.dataSource.MealCsvDataSource
@@ -14,7 +16,7 @@ val dataModule = module {
     single { CsvLineFormatter() }
     single { CsvLineHandler() }
 
-    single<MealParser> { MealCsvParser(get()) }
+    single<MealParser> { MealCsvParser(get(), get()) }
     single<MealReader> { MealCsvReader(get(), get()) }
     single<MealDataSource> { MealCsvDataSource(get(), get()) }
 
