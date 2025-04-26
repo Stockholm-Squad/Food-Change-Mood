@@ -49,6 +49,7 @@ class FoodConsoleUITest {
         suggestSweetNoEggsUI = mockk(relaxed = true)
 
         foodConsoleUI = FoodConsoleUI(
+            reader,
             healthyFastFoodMealsUI,
             exploreCountryMealsUI,
             getIraqiMealsUI,
